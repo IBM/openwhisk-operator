@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 # Copyright 2017-2018 IBM Corporation
 #
@@ -17,8 +17,9 @@
 
 set -e
 
-echo "installing ibmcloud"
-curl -fsSL https://clis.ng.bluemix.net/install/linux | sh
+ROOT=$(realpath $(dirname ${BASH_SOURCE})/../..)
 
-echo "installing Cloud Functions plugin"
-ibmcloud plugin install Cloud-Functions -r Bluemix -f 
+cd $ROOT
+
+kustomize build config/crds | kubectl apply -f -
+kustomize build config/default | kubectl apply -f -

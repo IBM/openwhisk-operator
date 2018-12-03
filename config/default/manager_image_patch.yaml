@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
       - image: ibmcom/openwhisk-operator
-        name: openwhisk-operator
+        name: manager

@@ -17,9 +17,8 @@
 
 set -e
 
-
-if [ -z ${KUBECTL_VERSION+x} ]; then
-    KUBECTL_VERSION=v1.10.0
+if [ "${MINIKUBE_INSTALL}" != "true" ]; then
+    exit 0
 fi
 
 if [ -z ${MINIKUBE_VERSION+x} ]; then
@@ -30,11 +29,6 @@ export MINIKUBE_WANTUPDATENOTIFICATION=false
 export MINIKUBE_WANTREPORTERRORPROMPT=false
 export CHANGE_MINIKUBE_NONE_USER=true
 export MINIKUBE_HOME=$HOME
-
-echo "installing kubectl"
-curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
-chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/
 
 echo "installing minikube"
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/${MINIKUBE_VERSION}/minikube-linux-amd64

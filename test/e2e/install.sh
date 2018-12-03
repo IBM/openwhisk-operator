@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 # Copyright 2017-2018 IBM Corporation
 #
@@ -17,8 +17,6 @@
 
 set -e
 
-echo "installing ibmcloud"
-curl -fsSL https://clis.ng.bluemix.net/install/linux | sh
+kustomize build github.com/IBM/openwhisk-operator//config/crds | kubectl apply -f -
+kustomize build github.com/IBM/openwhisk-operator//config/default | kubectl apply -f -
 
-echo "installing Cloud Functions plugin"
-ibmcloud plugin install Cloud-Functions -r Bluemix -f 

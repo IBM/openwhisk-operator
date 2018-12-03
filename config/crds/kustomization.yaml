@@ -1,0 +1,8 @@
+resources:
+- openwhisk_v1beta1_composition.yaml
+- openwhisk_v1beta1_function.yaml
+- openwhisk_v1beta1_invocation.yaml
+- openwhisk_v1beta1_package.yaml
+- openwhisk_v1beta1_rule.yaml
+- openwhisk_v1beta1_trigger.yaml
+

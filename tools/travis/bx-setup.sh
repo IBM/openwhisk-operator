@@ -17,58 +17,61 @@
 
 set -e
 
-if [[ $BLUEMIX_API_KEY == "" ]]; then
-    echo "missing BLUEMIX_API_KEY. Aborting"
-    exit 1
+if [ -z ${LOCAL_OPENWHISK} ]; then
+
+    if [[ $BLUEMIX_API_KEY == "" ]]; then
+        echo "missing BLUEMIX_API_KEY. Aborting"
+        exit 1
+    fi
+
+    if [[ $BLUEMIX_ORG == "" ]]; then
+        echo "missing BLUEMIX_ORG. Aborting"
+        exit 1
+    fi
+
+    if [[ $BLUEMIX_SPACE == "" ]]; then
+        echo "missing BLUEMIX_SPACE. Aborting"
+        exit 1
+    fi
+
+    if [[ $BLUEMIX_REGION == "" ]]; then
+        echo "missing BLUEMIX_REGION. Aborting"
+        exit 1
+    fi
+    
+    bx login -a api.ng.bluemix.net --apikey ${BLUEMIX_API_KEY} -o $BLUEMIX_ORG
+    bx account space-create $BLUEMIX_SPACE
+    bx target -s $BLUEMIX_SPACE
+
+    # set +e
+
+    actions=($(bx wsk action list))
+    
+    len=${#actions[@]}
+    for (( i=1; i<len; i+=3 )) 
+    do
+        bx wsk action delete ${actions[$i]}
+    done
+
+    pkgs=($(bx wsk package list))
+    len=${#pkgs[@]}
+    for (( i=1; i<len; i+=2 )) 
+    do
+        bx wsk package delete ${pkgs[$i]}
+    done
+
+    rules=($(bx wsk rule list))
+    len=${#rules[@]}
+    for (( i=1; i<len; i+=3 )) 
+    do
+        bx wsk rule delete ${rules[$i]}
+    done
+
+    triggers=($(bx wsk trigger list))
+    len=${#triggers[@]}
+    for (( i=1; i<len; i+=2 )) 
+    do
+        bx wsk trigger delete ${triggers[$i]}
+    done
+
 fi
-
-if [[ $BLUEMIX_ORG == "" ]]; then
-    echo "missing BLUEMIX_ORG. Aborting"
-    exit 1
-fi
-
-if [[ $BLUEMIX_SPACE == "" ]]; then
-    echo "missing BLUEMIX_SPACE. Aborting"
-    exit 1
-fi
-
-if [[ $BLUEMIX_REGION == "" ]]; then
-    echo "missing BLUEMIX_REGION. Aborting"
-    exit 1
-fi
-  
-bx login -a api.ng.bluemix.net --apikey ${BLUEMIX_API_KEY} -o $BLUEMIX_ORG
-bx account space-create $BLUEMIX_SPACE
-bx target -s $BLUEMIX_SPACE
-
-# set +e
-
-actions=($(bx wsk action list))
-echo $actions
-
-len=${#actions[@]}
-for (( i=1; i<len; i+=3 )) 
-do
-    bx wsk action delete ${actions[$i]}
-done
-
-pkgs=($(bx wsk package list))
-len=${#pkgs[@]}
-for (( i=1; i<len; i+=2 )) 
-do
-    bx wsk package delete ${pkgs[$i]}
-done
-
-rules=($(bx wsk rule list))
-len=${#rules[@]}
-for (( i=1; i<len; i+=3 )) 
-do
-    bx wsk rule delete ${rules[$i]}
-done
-
-triggers=($(bx wsk trigger list))
-len=${#triggers[@]}
-for (( i=1; i<len; i+=2 )) 
-do
-    bx wsk trigger delete ${triggers[$i]}
-done

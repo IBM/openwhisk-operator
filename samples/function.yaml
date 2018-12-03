@@ -4,9 +4,8 @@ metadata:
   name: myfunction
   namespace: default
 spec:
-  codeUri: https://raw.githubusercontent.com/apache/incubator-openwhisk-catalog/master/packages/utils/echo.js
+  codeURI: https://raw.githubusercontent.com/apache/incubator-openwhisk-catalog/master/packages/utils/echo.js
   runtime: nodejs:6
   parameters:
-  - name: object
-    value:
-      subparam1: Hello3
+  - name: message
+    value: "Hello"

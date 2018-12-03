@@ -5,38 +5,31 @@ dist: trusty
 sudo: required
 services:
   - docker
-env:
-  - IBMCLOUD_VERSION_CHECK=false KB_VERSION=1.0.5
   
 go_import_path: github.com/ibm/openwhisk-operator
 
 before_install:
-  - if [ "${TRAVIS_PULL_REQUEST}" = "true" ]; then ./tools/travis/ow-setup.sh; fi
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - curl -SL "https://github.com/kubernetes-sigs/kubebuilder/releases/download/v${KB_VERSION}/kubebuilder_${KB_VERSION}_linux_amd64.tar.gz" | tar xz  
-  - export KUBEBUILDER_ASSETS=$TRAVIS_BUILD_DIR/kubebuilder_${KB_VERSION}_linux_amd64/bin
-  - $KUBEBUILDER_ASSETS/kubebuilder version
+  - ./tools/travis/k8s-tools.sh
+  - ./tools/travis/minikube-install.sh
   - ./tools/travis/bx-install.sh
+  - ./tools/travis/bx-setup.sh
+  - go get -v github.com/onsi/ginkgo/ginkgo
   
 install:
-  - go get -v github.com/onsi/ginkgo/ginkgo
   - dep ensure -v
-  - if [ "${TRAVIS_PULL_REQUEST}" = "true" ]; then ./tools/travis/ow-build.sh && ./tools/travis/ow-deploy.sh; fi
   
-before_script:
-  - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then ./tools/travis/bx-setup.sh; fi
-  
-script:
-  - make test
-
-deploy:
-- provider: script
-  skip_cleanup: true
-  script: bash tools/travis/docker.sh
-  on: 
-    branch: "master"
-- provider: script
-  skip_cleanup: true
-  script: bash tools/travis/docker.sh
-  on: 
-    tags: true
+jobs:
+  include:
+    - stage: test
+      script: make test      
+      env:
+      - KB_VERSION=1.0.5
+    # - script: test/e2e/install-local.sh
+    #  env:
+    #    INSTALL_MINIKUBE=true 
+    - stage: deploy
+      script: bash tools/travis/docker.sh
+      skip_cleanup: true
+      if: branch = master OR env(TRAVIS_TAG) 
+ 

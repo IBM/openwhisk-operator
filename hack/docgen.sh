@@ -31,3 +31,6 @@ mkdir -p api/swagger
 go run $ROOT/hack/openapi/builder.go api/swagger/swagger.json
 
 docker run -v ${ROOT}/docs:/root/docs -v ${ROOT}/api:/root/api villardl/spectacle -t /root/docs /root/api/swagger/swagger-doc.json
+
+# Override stylesheet until we figure out how to change layout in spectacle.
+cp -f $ROOT/docs/stylesheets/spectacle.min.css.patched $ROOT/docs/stylesheets/spectacle.min.css

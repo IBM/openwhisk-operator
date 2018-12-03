@@ -46,6 +46,10 @@ doc:
 	@patch -tub vendor/k8s.io/kube-openapi/pkg/builder/openapi.go hack/kube-openapi.go.patch
 	hack/docgen.sh
 
+# Preprocess markdown
+syncmd:
+	docker run -v $(shell pwd):/doc villardl/markdownx -u doc/README.md
+
 # Run against the configured Kubernetes cluster in ~/.kube/config
 run: generate fmt vet
 	go run ./cmd/manager/main.go -logtostderr=true -v=5
