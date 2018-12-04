@@ -10,6 +10,8 @@ spec:
   names:
     kind: Trigger
     plural: triggers
+    shortNames:
+    - owt
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -97,8 +99,6 @@ spec:
           - generation
           type: object
   version: v1beta1
-  shortNames:
-    - owt
 status:
   acceptedNames:
     kind: ""

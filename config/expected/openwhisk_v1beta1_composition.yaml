@@ -10,6 +10,8 @@ spec:
   names:
     kind: Composition
     plural: compositions
+    shortNames:
+    - owc
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -65,8 +67,6 @@ spec:
           - generation
           type: object
   version: v1beta1
-  shortNames:
-    - owc
 status:
   acceptedNames:
     kind: ""

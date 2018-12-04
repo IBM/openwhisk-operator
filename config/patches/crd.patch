@@ -1,49 +1,59 @@
+Only in config/crds/: kustomization.yaml
 diff -u config/crds/openwhisk_v1beta1_composition.yaml config/expected/openwhisk_v1beta1_composition.yaml
---- config/crds/openwhisk_v1beta1_composition.yaml	2018-11-14 16:28:47.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_composition.yaml	2018-11-14 16:27:34.000000000 -0500
-@@ -65,6 +65,8 @@
-           - generation
-           type: object
-   version: v1beta1
-+  shortNames:
+--- config/crds/openwhisk_v1beta1_composition.yaml	2018-12-04 16:36:34.000000000 -0500
++++ config/expected/openwhisk_v1beta1_composition.yaml	2018-12-04 16:35:12.000000000 -0500
+@@ -10,6 +10,8 @@
+   names:
+     kind: Composition
+     plural: compositions
++    shortNames:
 +    - owc
- status:
-   acceptedNames:
-     kind: ""
+   scope: Namespaced
+   validation:
+     openAPIV3Schema:
 diff -u config/crds/openwhisk_v1beta1_function.yaml config/expected/openwhisk_v1beta1_function.yaml
---- config/crds/openwhisk_v1beta1_function.yaml	2018-11-14 16:28:47.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_function.yaml	2018-11-14 16:27:50.000000000 -0500
-@@ -29,8 +29,6 @@
-                     type: object
-                   name:
-                     type: string
--                  value:
--                    type: object
-                   valueFrom:
-                     properties:
-                       configMapKeyRef:
-@@ -98,8 +96,6 @@
-                     type: object
-                   name:
-                     type: string
--                  value:
--                    type: object
-                   valueFrom:
-                     properties:
-                       configMapKeyRef:
-@@ -133,6 +129,8 @@
-           - generation
-           type: object
-   version: v1beta1
-+  shortNames:
+--- config/crds/openwhisk_v1beta1_function.yaml	2018-12-04 16:36:34.000000000 -0500
++++ config/expected/openwhisk_v1beta1_function.yaml	2018-12-04 16:35:36.000000000 -0500
+@@ -10,6 +10,8 @@
+   names:
+     kind: Function
+     plural: functions
++    shortNames:
 +    - owf
- status:
-   acceptedNames:
-     kind: ""
+   scope: Namespaced
+   validation:
+     openAPIV3Schema:
+@@ -29,8 +31,6 @@
+                     type: object
+                   name:
+                     type: string
+-                  value:
+-                    type: object
+                   valueFrom:
+                     properties:
+                       configMapKeyRef:
+@@ -98,8 +98,6 @@
+                     type: object
+                   name:
+                     type: string
+-                  value:
+-                    type: object
+                   valueFrom:
+                     properties:
+                       configMapKeyRef:
 diff -u config/crds/openwhisk_v1beta1_invocation.yaml config/expected/openwhisk_v1beta1_invocation.yaml
---- config/crds/openwhisk_v1beta1_invocation.yaml	2018-11-14 16:28:47.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_invocation.yaml	2018-11-14 16:27:58.000000000 -0500
-@@ -54,8 +54,6 @@
+--- config/crds/openwhisk_v1beta1_invocation.yaml	2018-12-04 16:36:34.000000000 -0500
++++ config/expected/openwhisk_v1beta1_invocation.yaml	2018-12-04 16:35:45.000000000 -0500
+@@ -10,6 +10,8 @@
+   names:
+     kind: Invocation
+     plural: invocations
++    shortNames:
++    - owi
+   scope: Namespaced
+   validation:
+     openAPIV3Schema:
+@@ -54,8 +56,6 @@
                          type: object
                        name:
                          type: string
@@ -52,7 +62,7 @@ diff -u config/crds/openwhisk_v1beta1_invocation.yaml config/expected/openwhisk_
                        valueFrom:
                          properties:
                            configMapKeyRef:
-@@ -79,8 +77,6 @@
+@@ -79,8 +79,6 @@
                      type: object
                    name:
                      type: string
@@ -61,84 +71,75 @@ diff -u config/crds/openwhisk_v1beta1_invocation.yaml config/expected/openwhisk_
                    valueFrom:
                      properties:
                        configMapKeyRef:
-@@ -117,6 +113,8 @@
-           - generation
-           type: object
-   version: v1beta1
-+  shortNames:
-+    - owi
- status:
-   acceptedNames:
-     kind: ""
 diff -u config/crds/openwhisk_v1beta1_package.yaml config/expected/openwhisk_v1beta1_package.yaml
---- config/crds/openwhisk_v1beta1_package.yaml	2018-11-14 16:28:47.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_package.yaml	2018-11-14 16:28:08.000000000 -0500
-@@ -29,8 +29,6 @@
-                     type: object
-                   name:
-                     type: string
--                  value:
--                    type: object
-                   valueFrom:
-                     properties:
-                       configMapKeyRef:
-@@ -74,8 +72,6 @@
-                     type: object
-                   name:
-                     type: string
--                  value:
--                    type: object
-                   valueFrom:
-                     properties:
-                       configMapKeyRef:
-@@ -105,6 +101,8 @@
-           - generation
-           type: object
-   version: v1beta1
-+  shortNames:
+--- config/crds/openwhisk_v1beta1_package.yaml	2018-12-04 16:36:34.000000000 -0500
++++ config/expected/openwhisk_v1beta1_package.yaml	2018-12-04 16:35:53.000000000 -0500
+@@ -10,6 +10,8 @@
+   names:
+     kind: Package
+     plural: packages
++    shortNames:
 +    - owp
- status:
-   acceptedNames:
-     kind: ""
+   scope: Namespaced
+   validation:
+     openAPIV3Schema:
+@@ -29,8 +31,6 @@
+                     type: object
+                   name:
+                     type: string
+-                  value:
+-                    type: object
+                   valueFrom:
+                     properties:
+                       configMapKeyRef:
+@@ -74,8 +74,6 @@
+                     type: object
+                   name:
+                     type: string
+-                  value:
+-                    type: object
+                   valueFrom:
+                     properties:
+                       configMapKeyRef:
 diff -u config/crds/openwhisk_v1beta1_rule.yaml config/expected/openwhisk_v1beta1_rule.yaml
---- config/crds/openwhisk_v1beta1_rule.yaml	2018-11-14 16:28:47.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_rule.yaml	2018-11-14 16:28:17.000000000 -0500
-@@ -66,6 +66,8 @@
-           - generation
-           type: object
-   version: v1beta1
-+  shortNames:
+--- config/crds/openwhisk_v1beta1_rule.yaml	2018-12-04 16:36:34.000000000 -0500
++++ config/expected/openwhisk_v1beta1_rule.yaml	2018-12-04 16:36:06.000000000 -0500
+@@ -10,6 +10,8 @@
+   names:
+     kind: Rule
+     plural: rules
++    shortNames:
 +    - owr
- status:
-   acceptedNames:
-     kind: ""
+   scope: Namespaced
+   validation:
+     openAPIV3Schema:
 diff -u config/crds/openwhisk_v1beta1_trigger.yaml config/expected/openwhisk_v1beta1_trigger.yaml
---- config/crds/openwhisk_v1beta1_trigger.yaml	2018-11-14 16:28:47.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_trigger.yaml	2018-11-14 16:28:25.000000000 -0500
-@@ -29,8 +29,6 @@
-                     type: object
-                   name:
-                     type: string
--                  value:
--                    type: object
-                   valueFrom:
-                     properties:
-                       configMapKeyRef:
-@@ -74,8 +72,6 @@
-                     type: object
-                   name:
-                     type: string
--                  value:
--                    type: object
-                   valueFrom:
-                     properties:
-                       configMapKeyRef:
-@@ -101,6 +97,8 @@
-           - generation
-           type: object
-   version: v1beta1
-+  shortNames:
+--- config/crds/openwhisk_v1beta1_trigger.yaml	2018-12-04 16:36:34.000000000 -0500
++++ config/expected/openwhisk_v1beta1_trigger.yaml	2018-12-04 16:36:17.000000000 -0500
+@@ -10,6 +10,8 @@
+   names:
+     kind: Trigger
+     plural: triggers
++    shortNames:
 +    - owt
- status:
-   acceptedNames:
-     kind: ""
+   scope: Namespaced
+   validation:
+     openAPIV3Schema:
+@@ -29,8 +31,6 @@
+                     type: object
+                   name:
+                     type: string
+-                  value:
+-                    type: object
+                   valueFrom:
+                     properties:
+                       configMapKeyRef:
+@@ -74,8 +74,6 @@
+                     type: object
+                   name:
+                     type: string
+-                  value:
+-                    type: object
+                   valueFrom:
+                     properties:
+                       configMapKeyRef:

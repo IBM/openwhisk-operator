@@ -10,6 +10,8 @@ spec:
   names:
     kind: Function
     plural: functions
+    shortNames:
+    - owf
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -129,8 +131,6 @@ spec:
           - generation
           type: object
   version: v1beta1
-  shortNames:
-    - owf
 status:
   acceptedNames:
     kind: ""

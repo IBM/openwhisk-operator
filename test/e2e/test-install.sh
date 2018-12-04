@@ -17,5 +17,13 @@
 
 set -e
 
-# kustomize build github.com/IBM/openwhisk-operator//config/crds | kubectl apply -f -
-# kustomize build github.com/IBM/openwhisk-operator//config/default | kubectl apply -f -
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")"/../.. && pwd)
+cd $ROOT
+
+source hack/lib/utils.sh
+source hack/lib/object.sh
+
+kustomize build github.com/IBM/openwhisk-operator//config/crds | kubectl apply -f -
+kustomize build github.com/IBM/openwhisk-operator//config/default | kubectl apply -f -
+
+object::wait_operator_ready

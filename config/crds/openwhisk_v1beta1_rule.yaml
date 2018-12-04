@@ -10,6 +10,8 @@ spec:
   names:
     kind: Rule
     plural: rules
+    shortNames:
+    - owr
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -66,8 +68,6 @@ spec:
           - generation
           type: object
   version: v1beta1
-  shortNames:
-    - owr
 status:
   acceptedNames:
     kind: ""

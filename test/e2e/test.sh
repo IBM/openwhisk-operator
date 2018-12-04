@@ -25,7 +25,7 @@ source hack/lib/utils.sh
 
 u::header "installing CRDs and operator"
 
-# kustomize build config/crds | kubectl apply -f -
-# kustomize build config/default | kubectl apply -f -
+kustomize build config/crds | kubectl apply -f -
+kustomize build config/default | kubectl apply -f -
 
-# object::wait_operator_ready
+object::wait_operator_ready

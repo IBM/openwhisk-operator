@@ -26,12 +26,9 @@ jobs:
       script: make test      
       env:
       - KB_VERSION=1.0.5 REMOTE_OPENWHISK=1 INSTALL_IBMCLOUD=1 INSTALL_K8S_TOOLS=1 RUN_DEP=1 
-    # - script: test/e2e/test-install.sh
-    #   env:
-    #   - INSTALL_DIND=1 INSTALL_K8S_TOOLS=1 
-    #- script: test/e2e/test.sh
-    #  env:
-    #  - INSTALL_DIND=1 INSTALL_K8S_TOOLS=1
+    - script: test/e2e/test-install.sh
+      env:
+      - INSTALL_MINIKUBE=1 INSTALL_K8S_TOOLS=1
     - script: test/e2e/test.sh
       env:
       - INSTALL_MINIKUBE=1 INSTALL_K8S_TOOLS=1

@@ -10,6 +10,8 @@ spec:
   names:
     kind: Package
     plural: packages
+    shortNames:
+    - owp
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -101,8 +103,6 @@ spec:
           - generation
           type: object
   version: v1beta1
-  shortNames:
-    - owp
 status:
   acceptedNames:
     kind: ""

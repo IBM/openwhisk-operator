@@ -10,6 +10,8 @@ spec:
   names:
     kind: Invocation
     plural: invocations
+    shortNames:
+    - owi
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -113,8 +115,6 @@ spec:
           - generation
           type: object
   version: v1beta1
-  shortNames:
-    - owi
 status:
   acceptedNames:
     kind: ""
