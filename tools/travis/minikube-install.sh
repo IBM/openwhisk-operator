@@ -17,18 +17,25 @@
 
 set -e
 
-if [ "${MINIKUBE_INSTALL}" != "true" ]; then
+if [ -z "${INSTALL_MINIKUBE}" ]; then
     exit 0
 fi
 
-if [ -z ${MINIKUBE_VERSION+x} ]; then
-    MINIKUBE_VERSION=latest
-fi
+MINIKUBE_VERSION=${MINIKUBE_VERSION:-0.30.0}
+BOOTSTRAPPER=${BOOTSTRAPPER:-kubeadm}
+KUBE_VERSION=${KUBE_VERSION:-1.11}
 
 export MINIKUBE_WANTUPDATENOTIFICATION=false
 export MINIKUBE_WANTREPORTERRORPROMPT=false
 export CHANGE_MINIKUBE_NONE_USER=true
 export MINIKUBE_HOME=$HOME
+
+echo "installing nsenter"
+if ! which nsenter; then
+    curl -L https://github.com/minrk/git-crypt-bin/releases/download/trusty/nsenter > nsenter
+    chmod +x nsenter
+    sudo mv nsenter /usr/local/bin/
+fi
 
 echo "installing minikube"
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/${MINIKUBE_VERSION}/minikube-linux-amd64
@@ -37,8 +44,7 @@ sudo mv minikube /usr/local/bin/
 
 echo "starting minikube"
 export KUBECONFIG=$HOME/.kube/config
-sudo -E minikube start --vm-driver=none --bootstrapper=localkube --kubernetes-version=${KUBECTL_VERSION}
-
+sudo -E minikube start --vm-driver=none --bootstrapper=${BOOTSTRAPPER} --extra-config=apiserver.authorization-mode=RBAC --kubernetes-version=${KUBECTL_VERSION}
 echo "update context"
 # minikube update-context
 

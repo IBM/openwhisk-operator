@@ -1,6 +1,6 @@
 # Apache OpenWhisk Operators
 
-[![Build Status](https://travis-ci.org/IBM/openwhisk-operator.svg?branch=master)](https://travis-ci.org/IBM/openwhisk-operator)
+[![Build Status](https://travis-ci.com/IBM/openwhisk-operator.svg?branch=master)](https://travis-ci.com/IBM/openwhisk-operator)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This project provides a collection of Kubernetes operators for managing [Apache OpenWhisk](https://openwhisk.apache.org/) resources namely actions, packages, rules and triggers.

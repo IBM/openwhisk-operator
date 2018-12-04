@@ -1,7 +1,7 @@
 language: go
 go:
   - "1.11.x"
-dist: trusty
+dist: xenial
 sudo: required
 services:
   - docker
@@ -9,27 +9,36 @@ services:
 go_import_path: github.com/ibm/openwhisk-operator
 
 before_install:
-  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - ./tools/travis/start-kubeadm-dind.sh
   - ./tools/travis/k8s-tools.sh
   - ./tools/travis/minikube-install.sh
   - ./tools/travis/bx-install.sh
   - ./tools/travis/bx-setup.sh
+  - if [ ! -z "$RUN_DEP" ]; then curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh ; fi
   - go get -v github.com/onsi/ginkgo/ginkgo
   
 install:
-  - dep ensure -v
+  - if [ ! -z "$RUN_DEP" ]; then dep ensure -v; fi
   
 jobs:
   include:
     - stage: test
       script: make test      
       env:
-      - KB_VERSION=1.0.5
-    # - script: test/e2e/install-local.sh
+      - KB_VERSION=1.0.5 REMOTE_OPENWHISK=1 INSTALL_IBMCLOUD=1 INSTALL_K8S_TOOLS=1 RUN_DEP=1 
+    # - script: test/e2e/test-install.sh
+    #   env:
+    #   - INSTALL_DIND=1 INSTALL_K8S_TOOLS=1 
+    #- script: test/e2e/test.sh
     #  env:
-    #    INSTALL_MINIKUBE=true 
+    #  - INSTALL_DIND=1 INSTALL_K8S_TOOLS=1
+    - script: test/e2e/test.sh
+      env:
+      - INSTALL_MINIKUBE=1 INSTALL_K8S_TOOLS=1
     - stage: deploy
       script: bash tools/travis/docker.sh
+      env:
+      - RUN_DEP=1 
       skip_cleanup: true
       if: branch = master OR env(TRAVIS_TAG) 
  

@@ -1,3 +1,4 @@
+
 #!/bin/bash
 #
 # Copyright 2017-2018 IBM Corporation
@@ -15,11 +16,24 @@
 # limitations under the License.
 #
 
-set -e
+COLOR_RESET="\e[00m"
+COLOR_GREEN="\e[1;32m"
+COLOR_RED="\e[00;31m"
 
-ROOT=$(realpath $(dirname ${BASH_SOURCE})/../..)
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
 
-cd $ROOT
+CHECKMARK="${COLOR_GREEN}✔${COLOR_RESET}"
+CROSSMARK="${COLOR_RED}✗${COLOR_RESET}"
 
-kustomize build config/crds | kubectl apply -f -
-kustomize build config/default | kubectl apply -f -
+# print header in bold
+function u::header() {
+    echo ""
+    echo ${BOLD}${1}${NORMAL}
+}
+
+# print test suite name
+function u::testsuite() {
+    u::header "$1"
+    u::header "${BOLD}====${NORMAL}"
+}

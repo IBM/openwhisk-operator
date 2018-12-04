@@ -17,6 +17,10 @@
 
 set -e
 
+if [ -z "${INSTALL_K8S_TOOLS}" ]; then
+    exit 0
+fi
+
 if [ -z ${KUBECTL_VERSION+x} ]; then
     KUBECTL_VERSION=v1.10.0
 fi
