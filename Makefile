@@ -9,13 +9,21 @@ all: test manager
 test: generate fmt vet manifests
 	ginkgo -r --trace --compilers=1 -cover -coverprofile cover.out -outputdir=. -- -v=${LOG_LEVEL} -logtostderr=true 
 	
+# Run e2e test
+e2e: 
+	@test/e2e/test.sh
+
+# Run travis tests
+travistest: docker-build e2e 
+	@tools/travis/docker.sh
+	
 # pretty print cover
 cover: 
 	go tool cover -html=cover.out
 
 # Run function tests
 testf:
-	go test  -p 1  github.com/ibm/openwhisk-operator/pkg/controller/function -v -args -logtostderr=true -v=5
+	go test -p 1  github.com/ibm/openwhisk-operator/pkg/controller/function -v -args -logtostderr=true -v=5
 
 # Run invocation tests
 testi:
@@ -84,7 +92,7 @@ vet:
 # Generate code
 generate:
 	go generate ./pkg/... ./cmd/...
-
+	
 # Build the docker image
 docker-build: test
 	docker build . -t ${IMG}

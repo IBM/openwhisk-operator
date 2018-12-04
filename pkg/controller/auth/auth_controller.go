@@ -84,8 +84,9 @@ type ReconcileAuth struct {
 
 // Reconcile reads that state of the cluster for a Auth object and makes changes based on the state read
 // and what is in the Auth.Spec
-// Automatically generate RBAC rules to allow the Controller to read and write Deployments
-// +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=cms,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=,resources=configmaps,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=,resources=secrets,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=,resources=events,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileAuth) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	context := context.New(r.Client, request)
 

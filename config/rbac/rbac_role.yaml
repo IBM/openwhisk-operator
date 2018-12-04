@@ -5,9 +5,33 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ""
   resources:
-  - cms
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
   verbs:
   - get
   - list

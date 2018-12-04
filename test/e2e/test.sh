@@ -23,9 +23,23 @@ cd $ROOT
 source hack/lib/object.sh
 source hack/lib/utils.sh
 
-u::header "installing CRDs and operator"
+u::header "building docker image"
+docker build . -t local/openwhisk-operator
+	
+u::header "installing CRDs, operators and secrets"
 
 kustomize build config/crds | kubectl apply -f -
-kustomize build config/default | kubectl apply -f -
+kustomize build config/local | kubectl apply -f -
 
-object::wait_operator_ready
+AUTH=$(cat ~/.wskprops | grep 'AUTH' | awk -F= '{print $2}')
+APIHOST=$(cat ~/.wskprops | grep 'APIHOST' | awk -F= '{print $2}')
+
+kubectl create secret generic seed-defaults-owprops --from-literal=apihost=$APIHOST --from-literal=auth=$AUTH
+
+u::header "running tests"
+
+cd $ROOT/test/e2e
+
+. ./test-hello.sh
+
+u::report_and_exit

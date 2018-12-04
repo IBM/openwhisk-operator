@@ -26,6 +26,9 @@ NORMAL=$(tput sgr0)
 CHECKMARK="${COLOR_GREEN}✔${COLOR_RESET}"
 CROSSMARK="${COLOR_RED}✗${COLOR_RESET}"
 
+LASTCASE=0
+EXIT_CODE=0
+
 # print header in bold
 function u::header() {
     echo ""
@@ -36,4 +39,37 @@ function u::header() {
 function u::testsuite() {
     u::header "$1"
     u::header "${BOLD}====${NORMAL}"
+}
+
+# print test case descrition
+function u::begin_testcase() {
+    printf "  $1..."
+    echo "" 
+    LASTCASE=0
+}
+
+# print test case descrition
+function u::end_testcase() {
+    if [ $LASTCASE != 0 ]; then
+        EXIT_CODE=1
+    fi
+    echo ""
+}
+
+# assert values are equal
+function u::assert_equal() {
+    local expected="${1//[$'\t\r\n']}"
+    local actual="${2//[$'\t\r\n']}"
+    if [ "$expected" != "$actual" ]; then
+        LASTCASE=1
+        echo ""
+        echo *"$expected"*
+        echo "not equal to"
+        echo *"$actual"*
+    fi
+}
+
+# finalize all testsuites
+function u::report_and_exit() {
+    exit $EXIT_CODE
 }

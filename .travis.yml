@@ -31,7 +31,7 @@ jobs:
       - INSTALL_MINIKUBE=1 INSTALL_K8S_TOOLS=1
     - script: test/e2e/test.sh
       env:
-      - INSTALL_MINIKUBE=1 INSTALL_K8S_TOOLS=1
+      - REMOTE_OPENWHISK=1 INSTALL_IBMCLOUD=1 INSTALL_K8S_TOOLS=1 INSTALL_MINIKUBE=1 RUN_DEP=1 
     - stage: deploy
       script: bash tools/travis/docker.sh
       env:

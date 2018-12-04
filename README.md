@@ -35,11 +35,13 @@ This project provides a collection of Kubernetes operators for managing [Apache 
 $ kustomize build github.com/IBM/openwhisk-operator//config/crds | kubectl apply -f -
 ```
 
-2. Then install the operator:
+2. Then install the operators:
 
 ```sh
 $ kustomize build github.com/IBM/openwhisk-operator//config/default | kubectl apply -f -
 ```
+
+By default the operators are installed in the `openwhisk-system` namespace and are granted [clustor-wide](./config/rbac/rbac_role_binding.yaml) [permissions](./config/rbac/rbac_role.yaml).
 
 # Using the operators
 
