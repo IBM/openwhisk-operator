@@ -23,7 +23,6 @@
           <h5>Schema Definitions</h5>
           <a href="#definition-keyvalue.v1.KeyValue"> keyvalue.v1.KeyValue </a>
           <a href="#definition-keyvalue.v1.KeyValueSource"> keyvalue.v1.KeyValueSource </a>
-          <a href="#definition-lib.ibmcloud.v1.ResourceContext"> lib.ibmcloud.v1.ResourceContext </a>
           <a href="#definition-openwhisk.v1beta1.Composition"> openwhisk.v1beta1.Composition </a>
           <a href="#definition-openwhisk.v1beta1.CompositionList"> openwhisk.v1beta1.CompositionList </a>
           <a href="#definition-openwhisk.v1beta1.CompositionSpec"> openwhisk.v1beta1.CompositionSpec </a>
@@ -211,68 +210,6 @@
               </div>
             </div>
           </div>
-          <div id="definition-lib.ibmcloud.v1.ResourceContext" class="definition panel" data-traverse-target="definition-lib.ibmcloud.v1.ResourceContext">
-            <h2 class="panel-title">
-              <a name="/definitions/lib.ibmcloud.v1.ResourceContext"></a>lib.ibmcloud.v1.ResourceContext:
-              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
-              <span class="json-property-range" title="Value limits"></span>
-              
-              
-              </span> -->
-            </h2>
-            <div class="doc-row">
-              <div class="doc-copy">
-                <section class="json-schema-description">
-                  <p>ResourceContext defines the CloudFoundry context and resource group</p>
-                </section>
-                <section class="json-schema-properties">
-                  <dl>
-                    <dt data-property-name="org">
-                      <span class="json-property-name">org:</span>
-                      <span class="json-property-type">string</span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="region">
-                      <span class="json-property-name">region:</span>
-                      <span class="json-property-type">string</span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="resourcegroup">
-                      <span class="json-property-name">resourcegroup:</span>
-                      <span class="json-property-type">string</span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="resourcelocation">
-                      <span class="json-property-name">resourcelocation:</span>
-                      <span class="json-property-type">string</span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="space">
-                      <span class="json-property-name">space:</span>
-                      <span class="json-property-type">string</span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                  </dl>
-                </section>
-              </div>
-              <div class="doc-examples">
-                <section>
-                  <h5>Example</h5>
-                  <!-- <div class="hljs"> -->
-                  <html>
-                  <head></head>
-                  <body><pre><code class="hljs language-yaml"><span class="hljs-attr">org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">space:</span> <span class="hljs-string">string</span>
-</code></pre> </body>
-                  </html>
-                  <!-- </div> -->
-                </section>
-              </div>
-            </div>
-          </div>
           <div id="definition-openwhisk.v1beta1.Composition" class="definition panel" data-traverse-target="definition-openwhisk.v1beta1.Composition">
             <h2 class="panel-title">
               <a name="/definitions/openwhisk.v1beta1.Composition"></a>openwhisk.v1beta1.Composition:
@@ -350,12 +287,6 @@
 <span class="hljs-attr">spec:</span>
 <span class="hljs-attr">  composition:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">  compositionURI:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  context:</span>
-<span class="hljs-attr">    org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">    region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">    resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">    resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">    space:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">  name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">  package:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">status:</span>
@@ -451,12 +382,6 @@
 <span class="hljs-attr">    spec:</span>
 <span class="hljs-attr">      composition:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">      compositionURI:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">      context:</span>
-<span class="hljs-attr">        org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">        region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">        resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">        resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">        space:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">      name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">      package:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">    status:</span>
@@ -503,18 +428,6 @@
                     <dd>
                       <p>The location of the composition to deploy. Support <code>http(s)</code> and <code>file</code> protocols.</p>
                     </dd>
-                    <dt data-property-name="context" class="has-description">
-                      <span class="json-property-name">context:</span>
-                      <span class="json-property-type">
-                        <span class="">
-                          <a class="json-schema-ref" href="#/definitions/lib.ibmcloud.v1.ResourceContext">lib.ibmcloud.v1.ResourceContext</a>
-                        </span>
-                      </span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dd>
-                      <p>Where to deploy the composition. If not specified, the controller reads the wsk properties from <code>seed-default-owprops</code> secret in the resource namespace. This secret must defined two keys, <code>apihost</code> and <code>auth</code> <code>seed-default-owprops</code> is automatically created from <code>seed-defaults</code> or it can be manually set</p>
-                    </dd>
                     <dt data-property-name="contextFrom" class="has-description">
                       <span class="json-property-name">contextFrom:</span>
                       <span class="json-property-type">
@@ -554,12 +467,6 @@
                   <head></head>
                   <body><pre><code class="hljs language-yaml"><span class="hljs-attr">composition:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">compositionURI:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">context:</span>
-<span class="hljs-attr">  org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  space:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">package:</span> <span class="hljs-string">string</span>
 </code></pre> </body>
@@ -866,18 +773,6 @@
                     <dd>
                       <p>The location of the code to deploy. Support <code>http(s)</code> and <code>file</code> protocols.</p>
                     </dd>
-                    <dt data-property-name="context" class="has-description">
-                      <span class="json-property-name">context:</span>
-                      <span class="json-property-type">
-                        <span class="">
-                          <a class="json-schema-ref" href="#/definitions/lib.ibmcloud.v1.ResourceContext">lib.ibmcloud.v1.ResourceContext</a>
-                        </span>
-                      </span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dd>
-                      <p>Where to deploy the function. If not specified, the controller reads the wsk properties from <code>seed-default-owprops</code> secret in the resource namespace. This secret must defined two keys, <code>apihost</code> and <code>auth</code> <code>seed-default-owprops</code> is automatically created from <code>seed-defaults</code> or it can be manually set</p>
-                    </dd>
                     <dt data-property-name="contextFrom" class="has-description">
                       <span class="json-property-name">contextFrom:</span>
                       <span class="json-property-type">
@@ -1091,12 +986,6 @@
 <span class="hljs-attr">    valueFrom:</span> <span class="hljs-string">{}</span>
 <span class="hljs-attr">code:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">codeURI:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">context:</span>
-<span class="hljs-attr">  org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  space:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">docker:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">functions:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">limits:</span>
@@ -1453,18 +1342,6 @@
                 </section>
                 <section class="json-schema-properties">
                   <dl>
-                    <dt data-property-name="context" class="has-description">
-                      <span class="json-property-name">context:</span>
-                      <span class="json-property-type">
-                        <span class="">
-                          <a class="json-schema-ref" href="#/definitions/lib.ibmcloud.v1.ResourceContext">lib.ibmcloud.v1.ResourceContext</a>
-                        </span>
-                      </span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dd>
-                      <p>Where to deploy the invocation. If not specified, the controller reads the wsk properties from <code>seed-default-owprops</code> secret in the resource namespace. This secret must defined two keys, <code>apihost</code> and <code>auth</code> <code>seed-default-owprops</code> is automatically created from <code>seed-defaults</code> or it can be manually set</p>
-                    </dd>
                     <dt data-property-name="contextFrom" class="has-description">
                       <span class="json-property-name">contextFrom:</span>
                       <span class="json-property-type">
@@ -1542,12 +1419,7 @@
                   <!-- <div class="hljs"> -->
                   <html>
                   <head></head>
-                  <body><pre><code class="hljs language-yaml"><span class="hljs-attr">context:</span>
-<span class="hljs-attr">  org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  space:</span> <span class="hljs-string">string</span>
+                  <body><pre><code class="hljs language-yaml">
 <span class="hljs-attr">finalizer:</span>
 <span class="hljs-attr">  function:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">  parameters:</span>
@@ -1983,18 +1855,6 @@
                     <dd>
                       <p>Name of the package for which a binding should be created</p>
                     </dd>
-                    <dt data-property-name="context" class="has-description">
-                      <span class="json-property-name">context:</span>
-                      <span class="json-property-type">
-                        <span class="">
-                          <a class="json-schema-ref" href="#/definitions/lib.ibmcloud.v1.ResourceContext">lib.ibmcloud.v1.ResourceContext</a>
-                        </span>
-                      </span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dd>
-                      <p>Where to deploy the package. If not specified, the controller reads the wsk properties from <code>seed-default-owprops</code> secret in the resource namespace. This secret must defined two keys, <code>apihost</code> and <code>auth</code> <code>seed-default-owprops</code> is automatically created from <code>seed-defaults</code> or it can be manually set</p>
-                    </dd>
                     <dt data-property-name="contextFrom" class="has-description">
                       <span class="json-property-name">contextFrom:</span>
                       <span class="json-property-type">
@@ -2068,12 +1928,6 @@
 <span class="hljs-attr">    name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">    valueFrom:</span> <span class="hljs-string">{}</span>
 <span class="hljs-attr">bind:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">context:</span>
-<span class="hljs-attr">  org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  space:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">parameters:</span>
 <span class="hljs-attr">  - attributes:</span> <span class="hljs-string">object</span>
@@ -2337,18 +2191,6 @@
                 </section>
                 <section class="json-schema-properties">
                   <dl>
-                    <dt data-property-name="context" class="has-description">
-                      <span class="json-property-name">context:</span>
-                      <span class="json-property-type">
-                        <span class="">
-                          <a class="json-schema-ref" href="#/definitions/lib.ibmcloud.v1.ResourceContext">lib.ibmcloud.v1.ResourceContext</a>
-                        </span>
-                      </span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dd>
-                      <p>Where to deploy the rule. If not specified, the controller reads the wsk properties from <code>seed-default-owprops</code> secret in the resource namespace. This secret must defined two keys, <code>apihost</code> and <code>auth</code> <code>seed-default-owprops</code> is automatically created from <code>seed-defaults</code> or it can be manually set</p>
-                    </dd>
                     <dt data-property-name="contextFrom" class="has-description">
                       <span class="json-property-name">contextFrom:</span>
                       <span class="json-property-type">
@@ -2396,12 +2238,7 @@
                   <!-- <div class="hljs"> -->
                   <html>
                   <head></head>
-                  <body><pre><code class="hljs language-yaml"><span class="hljs-attr">context:</span>
-<span class="hljs-attr">  org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  space:</span> <span class="hljs-string">string</span>
+                  <body><pre><code class="hljs language-yaml">
 <span class="hljs-attr">function:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">trigger:</span> <span class="hljs-string">string</span>
@@ -2682,18 +2519,6 @@
                         <div class="json-inner-schema"> </div>
                       </section>
                     </dt>
-                    <dt data-property-name="context" class="has-description">
-                      <span class="json-property-name">context:</span>
-                      <span class="json-property-type">
-                        <span class="">
-                          <a class="json-schema-ref" href="#/definitions/lib.ibmcloud.v1.ResourceContext">lib.ibmcloud.v1.ResourceContext</a>
-                        </span>
-                      </span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dd>
-                      <p>Where to deploy the trigger. If not specified, the controller reads the wsk properties from <code>seed-default-owprops</code> secret in the resource namespace. This secret must defined two keys, <code>apihost</code> and <code>auth</code> <code>seed-default-owprops</code> is automatically created from <code>seed-defaults</code> or it can be manually set</p>
-                    </dd>
                     <dt data-property-name="contextFrom" class="has-description">
                       <span class="json-property-name">contextFrom:</span>
                       <span class="json-property-type">
@@ -2758,12 +2583,6 @@
 <span class="hljs-attr">  - attributes:</span> <span class="hljs-string">object</span>
 <span class="hljs-attr">    name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">    valueFrom:</span> <span class="hljs-string">{}</span>
-<span class="hljs-attr">context:</span>
-<span class="hljs-attr">  org:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  region:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcegroup:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  resourcelocation:</span> <span class="hljs-string">string</span>
-<span class="hljs-attr">  space:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">feed:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">parameters:</span>

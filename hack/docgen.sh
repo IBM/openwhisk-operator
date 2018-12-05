@@ -22,7 +22,6 @@ CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${ROOT}; ls -d -1 ./vendor/k8s.io/code-generator
 
 go run ${CODEGEN_PKG}/cmd/openapi-gen/main.go \
   --input-dirs "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1" \
-  --input-dirs "github.com/ibm/openwhisk-operator/vendor/github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1" \
   --input-dirs "github.com/ibm/openwhisk-operator/vendor/github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1" \
   --output-package "github.com/ibm/openwhisk-operator/pkg/openapi" \
   --output-base "${ROOT}/../../.."

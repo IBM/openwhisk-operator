@@ -29,7 +29,6 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext":               schema_pkg_lib_ibmcloud_v1_ResourceContext(ref),
 		"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue":               schema_types_apis_keyvalue_v1_KeyValue(ref),
 		"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValueSource":         schema_types_apis_keyvalue_v1_KeyValueSource(ref),
 		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Composition":         schema_pkg_apis_openwhisk_v1beta1_Composition(ref),
@@ -59,49 +58,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerList":         schema_pkg_apis_openwhisk_v1beta1_TriggerList(ref),
 		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerSpec":         schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref),
 		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerStatus":       schema_pkg_apis_openwhisk_v1beta1_TriggerStatus(ref),
-	}
-}
-
-func schema_pkg_lib_ibmcloud_v1_ResourceContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ResourceContext defines the CloudFoundry context and resource group",
-				Properties: map[string]spec.Schema{
-					"org": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"space": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"resourcegroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"resourcelocation": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{},
 	}
 }
 
@@ -301,12 +257,6 @@ func schema_pkg_apis_openwhisk_v1beta1_CompositionSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
-					"context": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Where to deploy the composition. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-							Ref:         ref("github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext"),
-						},
-					},
 					"contextFrom": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -317,7 +267,7 @@ func schema_pkg_apis_openwhisk_v1beta1_CompositionSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext", "k8s.io/api/core/v1.SecretEnvSource"},
+			"k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
@@ -557,12 +507,6 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref common.ReferenceCallback
 							},
 						},
 					},
-					"context": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Where to deploy the function. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-							Ref:         ref("github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext"),
-						},
-					},
 					"contextFrom": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -573,7 +517,7 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext", "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Limits", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Limits", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
@@ -772,12 +716,6 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationSpec(ref common.ReferenceCallba
 							Ref:         ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationFinalizer"),
 						},
 					},
-					"context": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Where to deploy the invocation. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-							Ref:         ref("github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext"),
-						},
-					},
 					"contextFrom": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -789,7 +727,7 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext", "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationFinalizer", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationTarget", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationFinalizer", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationTarget", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
@@ -1042,12 +980,6 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref common.ReferenceCallback)
 							},
 						},
 					},
-					"context": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Where to deploy the package. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-							Ref:         ref("github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext"),
-						},
-					},
 					"contextFrom": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -1058,7 +990,7 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext", "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
@@ -1211,12 +1143,6 @@ func schema_pkg_apis_openwhisk_v1beta1_RuleSpec(ref common.ReferenceCallback) co
 							Format:      "",
 						},
 					},
-					"context": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Where to deploy the rule. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-							Ref:         ref("github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext"),
-						},
-					},
 					"contextFrom": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -1228,7 +1154,7 @@ func schema_pkg_apis_openwhisk_v1beta1_RuleSpec(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext", "k8s.io/api/core/v1.SecretEnvSource"},
+			"k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
@@ -1400,12 +1326,6 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref common.ReferenceCallback)
 							},
 						},
 					},
-					"context": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Where to deploy the trigger. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-							Ref:         ref("github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext"),
-						},
-					},
 					"contextFrom": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -1416,7 +1336,7 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1.ResourceContext", "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 

@@ -47,26 +47,6 @@
      }
     }
    },
-   "lib.ibmcloud.v1.ResourceContext": {
-    "description": "ResourceContext defines the CloudFoundry context and resource group",
-    "properties": {
-     "org": {
-      "type": "string"
-     },
-     "region": {
-      "type": "string"
-     },
-     "resourcegroup": {
-      "type": "string"
-     },
-     "resourcelocation": {
-      "type": "string"
-     },
-     "space": {
-      "type": "string"
-     }
-    }
-   },
    "openwhisk.v1beta1.Composition": {
     "description": "Composition is the Schema for the compositions API",
     "properties": {
@@ -138,10 +118,6 @@
      "compositionURI": {
       "description": "The location of the composition to deploy. Support `http(s)` and `file` protocols.",
       "type": "string"
-     },
-     "context": {
-      "description": "Where to deploy the composition. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-      "$ref": "#/definitions/lib.ibmcloud.v1.ResourceContext"
      },
      "contextFrom": {
       "description": "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -251,10 +227,6 @@
      "codeURI": {
       "description": "The location of the code to deploy. Support `http(s)` and `file` protocols.",
       "type": "string"
-     },
-     "context": {
-      "description": "Where to deploy the function. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-      "$ref": "#/definitions/lib.ibmcloud.v1.ResourceContext"
      },
      "contextFrom": {
       "description": "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
@@ -414,10 +386,6 @@
      "function"
     ],
     "properties": {
-     "context": {
-      "description": "Where to deploy the invocation. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-      "$ref": "#/definitions/lib.ibmcloud.v1.ResourceContext"
-     },
      "contextFrom": {
       "description": "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
       "$ref": "#/definitions/io.k8s.api.core.v1.SecretEnvSource"
@@ -574,10 +542,6 @@
       "description": "Name of the package for which a binding should be created",
       "type": "string"
      },
-     "context": {
-      "description": "Where to deploy the package. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-      "$ref": "#/definitions/lib.ibmcloud.v1.ResourceContext"
-     },
      "contextFrom": {
       "description": "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
       "$ref": "#/definitions/io.k8s.api.core.v1.SecretEnvSource"
@@ -690,10 +654,6 @@
      "function"
     ],
     "properties": {
-     "context": {
-      "description": "Where to deploy the rule. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-      "$ref": "#/definitions/lib.ibmcloud.v1.ResourceContext"
-     },
      "contextFrom": {
       "description": "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
       "$ref": "#/definitions/io.k8s.api.core.v1.SecretEnvSource"
@@ -801,10 +761,6 @@
       "items": {
        "$ref": "#/definitions/keyvalue.v1.KeyValue"
       }
-     },
-     "context": {
-      "description": "Where to deploy the trigger. If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace. This secret must defined two keys, `apihost` and `auth` `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set",
-      "$ref": "#/definitions/lib.ibmcloud.v1.ResourceContext"
      },
      "contextFrom": {
       "description": "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",

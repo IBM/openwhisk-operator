@@ -19,7 +19,6 @@ import (
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	icv1 "github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1"
 	keyvaluev1 "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1"
 	resv1 "github.com/ibm/cloud-operators/pkg/types/apis/resource/v1"
 )
@@ -111,12 +110,6 @@ type FunctionSpec struct {
 	// List of key/value annotations
 	// +optional
 	Annotations []keyvaluev1.KeyValue `json:"annotations,omitempty"`
-	// Where to deploy the function.
-	// If not specified, the controller reads the wsk properties from `seed-default-owprops` secret in the resource namespace.
-	// This secret must defined two keys, `apihost` and `auth`
-	// `seed-default-owprops` is automatically created from `seed-defaults` or it can be manually set
-	// +optional
-	Context icv1.ResourceContext `json:"context,omitempty"`
 	// Reference to a secret representing where to deploy this entity
 	// Default is `seed-default-owprops`
 	// The secret must defines these fields:

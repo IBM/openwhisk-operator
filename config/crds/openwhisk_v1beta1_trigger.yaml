@@ -42,25 +42,6 @@ spec:
                 - name
                 type: object
               type: array
-            context:
-              properties:
-                org:
-                  type: string
-                region:
-                  type: string
-                resourcegroup:
-                  type: string
-                resourcelocation:
-                  type: string
-                space:
-                  type: string
-              required:
-              - org
-              - space
-              - region
-              - resourcegroup
-              - resourcelocation
-              type: object
             contextFrom:
               type: object
             feed:
