@@ -15,12 +15,14 @@
 # limitations under the License.
 #
 
-u::begin_testcase "should deploy the action hello in a package"
+function th::run() {
+    u::begin_testcase "should deploy the action hello in a package"
 
-kubectl apply -f hello.yaml >> /dev/null
-object::wait_function_online hello-world 10
+    kubectl apply -f hello.yaml >> /dev/null
+    object::wait_function_online hello-world 10
 
-result=$(ibmcloud wsk action invoke -br hello-world-package/hello-world -p name John -p place Yorktown)
-u::assert_equal '{    "greeting": "Hello, John from Yorktown"}' "$result"
+    result=$(ibmcloud wsk action invoke -br hello-world-package/hello-world -p name John -p place Yorktown)
+    u::assert_equal '{    "greeting": "Hello, John from Yorktown"}' "$result"
 
-u::end_testcase 
+    u::end_testcase 
+}

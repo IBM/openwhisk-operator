@@ -17,29 +17,44 @@
 
 set -e
 
+
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")"/../.. && pwd)
 cd $ROOT
+
+KUBE_ENV=${KUBE_ENV:=default}
 
 source hack/lib/object.sh
 source hack/lib/utils.sh
 
-u::header "building docker image"
-docker build . -t local/openwhisk-operator
-	
+if [ "${KUBE_ENV}" = "local" ]; then
+    u::header "building docker image"
+    docker build . -t local/openwhisk-operator
+fi
+
 u::header "installing CRDs, operators and secrets"
 
 kustomize build config/crds | kubectl apply -f -
-kustomize build config/local | kubectl apply -f -
-
-AUTH=$(cat ~/.wskprops | grep 'AUTH' | awk -F= '{print $2}')
-APIHOST=$(cat ~/.wskprops | grep 'APIHOST' | awk -F= '{print $2}')
-
-kubectl create secret generic seed-defaults-owprops --from-literal=apihost=$APIHOST --from-literal=auth=$AUTH
-
-u::header "running tests"
+kustomize build config/${KUBE_ENV} | kubectl apply -f -
 
 cd $ROOT/test/e2e
 
-. ./test-hello.sh
+source ./test-hello.sh
+source ./test-doc.sh
+
+function cleanup() {
+  set +e
+  u::header "cleaning up..."
+
+  # td::cleanup
+  kubectl delete secret seed-defaults-owprops
+}
+trap cleanup EXIT
+
+. ./wskprops-secrets.sh
+
+u::header "running tests"
+
+td::run
+th::run
 
 u::report_and_exit
