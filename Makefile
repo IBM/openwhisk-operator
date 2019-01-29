@@ -7,18 +7,18 @@ all: test manager
 
 # Run tests
 test: generate fmt vet manifests
-	ginkgo -r --trace --compilers=1 -cover -coverprofile cover.out -outputdir=. -- -v=${LOG_LEVEL} -logtostderr=true 
-	
+	ginkgo -r --trace --compilers=1 -cover -coverprofile cover.out -outputdir=. -- -v=${LOG_LEVEL} -logtostderr=true
+
 # Run e2e test
-e2e: 
+e2e:
 	@test/e2e/test.sh
 
 # Run travis tests
-travistest: docker-build e2e 
+travistest: docker-build e2e
 	@tools/travis/docker.sh
-	
+
 # pretty print cover
-cover: 
+cover:
 	go tool cover -html=cover.out
 
 # Run function tests
@@ -44,6 +44,10 @@ testr:
 # Run composition tests
 testc:
 	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/composition -v -args -logtostderr=true -v=5
+
+# Run package tests
+testp:
+	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/pkg -v -args -logtostderr=true -v=5
 
 # Build manager binary
 manager: generate fmt vet
@@ -92,7 +96,7 @@ vet:
 # Generate code
 generate:
 	go generate ./pkg/... ./cmd/...
-	
+
 # Build the docker image
 docker-build: test
 	docker build . -t ${IMG}

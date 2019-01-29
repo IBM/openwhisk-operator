@@ -78,6 +78,17 @@ func GetAction(client *whisk.Client, actionName string) func() (*whisk.Action, e
 	}
 }
 
+// GetPackage tries to get the package.
+func GetPackage(client *whisk.Client, pkgName string) func() (*whisk.Package, error) {
+	return func() (*whisk.Package, error) {
+		pkg, _, err := client.Packages.Get(pkgName)
+		if err == nil {
+			return pkg, nil
+		}
+		return nil, err
+	}
+}
+
 // ActionInvocation invokes the given action, dropping the response for gomega compatibility
 func ActionInvocation(wskclient *whisk.Client, actionName string, payload interface{}) (map[string]interface{}, error) {
 	result, _, err := wskclient.Actions.Invoke(actionName, payload, true, true)

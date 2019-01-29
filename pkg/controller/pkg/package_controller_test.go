@@ -1,19 +1,4 @@
-/*
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
-package composition
+package pkg
 
 import (
 	"log"
@@ -21,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -33,6 +20,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
+
+	"github.com/apache/incubator-openwhisk-client-go/whisk"
 
 	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/types/apis/resource/v1"
@@ -47,23 +36,22 @@ var (
 	cfg       *rest.Config
 	namespace string
 	scontext  context.Context
-	cclient   *ow.CompositionClient
+	wskclient *whisk.Client
 	t         *envtest.Environment
 	stop      chan struct{}
 )
 
-func TestComposition(t *testing.T) {
+func TestPackage(t *testing.T) {
 	RegisterFailHandler(Fail)
 	SetDefaultEventuallyPollingInterval(1 * time.Second)
 	SetDefaultEventuallyTimeout(30 * time.Second)
 
-	RunSpecs(t, "Composition Suite")
+	RunSpecs(t, "Package Suite")
 }
 
 var _ = BeforeSuite(func() {
 	logf.SetLogger(logf.ZapLoggerTo(GinkgoWriter, true))
 
-	// Start kube apiserver
 	t = &envtest.Environment{
 		CRDDirectoryPaths:        []string{filepath.Join("..", "..", "..", "config", "crds")},
 		ControlPlaneStartTimeout: 2 * time.Minute,
@@ -75,26 +63,34 @@ var _ = BeforeSuite(func() {
 		log.Fatal(err)
 	}
 
-	// Setup the Manager and Controller.  Wrap the Controller Reconcile function so it writes each request to a
-	// channel when it is finished.
 	mgr, err := manager.New(cfg, manager.Options{})
 	Expect(err).NotTo(HaveOccurred())
+
 	c = mgr.GetClient()
 
 	recFn := newReconciler(mgr)
 	Expect(add(mgr, recFn)).NotTo(HaveOccurred())
+
 	stop = owtest.StartTestManager(mgr)
 
-	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-composition-")
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-package-")
 	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
 
 	clientset := owtest.GetClientsetOrDie(cfg)
+	config := &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "secretmessage",
+		},
+		Data: map[string][]byte{
+			"verysecretkey": []byte("verysecretbody"),
+		},
+	}
+	clientset.CoreV1().Secrets(namespace).Create(config)
+
 	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
 
-	cclient, err = ow.NewCompositionClient(scontext, nil)
+	wskclient, err = ow.NewWskClient(scontext, nil)
 	Expect(err).NotTo(HaveOccurred())
-
 })
 
 var _ = AfterSuite(func() {
@@ -102,23 +98,23 @@ var _ = AfterSuite(func() {
 	t.Stop()
 })
 
-var _ = Describe("composition", func() {
+var _ = Describe("package", func() {
 
 	DescribeTable("should be ready",
-		func(specfile string) {
-			composition := owtest.LoadComposition("testdata/" + specfile)
-			obj := owtest.PostInNs(scontext, &composition, true, 0)
+		func(specfile string, expected whisk.KeyValueArr) {
+			pkg := owtest.LoadPackage("testdata/" + specfile)
+			obj := owtest.PostInNs(scontext, &pkg, true, 0)
+
+			getParameters := func(pkg *whisk.Package) whisk.KeyValueArr {
+				return pkg.Parameters
+			}
+
 			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
-
-			params := make(map[string]string)
-			params["msg"] = "Hello"
-
-			Expect(owtest.CompositionInvocation(cclient, composition.Name, params)).Should(WithTransform(owtest.Result, HaveKeyWithValue("msg", "Hello")))
-
-			err := scontext.Client().Delete(scontext, obj)
-			Expect(err).NotTo(HaveOccurred())
+			Eventually(owtest.GetPackage(wskclient, pkg.Name)).Should(WithTransform(getParameters, Equal(expected)))
 		},
-		Entry("with inline composition", "owc-inline.yaml"),
-		Entry("with external composition", "owc-external.yaml"),
+
+		Entry("parameter from secret", "pk-parametersfrom-secret.yaml",
+			whisk.KeyValueArr{whisk.KeyValue{Key: "verysecretkey", Value: "verysecretbody"}}),
 	)
+
 })

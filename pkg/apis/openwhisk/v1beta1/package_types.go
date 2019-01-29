@@ -72,6 +72,14 @@ type PackageSpec struct {
 	// +optional
 	Parameters []keyvaluev1.KeyValue `json:"parameters,omitempty"`
 
+	// List of key/value input parameters coming from a Secret or ConfigMap
+	// When multiple sources are specified, all key/value pairs are merged
+	// into a single set of key/value pairs, from the first source to the last source
+	// Duplicates are handled by overriding the previous key/value pair.
+	// The parameters property is applied last
+	// +optional
+	ParametersFrom []ParametersFromSource `json:"parametersFrom,omitempty"`
+
 	// Reference to a secret representing where to deploy this entity
 	// Default is `seed-default-owprops`
 	// The secret must defines these fields:

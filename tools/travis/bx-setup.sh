@@ -42,7 +42,10 @@ if [[ $BLUEMIX_REGION == "" ]]; then
 fi
 
 bx login -a api.ng.bluemix.net --apikey ${BLUEMIX_API_KEY} -o $BLUEMIX_ORG
-bx account space-create $BLUEMIX_SPACE
+
+if ! bx account space $BLUEMIX_SPACE ; then
+    bx account space-create $BLUEMIX_SPACE
+fi
 bx target -s $BLUEMIX_SPACE
 
 # set +e
@@ -50,28 +53,28 @@ bx target -s $BLUEMIX_SPACE
 actions=($(bx wsk action list))
 
 len=${#actions[@]}
-for (( i=1; i<len; i+=3 )) 
+for (( i=1; i<len; i+=3 ))
 do
     bx wsk action delete ${actions[$i]}
 done
 
 pkgs=($(bx wsk package list))
 len=${#pkgs[@]}
-for (( i=1; i<len; i+=2 )) 
+for (( i=1; i<len; i+=2 ))
 do
     bx wsk package delete ${pkgs[$i]}
 done
 
 rules=($(bx wsk rule list))
 len=${#rules[@]}
-for (( i=1; i<len; i+=3 )) 
+for (( i=1; i<len; i+=3 ))
 do
     bx wsk rule delete ${rules[$i]}
 done
 
 triggers=($(bx wsk trigger list))
 len=${#triggers[@]}
-for (( i=1; i<len; i+=2 )) 
+for (( i=1; i<len; i+=2 ))
 do
     bx wsk trigger delete ${triggers[$i]}
 done

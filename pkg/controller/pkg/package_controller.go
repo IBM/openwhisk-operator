@@ -169,6 +169,16 @@ func (r *ReconcilePackage) updatePackage(context context.Context, obj *openwhisk
 		wpkg.Namespace = "_"
 		wpkg.Publish = pkg.Publish
 
+		// parametersFrom
+		paramsFromArr, retry, err := ow.ConvertParametersFrom(context, obj, pkg.ParametersFrom)
+		if err != nil || retry {
+			return retry, err
+		}
+
+		if len(paramsFromArr) > 0 {
+			wpkg.Parameters = paramsFromArr
+		}
+
 		// params
 		keyValArr, retry, err := ow.ConvertKeyValues(context, obj, pkg.Parameters, "parameters")
 		if err != nil || retry {
@@ -177,7 +187,7 @@ func (r *ReconcilePackage) updatePackage(context context.Context, obj *openwhisk
 
 		// if we have successfully parser valid key/value parameters
 		if len(keyValArr) > 0 {
-			wpkg.Parameters = keyValArr
+			wpkg.Parameters = append(wpkg.Parameters, keyValArr...)
 		}
 
 		// annotations

@@ -27,6 +27,7 @@
           <a href="#definition-openwhisk.v1beta1.CompositionList"> openwhisk.v1beta1.CompositionList </a>
           <a href="#definition-openwhisk.v1beta1.CompositionSpec"> openwhisk.v1beta1.CompositionSpec </a>
           <a href="#definition-openwhisk.v1beta1.CompositionStatus"> openwhisk.v1beta1.CompositionStatus </a>
+          <a href="#definition-openwhisk.v1beta1.ConfigMapKeyReference"> openwhisk.v1beta1.ConfigMapKeyReference </a>
           <a href="#definition-openwhisk.v1beta1.Function"> openwhisk.v1beta1.Function </a>
           <a href="#definition-openwhisk.v1beta1.FunctionList"> openwhisk.v1beta1.FunctionList </a>
           <a href="#definition-openwhisk.v1beta1.FunctionSpec"> openwhisk.v1beta1.FunctionSpec </a>
@@ -42,10 +43,12 @@
           <a href="#definition-openwhisk.v1beta1.PackageList"> openwhisk.v1beta1.PackageList </a>
           <a href="#definition-openwhisk.v1beta1.PackageSpec"> openwhisk.v1beta1.PackageSpec </a>
           <a href="#definition-openwhisk.v1beta1.PackageStatus"> openwhisk.v1beta1.PackageStatus </a>
+          <a href="#definition-openwhisk.v1beta1.ParametersFromSource"> openwhisk.v1beta1.ParametersFromSource </a>
           <a href="#definition-openwhisk.v1beta1.Rule"> openwhisk.v1beta1.Rule </a>
           <a href="#definition-openwhisk.v1beta1.RuleList"> openwhisk.v1beta1.RuleList </a>
           <a href="#definition-openwhisk.v1beta1.RuleSpec"> openwhisk.v1beta1.RuleSpec </a>
           <a href="#definition-openwhisk.v1beta1.RuleStatus"> openwhisk.v1beta1.RuleStatus </a>
+          <a href="#definition-openwhisk.v1beta1.SecretKeyReference"> openwhisk.v1beta1.SecretKeyReference </a>
           <a href="#definition-openwhisk.v1beta1.Trigger"> openwhisk.v1beta1.Trigger </a>
           <a href="#definition-openwhisk.v1beta1.TriggerList"> openwhisk.v1beta1.TriggerList </a>
           <a href="#definition-openwhisk.v1beta1.TriggerSpec"> openwhisk.v1beta1.TriggerSpec </a>
@@ -523,6 +526,49 @@
                   <body><pre><code class="hljs language-yaml"><span class="hljs-attr">generation:</span> <span class="hljs-string">integer</span> <span class="hljs-string">(int64)</span>
 <span class="hljs-attr">message:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">state:</span> <span class="hljs-string">string</span>
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-openwhisk.v1beta1.ConfigMapKeyReference" class="definition panel" data-traverse-target="definition-openwhisk.v1beta1.ConfigMapKeyReference">
+            <h2 class="panel-title">
+              <a name="/definitions/openwhisk.v1beta1.ConfigMapKeyReference"></a>openwhisk.v1beta1.ConfigMapKeyReference:
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-description">
+                  <p>ConfigMapKeyReference selects a ConfigMap and optionally a key from it.</p>
+                </section>
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="name" class="has-description">
+                      <span class="json-property-name">name:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dd>
+                      <p>Name of the referent. More info:
+                        <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names">https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names</a>
+                      </p>
+                    </dd>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">string</span>
 </code></pre> </body>
                   </html>
                   <!-- </div> -->
@@ -1898,6 +1944,29 @@
                         <div class="json-inner-schema"> </div>
                       </section>
                     </dt>
+                    <dt data-property-name="parametersFrom" class="has-description">
+                      <span class="json-property-name">parametersFrom:</span>
+                      <span class="json-property-type">
+                        <span class="json-schema-ref-array">
+                          <a class="json-schema-ref" href="#/definitions/openwhisk.v1beta1.ParametersFromSource">openwhisk.v1beta1.ParametersFromSource</a>
+                        </span>
+                      </span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dd>
+                      <p>List of key/value input parameters coming from a Secret or ConfigMap When multiple sources are specified, all key/value pairs are merged into a single set of key/value pairs, from the first source to the last source Duplicates are handled by overriding the previous key/value pair. The parameters property is applied last</p>
+                    </dd>
+                    <dt class="json-inner-schema">
+                      <section class="json-schema-array-items">
+                        <span class="json-property-type">
+                          <span class="">
+                            <a class="json-schema-ref" href="#/definitions/openwhisk.v1beta1.ParametersFromSource">openwhisk.v1beta1.ParametersFromSource</a>
+                          </span>
+                        </span>
+                        <span class="json-property-range" title="Value limits"></span>
+                        <div class="json-inner-schema"> </div>
+                      </section>
+                    </dt>
                     <dt data-property-name="publish" class="has-description">
                       <span class="json-property-name">publish:</span>
                       <span class="json-property-type">boolean</span>
@@ -1933,6 +2002,11 @@
 <span class="hljs-attr">  - attributes:</span> <span class="hljs-string">object</span>
 <span class="hljs-attr">    name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">    valueFrom:</span> <span class="hljs-string">{}</span>
+<span class="hljs-attr">parametersFrom:</span>
+<span class="hljs-attr">  - configMapKeyRef:</span>
+<span class="hljs-attr">      name:</span> <span class="hljs-string">string</span>
+<span class="hljs-attr">    secretKeyRef:</span>
+<span class="hljs-attr">      name:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">publish:</span> <span class="hljs-string">boolean</span>
 <span class="hljs-attr">service:</span> <span class="hljs-string">string</span>
 </code></pre> </body>
@@ -1990,6 +2064,66 @@
                   <body><pre><code class="hljs language-yaml"><span class="hljs-attr">generation:</span> <span class="hljs-string">integer</span> <span class="hljs-string">(int64)</span>
 <span class="hljs-attr">message:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">state:</span> <span class="hljs-string">string</span>
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-openwhisk.v1beta1.ParametersFromSource" class="definition panel" data-traverse-target="definition-openwhisk.v1beta1.ParametersFromSource">
+            <h2 class="panel-title">
+              <a name="/definitions/openwhisk.v1beta1.ParametersFromSource"></a>openwhisk.v1beta1.ParametersFromSource:
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-description">
+                  <p>ParametersFromSource represents a source for the value of parameters</p>
+                </section>
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="configMapKeyRef" class="has-description">
+                      <span class="json-property-name">configMapKeyRef:</span>
+                      <span class="json-property-type">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/openwhisk.v1beta1.ConfigMapKeyReference">openwhisk.v1beta1.ConfigMapKeyReference</a>
+                        </span>
+                      </span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dd>
+                      <p>Selects a key of a ConfigMap.</p>
+                    </dd>
+                    <dt data-property-name="secretKeyRef" class="has-description">
+                      <span class="json-property-name">secretKeyRef:</span>
+                      <span class="json-property-type">
+                        <span class="">
+                          <a class="json-schema-ref" href="#/definitions/openwhisk.v1beta1.SecretKeyReference">openwhisk.v1beta1.SecretKeyReference</a>
+                        </span>
+                      </span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dd>
+                      <p>Selects a key of a secret in the resource namespace</p>
+                    </dd>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-yaml"><span class="hljs-attr">configMapKeyRef:</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">string</span>
+<span class="hljs-attr">secretKeyRef:</span>
+<span class="hljs-attr">  name:</span> <span class="hljs-string">string</span>
 </code></pre> </body>
                   </html>
                   <!-- </div> -->
@@ -2297,6 +2431,49 @@
                   <body><pre><code class="hljs language-yaml"><span class="hljs-attr">generation:</span> <span class="hljs-string">integer</span> <span class="hljs-string">(int64)</span>
 <span class="hljs-attr">message:</span> <span class="hljs-string">string</span>
 <span class="hljs-attr">state:</span> <span class="hljs-string">string</span>
+</code></pre> </body>
+                  </html>
+                  <!-- </div> -->
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-openwhisk.v1beta1.SecretKeyReference" class="definition panel" data-traverse-target="definition-openwhisk.v1beta1.SecretKeyReference">
+            <h2 class="panel-title">
+              <a name="/definitions/openwhisk.v1beta1.SecretKeyReference"></a>openwhisk.v1beta1.SecretKeyReference:
+              <!-- <span class="json-property-type"><span class="json-property-type">object</span>
+              <span class="json-property-range" title="Value limits"></span>
+              
+              
+              </span> -->
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-description">
+                  <p>SecretKeyReference selects a secret and optionally a key from it.</p>
+                </section>
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="name" class="has-description">
+                      <span class="json-property-name">name:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dd>
+                      <p>Name of the referent. More info:
+                        <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names">https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names</a>
+                      </p>
+                    </dd>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <!-- <div class="hljs"> -->
+                  <html>
+                  <head></head>
+                  <body><pre><code class="hljs language-yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">string</span>
 </code></pre> </body>
                   </html>
                   <!-- </div> -->

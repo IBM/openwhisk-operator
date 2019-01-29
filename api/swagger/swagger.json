@@ -149,6 +149,15 @@
      }
     }
    },
+   "openwhisk.v1beta1.ConfigMapKeyReference": {
+    "description": "ConfigMapKeyReference selects a ConfigMap and optionally a key from it.",
+    "properties": {
+     "name": {
+      "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+      "type": "string"
+     }
+    }
+   },
    "openwhisk.v1beta1.Function": {
     "description": "Function is the Schema for the functions API",
     "properties": {
@@ -557,6 +566,13 @@
        "$ref": "#/definitions/keyvalue.v1.KeyValue"
       }
      },
+     "parametersFrom": {
+      "description": "List of key/value input parameters coming from a Secret or ConfigMap When multiple sources are specified, all key/value pairs are merged into a single set of key/value pairs, from the first source to the last source Duplicates are handled by overriding the previous key/value pair. The parameters property is applied last",
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/openwhisk.v1beta1.ParametersFromSource"
+      }
+     },
      "publish": {
       "description": "Package visibility; `true` for `shared`, `false` for `private`",
       "type": "boolean"
@@ -583,6 +599,19 @@
      },
      "state": {
       "type": "string"
+     }
+    }
+   },
+   "openwhisk.v1beta1.ParametersFromSource": {
+    "description": "ParametersFromSource represents a source for the value of parameters",
+    "properties": {
+     "configMapKeyRef": {
+      "description": "Selects a key of a ConfigMap.",
+      "$ref": "#/definitions/openwhisk.v1beta1.ConfigMapKeyReference"
+     },
+     "secretKeyRef": {
+      "description": "Selects a key of a secret in the resource namespace",
+      "$ref": "#/definitions/openwhisk.v1beta1.SecretKeyReference"
      }
     }
    },
@@ -687,6 +716,15 @@
       "type": "string"
      },
      "state": {
+      "type": "string"
+     }
+    }
+   },
+   "openwhisk.v1beta1.SecretKeyReference": {
+    "description": "SecretKeyReference selects a secret and optionally a key from it.",
+    "properties": {
+     "name": {
+      "description": "Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
       "type": "string"
      }
     }

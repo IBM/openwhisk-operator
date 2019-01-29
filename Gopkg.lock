@@ -264,14 +264,13 @@
     "pkg/context",
     "pkg/lib/event",
     "pkg/lib/ibmcloud",
-    "pkg/lib/ibmcloud/v1",
     "pkg/lib/secret",
     "pkg/types/apis/keyvalue/v1",
     "pkg/types/apis/resource/v1",
     "pkg/util",
   ]
   pruneopts = "T"
-  revision = "f84660439ca8fc59edd7aefec5fdef7372e02b6c"
+  revision = "bde6067c31875a47d89c3250228fcab475923f4f"
 
 [[projects]]
   digest = "1:3477d9dd8c135faab978bac762eaeafb31f28d6da97ef500d5c271966f74140a"
@@ -999,10 +998,10 @@
     "github.com/go-openapi/spec",
     "github.com/ibm/cloud-operators/pkg/context",
     "github.com/ibm/cloud-operators/pkg/lib/ibmcloud",
-    "github.com/ibm/cloud-operators/pkg/lib/ibmcloud/v1",
     "github.com/ibm/cloud-operators/pkg/lib/secret",
     "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1",
     "github.com/ibm/cloud-operators/pkg/types/apis/resource/v1",
+    "github.com/ibm/cloud-operators/pkg/util",
     "github.com/onsi/ginkgo",
     "github.com/onsi/ginkgo/extensions/table",
     "github.com/onsi/gomega",

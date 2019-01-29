@@ -17,6 +17,7 @@
 package common
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -25,7 +26,11 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	context "github.com/ibm/cloud-operators/pkg/context"
+	"github.com/ibm/cloud-operators/pkg/lib/secret"
 	kv "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1"
+	"github.com/ibm/cloud-operators/pkg/util"
+
+	openwhiskv1beta1 "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1"
 )
 
 // ConvertKeyValues convert key value array to whisk key values
@@ -86,4 +91,78 @@ func GetValueString(keyValueArr whisk.KeyValueArr, key string) (string, error) {
 		return str, nil
 	}
 	return "", fmt.Errorf("missing string value '%v' for key '%s'", value, key)
+}
+
+// ConvertParametersFrom converts parameters sources to whisk key value pairs
+func ConvertParametersFrom(ctx context.Context, obj runtime.Object, params []openwhiskv1beta1.ParametersFromSource) (whisk.KeyValueArr, bool, error) {
+	keyValueArr := make(whisk.KeyValueArr, 0)
+
+	for _, source := range params {
+		if source.ConfigMapKeyRef != nil {
+			cm, err := util.GetConfigMap(ctx, source.ConfigMapKeyRef.Name, true)
+			if err != nil {
+				// Recoverable
+				return nil, true, fmt.Errorf("Missing configmap %s", source.ConfigMapKeyRef.Name)
+			}
+			if cm.Data != nil {
+				for k, v := range cm.Data {
+					var keyVal whisk.KeyValue
+					keyVal.Key = k
+
+					value := toJSONFromString(v)
+
+					if value != nil {
+						keyVal.Value = value
+						keyValueArr = append(keyValueArr, keyVal)
+					}
+				}
+			}
+		}
+		if source.SecretKeyRef != nil {
+			sc, err := secret.GetSecret(ctx, source.SecretKeyRef.Name, true)
+			if err != nil {
+				// Recoverable
+				return nil, true, fmt.Errorf("Missing secret %s", source.SecretKeyRef.Name)
+
+			}
+			if sc.Data != nil {
+				for k, v := range sc.Data {
+					var keyVal whisk.KeyValue
+					keyVal.Key = k
+
+					value := toJSONFromString(string(v))
+					if value != nil {
+						keyVal.Value = value
+						keyValueArr = append(keyValueArr, keyVal)
+					}
+				}
+			}
+		}
+	}
+
+	return keyValueArr, false, nil
+}
+
+func toJSONFromString(content string) interface{} {
+	var data interface{}
+
+	dc := json.NewDecoder(strings.NewReader(content))
+	dc.UseNumber()
+	if err := dc.Decode(&data); err != nil {
+		// Just return the content in order to support unquoted string value
+		// In the future we might want to implement some heuristic to detect the user intention
+		// Maybe if content start with '{' or '[' then the intent might be to specify a JSON and it is invalid
+
+		return content
+	}
+	if dc.More() {
+		// Not a valid JSON. Interpret as unquoted string value
+		return content
+	}
+	return data
+}
+
+func isJSON(str string) bool {
+	var js json.RawMessage
+	return json.Unmarshal([]byte(str), &js) == nil
 }
