@@ -13,6 +13,8 @@ spec:
     shortNames:
     - owi
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:

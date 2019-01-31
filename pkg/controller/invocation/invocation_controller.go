@@ -87,6 +87,7 @@ type ReconcileInvocation struct {
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=invocations,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=invocations/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileInvocation) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	context := context.New(r.Client, request)
 
@@ -152,7 +153,7 @@ func (r *ReconcileInvocation) Reconcile(request reconcile.Request) (reconcile.Re
 			invocation.Status.Generation = currentGeneration
 			invocation.Status.State = resv1.ResourceStateFailed
 			invocation.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutAndEmit(context, invocation); err != nil {
+			if err := resv1.PutStatusAndEmit(context, invocation); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -229,7 +230,7 @@ func (r *ReconcileInvocation) run(context context.Context, invocation *openwhisk
 	invocation.Status.State = resv1.ResourceStateOnline
 	invocation.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutAndEmit(context, invocation)
+	return false, resv1.PutStatusAndEmit(context, invocation)
 }
 
 func (r *ReconcileInvocation) store(context context.Context, invocation *openwhiskv1beta1.Invocation, projection *jsonpath.JSONPath, result map[string]interface{}) (bool, error) {

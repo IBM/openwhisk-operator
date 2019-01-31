@@ -28,6 +28,7 @@ import (
 
 // Function is the Schema for the functions API
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 type Function struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -13,6 +13,8 @@ spec:
     shortNames:
     - owp
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -44,25 +46,6 @@ spec:
               type: array
             bind:
               type: string
-            context:
-              properties:
-                org:
-                  type: string
-                region:
-                  type: string
-                resourcegroup:
-                  type: string
-                resourcelocation:
-                  type: string
-                space:
-                  type: string
-              required:
-              - org
-              - space
-              - region
-              - resourcegroup
-              - resourcelocation
-              type: object
             contextFrom:
               type: object
             name:
@@ -83,6 +66,21 @@ spec:
                     type: object
                 required:
                 - name
+                type: object
+              type: array
+            parametersFrom:
+              items:
+                properties:
+                  configMapKeyRef:
+                    properties:
+                      name:
+                        type: string
+                    type: object
+                  secretKeyRef:
+                    properties:
+                      name:
+                        type: string
+                    type: object
                 type: object
               type: array
             publish:

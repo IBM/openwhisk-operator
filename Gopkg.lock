@@ -270,7 +270,7 @@
     "pkg/util",
   ]
   pruneopts = "T"
-  revision = "bde6067c31875a47d89c3250228fcab475923f4f"
+  revision = "cde40155ff5056c24bd8a521d8d5de843e775e6e"
 
 [[projects]]
   digest = "1:3477d9dd8c135faab978bac762eaeafb31f28d6da97ef500d5c271966f74140a"

@@ -1,7 +1,7 @@
 Only in config/crds/: kustomization.yaml
 diff -u config/crds/openwhisk_v1beta1_composition.yaml config/expected/openwhisk_v1beta1_composition.yaml
---- config/crds/openwhisk_v1beta1_composition.yaml	2018-12-04 16:36:34.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_composition.yaml	2018-12-04 16:35:12.000000000 -0500
+--- config/crds/openwhisk_v1beta1_composition.yaml	2019-01-31 09:55:16.000000000 -0500
++++ config/expected/openwhisk_v1beta1_composition.yaml	2019-01-31 09:54:30.000000000 -0500
 @@ -10,6 +10,8 @@
    names:
      kind: Composition
@@ -12,8 +12,8 @@ diff -u config/crds/openwhisk_v1beta1_composition.yaml config/expected/openwhisk
    validation:
      openAPIV3Schema:
 diff -u config/crds/openwhisk_v1beta1_function.yaml config/expected/openwhisk_v1beta1_function.yaml
---- config/crds/openwhisk_v1beta1_function.yaml	2018-12-04 16:36:34.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_function.yaml	2018-12-04 16:35:36.000000000 -0500
+--- config/crds/openwhisk_v1beta1_function.yaml	2019-01-31 09:55:16.000000000 -0500
++++ config/expected/openwhisk_v1beta1_function.yaml	2019-01-31 09:54:30.000000000 -0500
 @@ -10,6 +10,8 @@
    names:
      kind: Function
@@ -21,9 +21,9 @@ diff -u config/crds/openwhisk_v1beta1_function.yaml config/expected/openwhisk_v1
 +    shortNames:
 +    - owf
    scope: Namespaced
-   validation:
-     openAPIV3Schema:
-@@ -29,8 +31,6 @@
+   subresources:
+     status: {}
+@@ -31,8 +33,6 @@
                      type: object
                    name:
                      type: string
@@ -32,7 +32,7 @@ diff -u config/crds/openwhisk_v1beta1_function.yaml config/expected/openwhisk_v1
                    valueFrom:
                      properties:
                        configMapKeyRef:
-@@ -98,8 +98,6 @@
+@@ -81,8 +81,6 @@
                      type: object
                    name:
                      type: string
@@ -41,9 +41,10 @@ diff -u config/crds/openwhisk_v1beta1_function.yaml config/expected/openwhisk_v1
                    valueFrom:
                      properties:
                        configMapKeyRef:
+Only in config/crds/: openwhisk_v1beta1_function.yaml.orig
 diff -u config/crds/openwhisk_v1beta1_invocation.yaml config/expected/openwhisk_v1beta1_invocation.yaml
---- config/crds/openwhisk_v1beta1_invocation.yaml	2018-12-04 16:36:34.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_invocation.yaml	2018-12-04 16:35:45.000000000 -0500
+--- config/crds/openwhisk_v1beta1_invocation.yaml	2019-01-31 09:55:16.000000000 -0500
++++ config/expected/openwhisk_v1beta1_invocation.yaml	2019-01-31 09:54:30.000000000 -0500
 @@ -10,6 +10,8 @@
    names:
      kind: Invocation
@@ -51,9 +52,9 @@ diff -u config/crds/openwhisk_v1beta1_invocation.yaml config/expected/openwhisk_
 +    shortNames:
 +    - owi
    scope: Namespaced
-   validation:
-     openAPIV3Schema:
-@@ -54,8 +56,6 @@
+   subresources:
+     status: {}
+@@ -37,8 +39,6 @@
                          type: object
                        name:
                          type: string
@@ -62,7 +63,7 @@ diff -u config/crds/openwhisk_v1beta1_invocation.yaml config/expected/openwhisk_
                        valueFrom:
                          properties:
                            configMapKeyRef:
-@@ -79,8 +79,6 @@
+@@ -62,8 +62,6 @@
                      type: object
                    name:
                      type: string
@@ -71,9 +72,10 @@ diff -u config/crds/openwhisk_v1beta1_invocation.yaml config/expected/openwhisk_
                    valueFrom:
                      properties:
                        configMapKeyRef:
+Only in config/crds/: openwhisk_v1beta1_invocation.yaml.orig
 diff -u config/crds/openwhisk_v1beta1_package.yaml config/expected/openwhisk_v1beta1_package.yaml
---- config/crds/openwhisk_v1beta1_package.yaml	2018-12-04 16:36:34.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_package.yaml	2018-12-04 16:35:53.000000000 -0500
+--- config/crds/openwhisk_v1beta1_package.yaml	2019-01-31 09:55:16.000000000 -0500
++++ config/expected/openwhisk_v1beta1_package.yaml	2019-01-31 09:54:30.000000000 -0500
 @@ -10,6 +10,8 @@
    names:
      kind: Package
@@ -81,9 +83,9 @@ diff -u config/crds/openwhisk_v1beta1_package.yaml config/expected/openwhisk_v1b
 +    shortNames:
 +    - owp
    scope: Namespaced
-   validation:
-     openAPIV3Schema:
-@@ -29,8 +31,6 @@
+   subresources:
+     status: {}
+@@ -31,8 +33,6 @@
                      type: object
                    name:
                      type: string
@@ -92,7 +94,7 @@ diff -u config/crds/openwhisk_v1beta1_package.yaml config/expected/openwhisk_v1b
                    valueFrom:
                      properties:
                        configMapKeyRef:
-@@ -74,8 +74,6 @@
+@@ -57,8 +57,6 @@
                      type: object
                    name:
                      type: string
@@ -101,9 +103,10 @@ diff -u config/crds/openwhisk_v1beta1_package.yaml config/expected/openwhisk_v1b
                    valueFrom:
                      properties:
                        configMapKeyRef:
+Only in config/crds/: openwhisk_v1beta1_package.yaml.orig
 diff -u config/crds/openwhisk_v1beta1_rule.yaml config/expected/openwhisk_v1beta1_rule.yaml
---- config/crds/openwhisk_v1beta1_rule.yaml	2018-12-04 16:36:34.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_rule.yaml	2018-12-04 16:36:06.000000000 -0500
+--- config/crds/openwhisk_v1beta1_rule.yaml	2019-01-31 09:55:16.000000000 -0500
++++ config/expected/openwhisk_v1beta1_rule.yaml	2019-01-31 09:54:30.000000000 -0500
 @@ -10,6 +10,8 @@
    names:
      kind: Rule
@@ -111,11 +114,12 @@ diff -u config/crds/openwhisk_v1beta1_rule.yaml config/expected/openwhisk_v1beta
 +    shortNames:
 +    - owr
    scope: Namespaced
-   validation:
-     openAPIV3Schema:
+   subresources:
+     status: {}
+Only in config/crds/: openwhisk_v1beta1_rule.yaml.orig
 diff -u config/crds/openwhisk_v1beta1_trigger.yaml config/expected/openwhisk_v1beta1_trigger.yaml
---- config/crds/openwhisk_v1beta1_trigger.yaml	2018-12-04 16:36:34.000000000 -0500
-+++ config/expected/openwhisk_v1beta1_trigger.yaml	2018-12-04 16:36:17.000000000 -0500
+--- config/crds/openwhisk_v1beta1_trigger.yaml	2019-01-31 09:55:16.000000000 -0500
++++ config/expected/openwhisk_v1beta1_trigger.yaml	2019-01-31 09:54:30.000000000 -0500
 @@ -10,6 +10,8 @@
    names:
      kind: Trigger
@@ -123,9 +127,9 @@ diff -u config/crds/openwhisk_v1beta1_trigger.yaml config/expected/openwhisk_v1b
 +    shortNames:
 +    - owt
    scope: Namespaced
-   validation:
-     openAPIV3Schema:
-@@ -29,8 +31,6 @@
+   subresources:
+     status: {}
+@@ -31,8 +33,6 @@
                      type: object
                    name:
                      type: string
@@ -134,7 +138,7 @@ diff -u config/crds/openwhisk_v1beta1_trigger.yaml config/expected/openwhisk_v1b
                    valueFrom:
                      properties:
                        configMapKeyRef:
-@@ -74,8 +74,6 @@
+@@ -57,8 +57,6 @@
                      type: object
                    name:
                      type: string
@@ -143,3 +147,4 @@ diff -u config/crds/openwhisk_v1beta1_trigger.yaml config/expected/openwhisk_v1b
                    valueFrom:
                      properties:
                        configMapKeyRef:
+Only in config/crds/: openwhisk_v1beta1_trigger.yaml.orig

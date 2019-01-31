@@ -80,6 +80,7 @@ type ReconcileTrigger struct {
 // and what is in the Trigger.Spec
 // Automatically generate RBAC triggers to allow the Controller to read and write Deployments
 // +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=triggers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=triggers/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileTrigger) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	context := context.New(r.Client, request)
 
@@ -136,7 +137,7 @@ func (r *ReconcileTrigger) Reconcile(request reconcile.Request) (reconcile.Resul
 			trigger.Status.Generation = currentGeneration
 			trigger.Status.State = resv1.ResourceStateFailed
 			trigger.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutAndEmit(context, trigger); err != nil {
+			if err := resv1.PutStatusAndEmit(context, trigger); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -276,7 +277,7 @@ func (r *ReconcileTrigger) updateTrigger(context context.Context, obj *openwhisk
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutAndEmit(context, obj)
+	return false, resv1.PutStatusAndEmit(context, obj)
 }
 
 func (r *ReconcileTrigger) finalize(context context.Context, obj *openwhiskv1beta1.Trigger) (reconcile.Result, error) {

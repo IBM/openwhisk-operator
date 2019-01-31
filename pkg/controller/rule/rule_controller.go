@@ -80,6 +80,7 @@ type ReconcileRule struct {
 // and what is in the Rule.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
 // +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=rules,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=rules/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileRule) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 
 	context := context.New(r.Client, request)
@@ -137,7 +138,7 @@ func (r *ReconcileRule) Reconcile(request reconcile.Request) (reconcile.Result, 
 			rule.Status.Generation = currentGeneration
 			rule.Status.State = resv1.ResourceStateFailed
 			rule.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutAndEmit(context, rule); err != nil {
+			if err := resv1.PutStatusAndEmit(context, rule); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -208,7 +209,7 @@ func (r *ReconcileRule) updateRule(context context.Context, obj *openwhiskv1beta
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutAndEmit(context, obj)
+	return false, resv1.PutStatusAndEmit(context, obj)
 }
 
 func (r *ReconcileRule) finalize(context context.Context, obj *openwhiskv1beta1.Rule) (reconcile.Result, error) {

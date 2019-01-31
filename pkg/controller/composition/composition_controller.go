@@ -80,6 +80,7 @@ type ReconcileComposition struct {
 // and what is in the Composition.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
 // +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=compositions,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=compositions/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileComposition) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	context := context.New(r.Client, request)
 
@@ -136,7 +137,7 @@ func (r *ReconcileComposition) Reconcile(request reconcile.Request) (reconcile.R
 			composition.Status.Generation = currentGeneration
 			composition.Status.State = resv1.ResourceStateFailed
 			composition.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutAndEmit(context, composition); err != nil {
+			if err := resv1.PutStatusAndEmit(context, composition); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -211,7 +212,7 @@ func (r ReconcileComposition) updateComposition(context context.Context, obj *op
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutAndEmit(context, obj)
+	return false, resv1.PutStatusAndEmit(context, obj)
 }
 
 func (r *ReconcileComposition) finalize(context context.Context, obj *openwhiskv1beta1.Composition) (reconcile.Result, error) {

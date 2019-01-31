@@ -13,6 +13,8 @@ spec:
     shortNames:
     - owp
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -64,6 +66,21 @@ spec:
                     type: object
                 required:
                 - name
+                type: object
+              type: array
+            parametersFrom:
+              items:
+                properties:
+                  configMapKeyRef:
+                    properties:
+                      name:
+                        type: string
+                    type: object
+                  secretKeyRef:
+                    properties:
+                      name:
+                        type: string
+                    type: object
                 type: object
               type: array
             publish:

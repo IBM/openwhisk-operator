@@ -25,6 +25,7 @@ import (
 
 // Invocation is the Schema for the invocations API
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type Invocation struct {

@@ -28,6 +28,7 @@ import (
 
 // Package is the Schema for the packages API
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 type Package struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
