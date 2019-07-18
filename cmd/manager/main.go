@@ -18,8 +18,8 @@ package main
 import (
 	"log"
 
-	"github.com/ibm/openwhisk-operator/pkg/apis"
-	"github.com/ibm/openwhisk-operator/pkg/controller"
+	"github.com/ibm/cloud-functions-operator/pkg/apis"
+	"github.com/ibm/cloud-functions-operator/pkg/controller"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"

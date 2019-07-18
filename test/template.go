@@ -24,7 +24,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	owv1 "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1"
+	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 
 	rcontext "github.com/ibm/cloud-operators/pkg/context"
 )
@@ -45,18 +45,6 @@ func PostPackage(context rcontext.Context, name string, spec owv1.PackageSpec, a
 func PostInvocation(context rcontext.Context, name string, spec owv1.InvocationSpec, async bool) runtime.Object {
 	obj := makeInvocation(context.Namespace(), name, spec)
 	return post(context, &obj, async, 0)
-}
-
-// PostComposition creates a Composition object
-func PostComposition(context rcontext.Context, name string, spec owv1.CompositionSpec, async bool) runtime.Object {
-	obj := makeComposition(context.Namespace(), name, spec)
-	return post(context, &obj, async, 0)
-}
-
-// DeleteComposition deletes a Composition object
-func DeleteComposition(context rcontext.Context, name string, spec owv1.CompositionSpec, async bool) {
-	obj := makeComposition(context.Namespace(), name, spec)
-	deleteObject(context, &obj, async)
 }
 
 func makeFunction(namespace string, name string, spec owv1.FunctionSpec) owv1.Function {
@@ -92,20 +80,6 @@ func makeInvocation(namespace string, name string, spec owv1.InvocationSpec) owv
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: owv1.SchemeGroupVersion.Group + "/" + owv1.SchemeGroupVersion.Version,
 			Kind:       "Invocation",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-		},
-		Spec: spec,
-	}
-}
-
-func makeComposition(namespace string, name string, spec owv1.CompositionSpec) owv1.Composition {
-	return owv1.Composition{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: owv1.SchemeGroupVersion.Group + "/" + owv1.SchemeGroupVersion.Version,
-			Kind:       "Composition",
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
@@ -176,11 +150,6 @@ func LoadPackage(filename string) owv1.Package {
 // LoadRule loads the YAML spec into obj
 func LoadRule(filename string) owv1.Rule {
 	return *LoadObject(filename, &owv1.Rule{}).(*owv1.Rule)
-}
-
-// LoadComposition loads the YAML spec into obj
-func LoadComposition(filename string) owv1.Composition {
-	return *LoadObject(filename, &owv1.Composition{}).(*owv1.Composition)
 }
 
 // LoadInvocation loads the YAML spec into obj

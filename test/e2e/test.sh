@@ -28,13 +28,18 @@ source hack/lib/utils.sh
 
 if [ "${KUBE_ENV}" = "local" ]; then
     u::header "building docker image"
-    docker build . -t local/openwhisk-operator
+    docker build . -t local/cloud-functions-operator
 fi
 
 u::header "installing CRDs, operators and secrets"
 
-kustomize build config/crds | kubectl apply -f -
-kustomize build config/${KUBE_ENV} | kubectl apply -f -
+kubectl apply -f config/crds/
+kubectl apply -f config/manager/
+kubectl apply -f config/rbac/
+
+if [ "${KUBE_ENV}" = "local" ]; then
+  kubectl apply -f config/local/
+fi
 
 cd $ROOT/test/e2e
 

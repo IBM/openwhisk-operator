@@ -33,11 +33,11 @@ import (
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
 
 	context "github.com/ibm/cloud-operators/pkg/context"
+	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 	"github.com/ibm/cloud-operators/pkg/lib/secret"
-	resv1 "github.com/ibm/cloud-operators/pkg/types/apis/resource/v1"
 
-	openwhiskv1beta1 "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1"
-	ow "github.com/ibm/openwhisk-operator/pkg/controller/common"
+	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
 )
 
 var clog = logf.Log
@@ -81,8 +81,8 @@ type ReconcilePackage struct {
 // Reconcile reads that state of the cluster for a Package object and makes changes based on the state read
 // and what is in the Package.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
-// +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=packages,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=openwhisk.seed.ibm.com,resources=packages/status,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=packages,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=packages/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcilePackage) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	context := context.New(r.Client, request)
 

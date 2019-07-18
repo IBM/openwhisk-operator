@@ -1,6 +1,0 @@
-apiVersion: openwhisk.seed.ibm.com/v1beta1
-kind: Composition
-metadata:
-  name: composition-external
-spec:
-  compositionURI: https://raw.github.ibm.com/composer/composer/master/samples/demo.js

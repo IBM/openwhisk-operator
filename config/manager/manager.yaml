@@ -1,49 +1,39 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  labels:
-    controller-tools.k8s.io: "1.0"
-  name: system
+  name: ibmcloud-operators
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: controller-manager-service
-  namespace: system
-  labels:
-    control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
+  name: cloud-functions-operator
+  namespace: ibmcloud-operators
 spec:
   selector:
-    control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
+    app: cloud-functions-operator
   ports:
   - port: 443
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: controller-manager
-  namespace: system
+  name: cloud-functions-operator
+  namespace: ibmcloud-operators
   labels:
-    control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
+    app: cloud-functions-operator
 spec:
   selector:
     matchLabels:
-      control-plane: controller-manager
-      controller-tools.k8s.io: "1.0"
-  serviceName: controller-manager-service
+      app: cloud-functions-operator
   template:
     metadata:
       labels:
-        control-plane: controller-manager
-        controller-tools.k8s.io: "1.0"
+        app: cloud-functions-operator
     spec:
       containers:
       - command:
         - /root/manager
-        image: controller:latest
+        image: ibmcom/openwhisk-operator:latest
         name: manager
         resources:
           limits:
@@ -52,4 +42,5 @@ spec:
           requests:
             cpu: 100m
             memory: 20Mi
+      serviceAccountName: cloud-functions-operator
       terminationGracePeriodSeconds: 10

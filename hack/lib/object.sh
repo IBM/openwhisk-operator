@@ -18,7 +18,7 @@
 # wait for the operator to be ready
 function object::wait_operator_ready() {
     printf "Checking operator status .."
-    until [ "$(kubectl -n openwhisk-system get po | grep 'Running' | awk '{print $3}')" == "Running" ]; do
+    until [ "$(kubectl -n ibmcloud-operators get po | grep 'Running' | awk '{print $3}')" == "Running" ]; do
         printf "."
         sleep 2
     done
@@ -54,7 +54,7 @@ function object::wait_function_online() {
     local name="$1"
     local retries="$2"
 
-    object::wait_resource_online "functions.openwhisk.seed.ibm.com" $name $retries
+    object::wait_resource_online "functions.ibmcloud.ibm.com" $name $retries
 }
 
 # wait for package to be online
@@ -62,7 +62,7 @@ function object::wait_package_online() {
     local name="$1"
     local retries="$2"
 
-    object::wait_resource_online "packages.openwhisk.seed.ibm.com" $name $retries
+    object::wait_resource_online "packages.ibmcloud.ibm.com" $name $retries
 }
 
 # wait for trigger to be online
@@ -70,7 +70,7 @@ function object::wait_trigger_online() {
     local name="$1"
     local retries="$2"
 
-    object::wait_resource_online "triggers.openwhisk.seed.ibm.com" $name $retries
+    object::wait_resource_online "triggers.ibmcloud.ibm.com" $name $retries
 }
 
 
@@ -79,5 +79,5 @@ function object::wait_rule_online() {
     local name="$1"
     local retries="$2"
 
-    object::wait_resource_online "rules.openwhisk.seed.ibm.com" $name $retries
+    object::wait_resource_online "rules.ibmcloud.ibm.com" $name $retries
 }

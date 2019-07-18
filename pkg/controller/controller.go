@@ -18,13 +18,12 @@ package controller
 import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
-	"github.com/ibm/openwhisk-operator/pkg/controller/auth"
-	"github.com/ibm/openwhisk-operator/pkg/controller/composition"
-	"github.com/ibm/openwhisk-operator/pkg/controller/function"
-	"github.com/ibm/openwhisk-operator/pkg/controller/invocation"
-	"github.com/ibm/openwhisk-operator/pkg/controller/pkg"
-	"github.com/ibm/openwhisk-operator/pkg/controller/rule"
-	"github.com/ibm/openwhisk-operator/pkg/controller/trigger"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/auth"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/function"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/invocation"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/pkg"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/rule"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/trigger"
 )
 
 // AddToManagerFuncs is a list of functions to add all Controllers to the Manager
@@ -33,7 +32,7 @@ var AddToManagerFuncs []func(manager.Manager) error
 func init() {
 	// AddToManagerFuncs is a list of functions to create controllers and add them to a manager.
 	AddToManagerFuncs = append(AddToManagerFuncs, function.Add, pkg.Add, rule.Add, trigger.Add,
-		invocation.Add, composition.Add, auth.Add)
+		invocation.Add, auth.Add)
 }
 
 // AddToManager adds all Controllers to the Manager

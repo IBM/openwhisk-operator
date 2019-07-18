@@ -2,12 +2,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   creationTimestamp: null
-  name: manager-rolebinding
+  name: cloud-functions-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: manager-role
+  name: cloud-functions-operator
 subjects:
 - kind: ServiceAccount
-  name: default
-  namespace: system
+  name: cloud-functions-operator
+  namespace: ibmcloud-operators

@@ -26,11 +26,11 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	context "github.com/ibm/cloud-operators/pkg/context"
+	kv "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1"
 	"github.com/ibm/cloud-operators/pkg/lib/secret"
-	kv "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1"
 	"github.com/ibm/cloud-operators/pkg/util"
 
-	openwhiskv1beta1 "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1"
+	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 )
 
 // ConvertKeyValues convert key value array to whisk key values

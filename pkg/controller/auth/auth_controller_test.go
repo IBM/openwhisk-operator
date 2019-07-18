@@ -34,7 +34,7 @@ import (
 
 	context "github.com/ibm/cloud-operators/pkg/context"
 
-	owtest "github.com/ibm/openwhisk-operator/test"
+	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
 var (

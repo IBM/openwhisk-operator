@@ -37,13 +37,13 @@ import (
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
 
 	context "github.com/ibm/cloud-operators/pkg/context"
-	resv1 "github.com/ibm/cloud-operators/pkg/types/apis/resource/v1"
+	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
-	"github.com/ibm/openwhisk-operator/pkg/apis"
-	owv1 "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1"
-	ow "github.com/ibm/openwhisk-operator/pkg/controller/common"
-	owfn "github.com/ibm/openwhisk-operator/pkg/controller/function"
-	owtest "github.com/ibm/openwhisk-operator/test"
+	"github.com/ibm/cloud-functions-operator/pkg/apis"
+	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
+	owfn "github.com/ibm/cloud-functions-operator/pkg/controller/function"
+	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
 var (

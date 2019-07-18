@@ -19,7 +19,6 @@ package test
 import (
 	"encoding/json"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"os/user"
 	"strings"
@@ -27,10 +26,6 @@ import (
 
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
-
-	context "github.com/ibm/cloud-operators/pkg/context"
-
-	ow "github.com/ibm/openwhisk-operator/pkg/controller/common"
 )
 
 var (
@@ -124,22 +119,4 @@ func InvokeAction(wskclient *whisk.Client, actionName string, payload interface{
 		return "", err
 	}
 	return string(bytes), nil
-}
-
-// InvokeComposition invokes the given action
-func InvokeComposition(context context.Context, name string, payload interface{}) (string, *http.Response, error) {
-	client, err := ow.NewCompositionClient(context, nil)
-	if err != nil {
-		return "", nil, err
-	}
-
-	result, resp, err := client.Invoke(name, payload)
-	if err != nil {
-		return "", resp, err
-	}
-	bytes, err := json.Marshal(result)
-	if err != nil {
-		return "", resp, err
-	}
-	return string(bytes), resp, nil
 }

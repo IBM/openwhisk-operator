@@ -1,9 +1,9 @@
-apiVersion: openwhisk.seed.ibm.com/v1beta1
+apiVersion: ibmcloud.ibm.com/v1alpha1
 kind: Function
 metadata:
   name: native-bash
 spec:
-  native: true 
+  native: true
   runtime: blackbox
   parameters:
   - name: message
@@ -11,5 +11,4 @@ spec:
   code: |
     #!/bin/bash
     echo $1
-  
-  
+

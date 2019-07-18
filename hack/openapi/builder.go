@@ -28,8 +28,8 @@ import (
 	"strings"
 
 	// Modify this
-	owv1 "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1"
-	generated "github.com/ibm/openwhisk-operator/pkg/openapi"
+	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	generated "github.com/ibm/cloud-functions-operator/pkg/openapi"
 
 	"github.com/ghodss/yaml"
 	"github.com/go-openapi/spec"
@@ -147,7 +147,7 @@ func createOpenAPIBuilderConfig(definitionNamer *DefinitionNamer) *common.Config
 			InfoProps: spec.InfoProps{
 				Title:   "Kubernetes Apache Openwhisk Operator",
 				Version: "1.0",
-				Description: `Collection of Kubernetes operators for 
+				Description: `Collection of Kubernetes operators for
  managing Apache Openwhisk resources, such as actions, packages, triggers and rules.`,
 			},
 		},

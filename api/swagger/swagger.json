@@ -1,155 +1,13 @@
 {
   "swagger": "2.0",
   "info": {
-   "description": "Collection of Kubernetes operators for \n managing Apache Openwhisk resources, such as actions, packages, triggers and rules.",
+   "description": "Collection of Kubernetes operators for\n managing Apache Openwhisk resources, such as actions, packages, triggers and rules.",
    "title": "Kubernetes Apache Openwhisk Operator",
    "version": "1.0"
   },
   "paths": {},
   "definitions": {
-   "keyvalue.v1.KeyValue": {
-    "description": "KeyValue represents a key-value pair",
-    "required": [
-     "name"
-    ],
-    "properties": {
-     "attributes": {
-      "description": "A parameter may have attributes (e.g. message hub topic might have partitions)",
-      "type": "object",
-      "additionalProperties": {
-       "$ref": "#/definitions/runtime.RawExtension"
-      }
-     },
-     "name": {
-      "description": "Name representing the key.",
-      "type": "string"
-     },
-     "value": {
-      "description": "Defaults to null.",
-      "$ref": "#/definitions/runtime.RawExtension"
-     },
-     "valueFrom": {
-      "description": "Source for the value. Cannot be used if value is not empty.",
-      "$ref": "#/definitions/keyvalue.v1.KeyValueSource"
-     }
-    }
-   },
-   "keyvalue.v1.KeyValueSource": {
-    "description": "KeyValueSource represents a source for the value of a KeyValue.",
-    "properties": {
-     "configMapKeyRef": {
-      "description": "Selects a key of a ConfigMap.",
-      "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapKeySelector"
-     },
-     "secretKeyRef": {
-      "description": "Selects a key of a secret in the resource namespace",
-      "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
-     }
-    }
-   },
-   "openwhisk.v1beta1.Composition": {
-    "description": "Composition is the Schema for the compositions API",
-    "properties": {
-     "apiVersion": {
-      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
-      "type": "string"
-     },
-     "kind": {
-      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
-      "type": "string"
-     },
-     "metadata": {
-      "$ref": "#/definitions/meta.v1.ObjectMeta"
-     },
-     "spec": {
-      "$ref": "#/definitions/openwhisk.v1beta1.CompositionSpec"
-     },
-     "status": {
-      "$ref": "#/definitions/openwhisk.v1beta1.CompositionStatus"
-     }
-    },
-    "x-kubernetes-group-version-kind": [
-     {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
-      "kind": "Composition"
-     }
-    ]
-   },
-   "openwhisk.v1beta1.CompositionList": {
-    "description": "CompositionList contains a list of Composition",
-    "required": [
-     "items"
-    ],
-    "properties": {
-     "apiVersion": {
-      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
-      "type": "string"
-     },
-     "items": {
-      "type": "array",
-      "items": {
-       "$ref": "#/definitions/openwhisk.v1beta1.Composition"
-      }
-     },
-     "kind": {
-      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
-      "type": "string"
-     },
-     "metadata": {
-      "$ref": "#/definitions/meta.v1.ListMeta"
-     }
-    },
-    "x-kubernetes-group-version-kind": [
-     {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
-      "kind": "CompositionList"
-     }
-    ]
-   },
-   "openwhisk.v1beta1.CompositionSpec": {
-    "description": "CompositionSpec defines the desired state of Composition",
-    "properties": {
-     "composition": {
-      "description": "The inline composition to deploy.",
-      "type": "string"
-     },
-     "compositionURI": {
-      "description": "The location of the composition to deploy. Support `http(s)` and `file` protocols.",
-      "type": "string"
-     },
-     "contextFrom": {
-      "description": "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
-      "$ref": "#/definitions/io.k8s.api.core.v1.SecretEnvSource"
-     },
-     "name": {
-      "description": "Composition name. Override metadata.name. Does not include the package name (see below)",
-      "type": "string"
-     },
-     "package": {
-      "description": "Composition package name. Add it to the default package when not specified",
-      "type": "string"
-     }
-    }
-   },
-   "openwhisk.v1beta1.CompositionStatus": {
-    "description": "CompositionStatus defines the observed state of Composition",
-    "properties": {
-     "generation": {
-      "description": "Last synced generation. Set by the system",
-      "type": "integer",
-      "format": "int64"
-     },
-     "message": {
-      "type": "string"
-     },
-     "state": {
-      "type": "string"
-     }
-    }
-   },
-   "openwhisk.v1beta1.ConfigMapKeyReference": {
+   "ibmcloud.v1alpha1.ConfigMapKeyReference": {
     "description": "ConfigMapKeyReference selects a ConfigMap and optionally a key from it.",
     "properties": {
      "name": {
@@ -158,7 +16,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.Function": {
+   "ibmcloud.v1alpha1.Function": {
     "description": "Function is the Schema for the functions API",
     "properties": {
      "apiVersion": {
@@ -173,21 +31,21 @@
       "$ref": "#/definitions/meta.v1.ObjectMeta"
      },
      "spec": {
-      "$ref": "#/definitions/openwhisk.v1beta1.FunctionSpec"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.FunctionSpec"
      },
      "status": {
-      "$ref": "#/definitions/openwhisk.v1beta1.FunctionStatus"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.FunctionStatus"
      }
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "Function"
      }
     ]
    },
-   "openwhisk.v1beta1.FunctionList": {
+   "ibmcloud.v1alpha1.FunctionList": {
     "description": "FunctionList contains a list of Function",
     "required": [
      "items"
@@ -200,7 +58,7 @@
      "items": {
       "type": "array",
       "items": {
-       "$ref": "#/definitions/openwhisk.v1beta1.Function"
+       "$ref": "#/definitions/ibmcloud.v1alpha1.Function"
       }
      },
      "kind": {
@@ -213,20 +71,20 @@
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "FunctionList"
      }
     ]
    },
-   "openwhisk.v1beta1.FunctionSpec": {
+   "ibmcloud.v1alpha1.FunctionSpec": {
     "description": "FunctionSpec represents the specification for Function resources",
     "properties": {
      "annotations": {
       "description": "List of key/value annotations",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      },
      "code": {
@@ -251,7 +109,7 @@
      },
      "limits": {
       "description": "Sets the action limits. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/reference.md#system-limits",
-      "$ref": "#/definitions/openwhisk.v1beta1.Limits"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.Limits"
      },
      "main": {
       "description": "The name of the action entry point (function or fully-qualified method name when applicable)",
@@ -273,7 +131,7 @@
       "description": "List of key/value input parameters",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      },
      "rawHTTP": {
@@ -290,7 +148,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.FunctionStatus": {
+   "ibmcloud.v1alpha1.FunctionStatus": {
     "description": "FunctionStatus defines the observed state of Function",
     "required": [
      "generation"
@@ -309,7 +167,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.Invocation": {
+   "ibmcloud.v1alpha1.Invocation": {
     "description": "Invocation is the Schema for the invocations API",
     "properties": {
      "apiVersion": {
@@ -324,21 +182,21 @@
       "$ref": "#/definitions/meta.v1.ObjectMeta"
      },
      "spec": {
-      "$ref": "#/definitions/openwhisk.v1beta1.InvocationSpec"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.InvocationSpec"
      },
      "status": {
-      "$ref": "#/definitions/openwhisk.v1beta1.InvocationStatus"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.InvocationStatus"
      }
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "Invocation"
      }
     ]
    },
-   "openwhisk.v1beta1.InvocationFinalizer": {
+   "ibmcloud.v1alpha1.InvocationFinalizer": {
     "description": "InvocationFinalizer defines the function to invoke when deleting the function invocation",
     "required": [
      "function"
@@ -352,12 +210,12 @@
       "description": "Parameters defines the list of parameters to use for the invocation",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      }
     }
    },
-   "openwhisk.v1beta1.InvocationList": {
+   "ibmcloud.v1alpha1.InvocationList": {
     "description": "InvocationList contains a list of Invocation",
     "required": [
      "items"
@@ -370,7 +228,7 @@
      "items": {
       "type": "array",
       "items": {
-       "$ref": "#/definitions/openwhisk.v1beta1.Invocation"
+       "$ref": "#/definitions/ibmcloud.v1alpha1.Invocation"
       }
      },
      "kind": {
@@ -383,13 +241,13 @@
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "InvocationList"
      }
     ]
    },
-   "openwhisk.v1beta1.InvocationSpec": {
+   "ibmcloud.v1alpha1.InvocationSpec": {
     "description": "InvocationSpec defines the desired state of Invocation",
     "required": [
      "function"
@@ -401,7 +259,7 @@
      },
      "finalizer": {
       "description": "Defines the function to invoke when this resource is deleted.",
-      "$ref": "#/definitions/openwhisk.v1beta1.InvocationFinalizer"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.InvocationFinalizer"
      },
      "function": {
       "description": "defines the name of function to invoke (eg. `/whisk.system/utils/echo` or `myfunction`) Invokes the function in the invocation context when the name is not fully qualified",
@@ -411,16 +269,16 @@
       "description": "Defines the list of parameters to use for the invocation",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      },
      "to": {
       "description": "Defines where to store the invocation result. Discard the result when not specified.",
-      "$ref": "#/definitions/openwhisk.v1beta1.InvocationTarget"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.InvocationTarget"
      }
     }
    },
-   "openwhisk.v1beta1.InvocationStatus": {
+   "ibmcloud.v1alpha1.InvocationStatus": {
     "description": "InvocationStatus defines the observed state of Invocation",
     "required": [
      "generation"
@@ -439,7 +297,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.InvocationTarget": {
+   "ibmcloud.v1alpha1.InvocationTarget": {
     "description": "InvocationTarget represents where to store the invocation result",
     "properties": {
      "configMapKeyRef": {
@@ -456,7 +314,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.Limits": {
+   "ibmcloud.v1alpha1.Limits": {
     "description": "Limits is used to express function resources constraints such as memory limits or timeout",
     "properties": {
      "logSize": {
@@ -476,7 +334,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.Package": {
+   "ibmcloud.v1alpha1.Package": {
     "description": "Package is the Schema for the packages API",
     "properties": {
      "apiVersion": {
@@ -491,21 +349,21 @@
       "$ref": "#/definitions/meta.v1.ObjectMeta"
      },
      "spec": {
-      "$ref": "#/definitions/openwhisk.v1beta1.PackageSpec"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.PackageSpec"
      },
      "status": {
-      "$ref": "#/definitions/openwhisk.v1beta1.PackageStatus"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.PackageStatus"
      }
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "Package"
      }
     ]
    },
-   "openwhisk.v1beta1.PackageList": {
+   "ibmcloud.v1alpha1.PackageList": {
     "description": "PackageList contains a list of Package",
     "required": [
      "items"
@@ -518,7 +376,7 @@
      "items": {
       "type": "array",
       "items": {
-       "$ref": "#/definitions/openwhisk.v1beta1.Package"
+       "$ref": "#/definitions/ibmcloud.v1alpha1.Package"
       }
      },
      "kind": {
@@ -531,20 +389,20 @@
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "PackageList"
      }
     ]
    },
-   "openwhisk.v1beta1.PackageSpec": {
+   "ibmcloud.v1alpha1.PackageSpec": {
     "description": "PackageSpec defines the desired state of Package",
     "properties": {
      "annotations": {
       "description": "List of key/value annotations",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      },
      "bind": {
@@ -563,14 +421,14 @@
       "description": "List of key/value input parameters",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      },
      "parametersFrom": {
       "description": "List of key/value input parameters coming from a Secret or ConfigMap When multiple sources are specified, all key/value pairs are merged into a single set of key/value pairs, from the first source to the last source Duplicates are handled by overriding the previous key/value pair. The parameters property is applied last",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/openwhisk.v1beta1.ParametersFromSource"
+       "$ref": "#/definitions/ibmcloud.v1alpha1.ParametersFromSource"
       }
      },
      "publish": {
@@ -583,7 +441,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.PackageStatus": {
+   "ibmcloud.v1alpha1.PackageStatus": {
     "description": "PackageStatus defines the observed state of Package",
     "required": [
      "generation"
@@ -602,20 +460,20 @@
      }
     }
    },
-   "openwhisk.v1beta1.ParametersFromSource": {
+   "ibmcloud.v1alpha1.ParametersFromSource": {
     "description": "ParametersFromSource represents a source for the value of parameters",
     "properties": {
      "configMapKeyRef": {
       "description": "Selects a key of a ConfigMap.",
-      "$ref": "#/definitions/openwhisk.v1beta1.ConfigMapKeyReference"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.ConfigMapKeyReference"
      },
      "secretKeyRef": {
       "description": "Selects a key of a secret in the resource namespace",
-      "$ref": "#/definitions/openwhisk.v1beta1.SecretKeyReference"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.SecretKeyReference"
      }
     }
    },
-   "openwhisk.v1beta1.Rule": {
+   "ibmcloud.v1alpha1.Rule": {
     "description": "Rule is the Schema for the rules API",
     "properties": {
      "apiVersion": {
@@ -630,21 +488,21 @@
       "$ref": "#/definitions/meta.v1.ObjectMeta"
      },
      "spec": {
-      "$ref": "#/definitions/openwhisk.v1beta1.RuleSpec"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.RuleSpec"
      },
      "status": {
-      "$ref": "#/definitions/openwhisk.v1beta1.RuleStatus"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.RuleStatus"
      }
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "Rule"
      }
     ]
    },
-   "openwhisk.v1beta1.RuleList": {
+   "ibmcloud.v1alpha1.RuleList": {
     "description": "RuleList contains a list of Rule",
     "required": [
      "items"
@@ -657,7 +515,7 @@
      "items": {
       "type": "array",
       "items": {
-       "$ref": "#/definitions/openwhisk.v1beta1.Rule"
+       "$ref": "#/definitions/ibmcloud.v1alpha1.Rule"
       }
      },
      "kind": {
@@ -670,13 +528,13 @@
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "RuleList"
      }
     ]
    },
-   "openwhisk.v1beta1.RuleSpec": {
+   "ibmcloud.v1alpha1.RuleSpec": {
     "description": "RuleSpec defines the desired state of Rule",
     "required": [
      "trigger",
@@ -701,7 +559,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.RuleStatus": {
+   "ibmcloud.v1alpha1.RuleStatus": {
     "description": "RuleStatus defines the observed state of Rule",
     "required": [
      "generation"
@@ -720,7 +578,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.SecretKeyReference": {
+   "ibmcloud.v1alpha1.SecretKeyReference": {
     "description": "SecretKeyReference selects a secret and optionally a key from it.",
     "properties": {
      "name": {
@@ -729,7 +587,7 @@
      }
     }
    },
-   "openwhisk.v1beta1.Trigger": {
+   "ibmcloud.v1alpha1.Trigger": {
     "description": "Trigger is the Schema for the triggers API",
     "properties": {
      "apiVersion": {
@@ -744,21 +602,21 @@
       "$ref": "#/definitions/meta.v1.ObjectMeta"
      },
      "spec": {
-      "$ref": "#/definitions/openwhisk.v1beta1.TriggerSpec"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.TriggerSpec"
      },
      "status": {
-      "$ref": "#/definitions/openwhisk.v1beta1.TriggerStatus"
+      "$ref": "#/definitions/ibmcloud.v1alpha1.TriggerStatus"
      }
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "Trigger"
      }
     ]
    },
-   "openwhisk.v1beta1.TriggerList": {
+   "ibmcloud.v1alpha1.TriggerList": {
     "description": "TriggerList contains a list of Trigger",
     "required": [
      "items"
@@ -771,7 +629,7 @@
      "items": {
       "type": "array",
       "items": {
-       "$ref": "#/definitions/openwhisk.v1beta1.Trigger"
+       "$ref": "#/definitions/ibmcloud.v1alpha1.Trigger"
       }
      },
      "kind": {
@@ -784,20 +642,20 @@
     },
     "x-kubernetes-group-version-kind": [
      {
-      "group": "openwhisk.seed.ibm.com",
-      "version": "v1beta1",
+      "group": "ibmcloud.ibm.com",
+      "version": "v1alpha1",
       "kind": "TriggerList"
      }
     ]
    },
-   "openwhisk.v1beta1.TriggerSpec": {
+   "ibmcloud.v1alpha1.TriggerSpec": {
     "description": "TriggerSpec defines the desired state of Trigger",
     "properties": {
      "annotations": {
       "description": "List of key/value annotations",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      },
      "contextFrom": {
@@ -816,12 +674,12 @@
       "description": "List of key/value input parameters",
       "type": "array",
       "items": {
-       "$ref": "#/definitions/keyvalue.v1.KeyValue"
+       "$ref": "#/definitions/lib.keyvalue.v1.KeyValue"
       }
      }
     }
    },
-   "openwhisk.v1beta1.TriggerStatus": {
+   "ibmcloud.v1alpha1.TriggerStatus": {
     "description": "TriggerStatus defines the observed state of Trigger",
     "required": [
      "generation"
@@ -837,6 +695,46 @@
      },
      "state": {
       "type": "string"
+     }
+    }
+   },
+   "lib.keyvalue.v1.KeyValue": {
+    "description": "KeyValue represents a key-value pair",
+    "required": [
+     "name"
+    ],
+    "properties": {
+     "attributes": {
+      "description": "A parameter may have attributes (e.g. message hub topic might have partitions)",
+      "type": "object",
+      "additionalProperties": {
+       "$ref": "#/definitions/runtime.RawExtension"
+      }
+     },
+     "name": {
+      "description": "Name representing the key.",
+      "type": "string"
+     },
+     "value": {
+      "description": "Defaults to null.",
+      "$ref": "#/definitions/runtime.RawExtension"
+     },
+     "valueFrom": {
+      "description": "Source for the value. Cannot be used if value is not empty.",
+      "$ref": "#/definitions/lib.keyvalue.v1.KeyValueSource"
+     }
+    }
+   },
+   "lib.keyvalue.v1.KeyValueSource": {
+    "description": "KeyValueSource represents a source for the value of a KeyValue.",
+    "properties": {
+     "configMapKeyRef": {
+      "description": "Selects a key of a ConfigMap.",
+      "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapKeySelector"
+     },
+     "secretKeyRef": {
+      "description": "Selects a key of a secret in the resource namespace",
+      "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
      }
     }
    }

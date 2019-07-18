@@ -20,7 +20,7 @@ ROOT=$(dirname ${BASH_SOURCE})/../..
 
 TAG=${TRAVIS_TAG:-vlatest}
 TAG=${TAG:1}
-NAME=ibmcom/openwhisk-operator
+NAME=ibmcom/cloud-functions-operator
 
 cd $ROOT
 

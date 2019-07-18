@@ -23,7 +23,8 @@ cd $ROOT
 source hack/lib/utils.sh
 source hack/lib/object.sh
 
-kustomize build github.com/IBM/openwhisk-operator//config/crds | kubectl apply -f -
-kustomize build github.com/IBM/openwhisk-operator//config/default | kubectl apply -f -
+kubectl apply -f config/crds
+kubectl apply -f config/manager
+kubectl apply -f config/rbac
 
 object::wait_operator_ready

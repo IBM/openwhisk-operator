@@ -1,13 +1,13 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= ibmcom/openwhisk-operator:latest
 LOG_LEVEL ?= 0
 
 all: test manager
 
 # Run tests
 test: generate fmt vet manifests
-	ginkgo -r --trace --compilers=1 -cover -coverprofile cover.out -outputdir=. -- -v=${LOG_LEVEL} -logtostderr=true
+	ginkgo -r --trace --compilers=1 -cover -coverprofile cover.out -outputdir=.
 
 # Run e2e test
 e2e:
@@ -23,35 +23,31 @@ cover:
 
 # Run function tests
 testf:
-	go test -p 1  github.com/ibm/openwhisk-operator/pkg/controller/function -v -args -logtostderr=true -v=5
+	go test -p 1  github.com/ibm/cloud-functions-operator/pkg/controller/function -v
 
 # Run invocation tests
 testi:
-	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/invocation -v -args -logtostderr=true -v=5
+	go test -p 1 github.com/ibm/cloud-functions-operator/pkg/controller/invocation -v
 
 # Run auth tests
 testa:
-	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/auth -v -args -logtostderr=true -v=5
+	go test -p 1 github.com/ibm/cloud-functions-operator/pkg/controller/auth -v
 
 # Run trigger tests
 testt:
-	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/trigger -v -args -logtostderr=true -v=5
+	go test -p 1 github.com/ibm/cloud-functions-operator/pkg/controller/trigger -v
 
 # Run rule tests
 testr:
-	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/rule -v -args -logtostderr=true -v=5
-
-# Run composition tests
-testc:
-	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/composition -v -args -logtostderr=true -v=5
+	go test -p 1 github.com/ibm/cloud-functions-operator/pkg/controller/rule -v
 
 # Run package tests
 testp:
-	go test -p 1 github.com/ibm/openwhisk-operator/pkg/controller/pkg -v -args -logtostderr=true -v=5
+	go test -p 1 github.com/ibm/cloud-functions-operator/pkg/controller/pkg -v -args -logtostderr=true -v=5
 
 # Build manager binary
 manager: generate fmt vet
-	go build -o bin/manager github.com/ibm/openwhisk-operator/cmd/manager
+	go build -o bin/manager github.com/ibm/cloud-functions-operator/cmd/manager
 
 # Generate documentation
 doc:
@@ -70,20 +66,10 @@ run: generate fmt vet
 install: manifests
 	kubectl apply -f config/crds
 
-# Deploy controller in the configured Kubernetes cluster in ~/.kube/config
-deploy: manifests
-	kubectl apply -f config/crds
-	kustomize build config/default | kubectl apply -f -
-
 # Generate manifests e.g. CRD, RBAC etc.
 manifests:
 	go run vendor/sigs.k8s.io/controller-tools/cmd/controller-gen/main.go all
-	patch -p0 -i config/patches/crd.patch
-
-# Generate patched
-patches:
-	go run vendor/sigs.k8s.io/controller-tools/cmd/controller-gen/main.go crd
-	diff -u config/crds/ config/expected/ > config/patches/crd.patch
+	./hack/crd_fix.sh
 
 # Run go fmt against code
 fmt:
@@ -100,8 +86,6 @@ generate:
 # Build the docker image
 docker-build: test
 	docker build . -t ${IMG}
-	@echo "updating kustomize image patch file for manager resource"
-	sed -i'' -e 's@image: .*@image: '"${IMG}"'@' ./config/default/manager_image_patch.yaml
 
 # Push the docker image
 docker-push:

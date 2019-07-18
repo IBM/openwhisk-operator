@@ -1,0 +1,6 @@
+apiVersion: ibmcloud.ibm.com/v1alpha1
+kind: Trigger
+metadata:
+  name: image-uploaded
+spec:
+  feed: openwhisk-cloudant/changes

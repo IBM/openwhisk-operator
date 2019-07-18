@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: manager-role
+  name: cloud-functions-operator
 rules:
 - apiGroups:
   - ""
@@ -41,31 +41,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
-  resources:
-  - compositions
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - openwhisk.seed.ibm.com
-  resources:
-  - compositions/status
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - functions
   verbs:
@@ -77,7 +53,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - functions/status
   verbs:
@@ -101,7 +77,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - invocations
   verbs:
@@ -113,7 +89,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - invocations/status
   verbs:
@@ -125,7 +101,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - packages
   verbs:
@@ -137,7 +113,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - packages/status
   verbs:
@@ -149,7 +125,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - rules
   verbs:
@@ -161,7 +137,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - rules/status
   verbs:
@@ -173,7 +149,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - triggers
   verbs:
@@ -185,7 +161,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - openwhisk.seed.ibm.com
+  - ibmcloud.ibm.com
   resources:
   - triggers/status
   verbs:

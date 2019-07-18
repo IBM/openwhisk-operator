@@ -1,21 +1,18 @@
 # Apache OpenWhisk Operators
 
-[![Build Status](https://travis-ci.org/IBM/openwhisk-operator.svg?branch=master)](https://travis-ci.org/IBM/openwhisk-operator)
+[![Build Status](https://travis-ci.org/IBM/cloud-functions-operator.svg?branch=master)](https://travis-ci.org/IBM/cloud-functions-operator)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-This project provides a collection of Kubernetes operators for managing [Apache OpenWhisk](https://openwhisk.apache.org/) resources namely actions, packages, rules and triggers.
+This project provides a Kubernetes operator for managing [IBM Cloud Functions](https://www.ibm.com/cloud/functions) resources: actions, packages, rules and triggers.
 
 
 <!-- TOC -->
 
-- [Apache OpenWhisk Operators](#apache-openwhisk-operators)
-- [Quick start](#quick-start)
-    - [Prerequisites](#prerequisites)
-    - [Installing the operators](#installing-the-operators)
-    - [Using the operators](#using-the-operators)
-        - [Setting up OpenWhisk credentials](#setting-up-openwhisk-credentials)
-        - [Deploying your first function](#deploying-your-first-function)
-- [Learn more](#learn-more)
+- [Prerequisites](#prerequisites)
+- [Installing the operator](#installing-the-operator)
+- [Using the operators](#using-the-operators)
+    - [Setting up IBM cloud credentials](#setting-up-ibm-cloud-credentials)
+    - [Deploying your first function](#deploying-your-first-function)
 
 <!-- /TOC -->
 
@@ -23,31 +20,32 @@ This project provides a collection of Kubernetes operators for managing [Apache 
 
 ## Prerequisites
 
-- A cluster running Kubernetes 1.11+ 
+- A cluster running Kubernetes 1.11+
 - `kubectl` installed and configured.
 - [`kustomize`](https://github.com/kubernetes-sigs/kustomize) installed.
 
-## Installing the operators
+## Installing the operator
 
-1. Install the CRDs using `kubectl`:
-
-```sh
-$ kustomize build github.com/IBM/openwhisk-operator//config/crds | kubectl apply -f -
-```
-
-2. Then install the operators:
+1. Clone this repository
+2. Install the CRDs using `kubectl`:
 
 ```sh
-$ kustomize build github.com/IBM/openwhisk-operator//config/default | kubectl apply -f -
+$ kubectl apply -f config/crds
 ```
 
-By default the operators are installed in the `openwhisk-system` namespace and are granted [clustor-wide](./config/rbac/rbac_role_binding.yaml) [permissions](./config/rbac/rbac_role.yaml).
+3. Then install the operator:
+
+```sh
+$ kubectl apply -f config/manager -f config/rbac/
+```
+
+By default the operator is installed in the `ibmcloud-operators` namespace and is granted [clustor-wide](./config/rbac/rbac_role_binding.yaml) [permissions](./config/rbac/rbac_role.yaml).
 
 ## Using the operators
 
-### Setting up OpenWhisk credentials
+### Setting up IBM cloud credentials
 
-By default, all operators look for OpenWhisk credentials in the `seed-defaults-owprops` secret:
+By default, all operators look for the IBM cloud function credentials in the `seed-defaults-owprops` secret:
 
 [//]: #embed-code(test/e2e/wskprops-secrets.sh)
 ```sh
@@ -67,7 +65,7 @@ Alternativalely, you can directly create a k8s secret
 ```yaml
 apiVersion: v1
 kind: Secret
-metadata: 
+metadata:
   name: seed-default-owprops
 stringData:
   apihost: localhost
@@ -75,15 +73,15 @@ stringData:
   insecure: "true"
 ```
 
-**NOTE**: be aware that all operators update OpenWhisk entities and can potentially override existing entitites.
+**NOTE**: be aware that all operators update IBM cloud function entities and can potentially override existing entities.
 
-### Deploying your first function 
+### Deploying your first function
 
-The `Function` resource kind allows the deployement of actions:
+The `Function` resource kind allows the deployment of actions:
 
 [//]: #embed-code(test/e2e/greetings.yaml)
 ```yaml
-apiVersion: openwhisk.seed.ibm.com/v1beta1
+apiVersion: ibmcloud.ibm.com/v1alpha1
 kind: Function
 metadata:
   name: greetings
@@ -104,10 +102,10 @@ $ kubectl apply -f sample.yaml
 wait a little bit and run:
 
 ```sh
-$ wsk action invoke greetings -br
+$ ibmcloud wsk action invoke greetings -br
 ```
 
 # Learn more
 
-- [reference documentation](https://ibm.github.io/openwhisk-operator/)
+- [reference documentation](https://ibm.github.io/cloud-functions-operator/)
 - [contributions](./CONTRIBUTING.md)

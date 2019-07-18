@@ -1,5 +1,4 @@
 bin
-vendor
 .DS_Store
 dist
 _build

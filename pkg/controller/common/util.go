@@ -25,7 +25,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 
 	context "github.com/ibm/cloud-operators/pkg/context"
-	resv1 "github.com/ibm/cloud-operators/pkg/types/apis/resource/v1"
+	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 )
 
 var slog = logf.Log.WithName("openwhisk")

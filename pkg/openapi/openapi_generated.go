@@ -29,284 +29,38 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue":                 schema_types_apis_keyvalue_v1_KeyValue(ref),
-		"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValueSource":           schema_types_apis_keyvalue_v1_KeyValueSource(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Composition":           schema_pkg_apis_openwhisk_v1beta1_Composition(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.CompositionList":       schema_pkg_apis_openwhisk_v1beta1_CompositionList(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.CompositionSpec":       schema_pkg_apis_openwhisk_v1beta1_CompositionSpec(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.CompositionStatus":     schema_pkg_apis_openwhisk_v1beta1_CompositionStatus(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.ConfigMapKeyReference": schema_pkg_apis_openwhisk_v1beta1_ConfigMapKeyReference(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Function":              schema_pkg_apis_openwhisk_v1beta1_Function(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.FunctionList":          schema_pkg_apis_openwhisk_v1beta1_FunctionList(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.FunctionSpec":          schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.FunctionStatus":        schema_pkg_apis_openwhisk_v1beta1_FunctionStatus(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Invocation":            schema_pkg_apis_openwhisk_v1beta1_Invocation(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationFinalizer":   schema_pkg_apis_openwhisk_v1beta1_InvocationFinalizer(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationList":        schema_pkg_apis_openwhisk_v1beta1_InvocationList(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationSpec":        schema_pkg_apis_openwhisk_v1beta1_InvocationSpec(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationStatus":      schema_pkg_apis_openwhisk_v1beta1_InvocationStatus(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationTarget":      schema_pkg_apis_openwhisk_v1beta1_InvocationTarget(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Limits":                schema_pkg_apis_openwhisk_v1beta1_Limits(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Package":               schema_pkg_apis_openwhisk_v1beta1_Package(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.PackageList":           schema_pkg_apis_openwhisk_v1beta1_PackageList(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.PackageSpec":           schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.PackageStatus":         schema_pkg_apis_openwhisk_v1beta1_PackageStatus(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.ParametersFromSource":  schema_pkg_apis_openwhisk_v1beta1_ParametersFromSource(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Rule":                  schema_pkg_apis_openwhisk_v1beta1_Rule(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.RuleList":              schema_pkg_apis_openwhisk_v1beta1_RuleList(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.RuleSpec":              schema_pkg_apis_openwhisk_v1beta1_RuleSpec(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.RuleStatus":            schema_pkg_apis_openwhisk_v1beta1_RuleStatus(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.SecretKeyReference":    schema_pkg_apis_openwhisk_v1beta1_SecretKeyReference(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Trigger":               schema_pkg_apis_openwhisk_v1beta1_Trigger(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerList":           schema_pkg_apis_openwhisk_v1beta1_TriggerList(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerSpec":           schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref),
-		"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerStatus":         schema_pkg_apis_openwhisk_v1beta1_TriggerStatus(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.ConfigMapKeyReference": schema_pkg_apis_ibmcloud_v1alpha1_ConfigMapKeyReference(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Function":              schema_pkg_apis_ibmcloud_v1alpha1_Function(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.FunctionList":          schema_pkg_apis_ibmcloud_v1alpha1_FunctionList(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.FunctionSpec":          schema_pkg_apis_ibmcloud_v1alpha1_FunctionSpec(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.FunctionStatus":        schema_pkg_apis_ibmcloud_v1alpha1_FunctionStatus(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Invocation":            schema_pkg_apis_ibmcloud_v1alpha1_Invocation(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationFinalizer":   schema_pkg_apis_ibmcloud_v1alpha1_InvocationFinalizer(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationList":        schema_pkg_apis_ibmcloud_v1alpha1_InvocationList(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationSpec":        schema_pkg_apis_ibmcloud_v1alpha1_InvocationSpec(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationStatus":      schema_pkg_apis_ibmcloud_v1alpha1_InvocationStatus(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationTarget":      schema_pkg_apis_ibmcloud_v1alpha1_InvocationTarget(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Limits":                schema_pkg_apis_ibmcloud_v1alpha1_Limits(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Package":               schema_pkg_apis_ibmcloud_v1alpha1_Package(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.PackageList":           schema_pkg_apis_ibmcloud_v1alpha1_PackageList(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.PackageSpec":           schema_pkg_apis_ibmcloud_v1alpha1_PackageSpec(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.PackageStatus":         schema_pkg_apis_ibmcloud_v1alpha1_PackageStatus(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.ParametersFromSource":  schema_pkg_apis_ibmcloud_v1alpha1_ParametersFromSource(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Rule":                  schema_pkg_apis_ibmcloud_v1alpha1_Rule(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.RuleList":              schema_pkg_apis_ibmcloud_v1alpha1_RuleList(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.RuleSpec":              schema_pkg_apis_ibmcloud_v1alpha1_RuleSpec(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.RuleStatus":            schema_pkg_apis_ibmcloud_v1alpha1_RuleStatus(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.SecretKeyReference":    schema_pkg_apis_ibmcloud_v1alpha1_SecretKeyReference(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Trigger":               schema_pkg_apis_ibmcloud_v1alpha1_Trigger(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.TriggerList":           schema_pkg_apis_ibmcloud_v1alpha1_TriggerList(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.TriggerSpec":           schema_pkg_apis_ibmcloud_v1alpha1_TriggerSpec(ref),
+		"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.TriggerStatus":         schema_pkg_apis_ibmcloud_v1alpha1_TriggerStatus(ref),
+		"github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue":                              schema_pkg_lib_keyvalue_v1_KeyValue(ref),
+		"github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValueSource":                        schema_pkg_lib_keyvalue_v1_KeyValueSource(ref),
 	}
 }
 
-func schema_types_apis_keyvalue_v1_KeyValue(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KeyValue represents a key-value pair",
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name representing the key.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"attributes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "A parameter may have attributes (e.g. message hub topic might have partitions)",
-							Type:        []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
-									},
-								},
-							},
-						},
-					},
-					"value": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Defaults to null.",
-							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
-						},
-					},
-					"valueFrom": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Source for the value. Cannot be used if value is not empty.",
-							Ref:         ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValueSource"),
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValueSource", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
-	}
-}
-
-func schema_types_apis_keyvalue_v1_KeyValueSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KeyValueSource represents a source for the value of a KeyValue.",
-				Properties: map[string]spec.Schema{
-					"configMapKeyRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Selects a key of a ConfigMap.",
-							Ref:         ref("k8s.io/api/core/v1.ConfigMapKeySelector"),
-						},
-					},
-					"secretKeyRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Selects a key of a secret in the resource namespace",
-							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.ConfigMapKeySelector", "k8s.io/api/core/v1.SecretKeySelector"},
-	}
-}
-
-func schema_pkg_apis_openwhisk_v1beta1_Composition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Composition is the Schema for the compositions API",
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.CompositionSpec"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.CompositionStatus"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.CompositionSpec", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.CompositionStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
-	}
-}
-
-func schema_pkg_apis_openwhisk_v1beta1_CompositionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CompositionList contains a list of Composition",
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Composition"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Composition", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
-	}
-}
-
-func schema_pkg_apis_openwhisk_v1beta1_CompositionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CompositionSpec defines the desired state of Composition",
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Composition name. Override metadata.name. Does not include the package name (see below)",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"package": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Composition package name. Add it to the default package when not specified",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"compositionURI": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The location of the composition to deploy. Support `http(s)` and `file` protocols.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"composition": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The inline composition to deploy.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"contextFrom": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Reference to a secret representing where to deploy this entity Default is `seed-default-owprops` The secret must defines these fields: apihost (string) : The OpenWhisk host auth (string): the authorization key cert (string):  the client certificate (optional) insecure (bool):  Whether or not to bypass certificate checking (optional, default is false)",
-							Ref:         ref("k8s.io/api/core/v1.SecretEnvSource"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretEnvSource"},
-	}
-}
-
-func schema_pkg_apis_openwhisk_v1beta1_CompositionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CompositionStatus defines the observed state of Composition",
-				Properties: map[string]spec.Schema{
-					"state": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"message": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"generation": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Last synced generation. Set by the system",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{},
-	}
-}
-
-func schema_pkg_apis_openwhisk_v1beta1_ConfigMapKeyReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_ConfigMapKeyReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -326,7 +80,7 @@ func schema_pkg_apis_openwhisk_v1beta1_ConfigMapKeyReference(ref common.Referenc
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_Function(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_Function(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -353,23 +107,23 @@ func schema_pkg_apis_openwhisk_v1beta1_Function(ref common.ReferenceCallback) co
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.FunctionSpec"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.FunctionSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.FunctionStatus"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.FunctionStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.FunctionSpec", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.FunctionStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.FunctionSpec", "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.FunctionStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_FunctionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_FunctionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -400,7 +154,7 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionList(ref common.ReferenceCallback
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Function"),
+										Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Function"),
 									},
 								},
 							},
@@ -411,11 +165,11 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Function", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Function", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_FunctionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -477,7 +231,7 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref common.ReferenceCallback
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -486,7 +240,7 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref common.ReferenceCallback
 					"limits": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Sets the action limits. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/reference.md#system-limits",
-							Ref:         ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Limits"),
+							Ref:         ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Limits"),
 						},
 					},
 					"main": {
@@ -524,7 +278,7 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref common.ReferenceCallback
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -540,11 +294,11 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Limits", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Limits", "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_FunctionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_FunctionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -577,7 +331,7 @@ func schema_pkg_apis_openwhisk_v1beta1_FunctionStatus(ref common.ReferenceCallba
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_Invocation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_Invocation(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -604,23 +358,23 @@ func schema_pkg_apis_openwhisk_v1beta1_Invocation(ref common.ReferenceCallback) 
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationSpec"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationStatus"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationSpec", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationSpec", "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_InvocationFinalizer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_InvocationFinalizer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -640,7 +394,7 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationFinalizer(ref common.ReferenceC
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -651,11 +405,11 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationFinalizer(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"},
+			"github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_InvocationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_InvocationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -686,7 +440,7 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationList(ref common.ReferenceCallba
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Invocation"),
+										Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Invocation"),
 									},
 								},
 							},
@@ -697,11 +451,11 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationList(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Invocation", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Invocation", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_InvocationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_InvocationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -721,7 +475,7 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationSpec(ref common.ReferenceCallba
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -730,13 +484,13 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationSpec(ref common.ReferenceCallba
 					"to": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Defines where to store the invocation result. Discard the result when not specified.",
-							Ref:         ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationTarget"),
+							Ref:         ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationTarget"),
 						},
 					},
 					"finalizer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Defines the function to invoke when this resource is deleted.",
-							Ref:         ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationFinalizer"),
+							Ref:         ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationFinalizer"),
 						},
 					},
 					"contextFrom": {
@@ -750,11 +504,11 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationFinalizer", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.InvocationTarget", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationFinalizer", "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.InvocationTarget", "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_InvocationStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_InvocationStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -787,7 +541,7 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationStatus(ref common.ReferenceCall
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_InvocationTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_InvocationTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -820,7 +574,7 @@ func schema_pkg_apis_openwhisk_v1beta1_InvocationTarget(ref common.ReferenceCall
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_Limits(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_Limits(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -854,7 +608,7 @@ func schema_pkg_apis_openwhisk_v1beta1_Limits(ref common.ReferenceCallback) comm
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_Package(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_Package(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -881,23 +635,23 @@ func schema_pkg_apis_openwhisk_v1beta1_Package(ref common.ReferenceCallback) com
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.PackageSpec"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.PackageSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.PackageStatus"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.PackageStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.PackageSpec", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.PackageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.PackageSpec", "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.PackageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_PackageList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_PackageList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -928,7 +682,7 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageList(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Package"),
+										Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Package"),
 									},
 								},
 							},
@@ -939,11 +693,11 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageList(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Package", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Package", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_PackageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -984,7 +738,7 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -997,7 +751,7 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -1010,7 +764,7 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.ParametersFromSource"),
+										Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.ParametersFromSource"),
 									},
 								},
 							},
@@ -1026,11 +780,11 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.ParametersFromSource", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.ParametersFromSource", "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_PackageStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_PackageStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1063,7 +817,7 @@ func schema_pkg_apis_openwhisk_v1beta1_PackageStatus(ref common.ReferenceCallbac
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_ParametersFromSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_ParametersFromSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1072,24 +826,24 @@ func schema_pkg_apis_openwhisk_v1beta1_ParametersFromSource(ref common.Reference
 					"configMapKeyRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Selects a key of a ConfigMap.",
-							Ref:         ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.ConfigMapKeyReference"),
+							Ref:         ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.ConfigMapKeyReference"),
 						},
 					},
 					"secretKeyRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Selects a key of a secret in the resource namespace",
-							Ref:         ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.SecretKeyReference"),
+							Ref:         ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.SecretKeyReference"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.ConfigMapKeyReference", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.SecretKeyReference"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.ConfigMapKeyReference", "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.SecretKeyReference"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_Rule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_Rule(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1116,23 +870,23 @@ func schema_pkg_apis_openwhisk_v1beta1_Rule(ref common.ReferenceCallback) common
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.RuleSpec"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.RuleSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.RuleStatus"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.RuleStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.RuleSpec", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.RuleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.RuleSpec", "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.RuleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_RuleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_RuleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1163,7 +917,7 @@ func schema_pkg_apis_openwhisk_v1beta1_RuleList(ref common.ReferenceCallback) co
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Rule"),
+										Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Rule"),
 									},
 								},
 							},
@@ -1174,11 +928,11 @@ func schema_pkg_apis_openwhisk_v1beta1_RuleList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Rule", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Rule", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_RuleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_RuleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1220,7 +974,7 @@ func schema_pkg_apis_openwhisk_v1beta1_RuleSpec(ref common.ReferenceCallback) co
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_RuleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_RuleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1253,7 +1007,7 @@ func schema_pkg_apis_openwhisk_v1beta1_RuleStatus(ref common.ReferenceCallback) 
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_SecretKeyReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_SecretKeyReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1273,7 +1027,7 @@ func schema_pkg_apis_openwhisk_v1beta1_SecretKeyReference(ref common.ReferenceCa
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_Trigger(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_Trigger(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1300,23 +1054,23 @@ func schema_pkg_apis_openwhisk_v1beta1_Trigger(ref common.ReferenceCallback) com
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerSpec"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.TriggerSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerStatus"),
+							Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.TriggerStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerSpec", "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.TriggerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.TriggerSpec", "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.TriggerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_TriggerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_TriggerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1347,7 +1101,7 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerList(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Trigger"),
+										Ref: ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Trigger"),
 									},
 								},
 							},
@@ -1358,11 +1112,11 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerList(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1.Trigger", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+			"github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Trigger", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_TriggerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1389,7 +1143,7 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -1402,7 +1156,7 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue"),
+										Ref: ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue"),
 									},
 								},
 							},
@@ -1418,11 +1172,11 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
+			"github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValue", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
-func schema_pkg_apis_openwhisk_v1beta1_TriggerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_ibmcloud_v1alpha1_TriggerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -1452,5 +1206,78 @@ func schema_pkg_apis_openwhisk_v1beta1_TriggerStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{},
+	}
+}
+
+func schema_pkg_lib_keyvalue_v1_KeyValue(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KeyValue represents a key-value pair",
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name representing the key.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"attributes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A parameter may have attributes (e.g. message hub topic might have partitions)",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+									},
+								},
+							},
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defaults to null.",
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"valueFrom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source for the value. Cannot be used if value is not empty.",
+							Ref:         ref("github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValueSource"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1.KeyValueSource", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+	}
+}
+
+func schema_pkg_lib_keyvalue_v1_KeyValueSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KeyValueSource represents a source for the value of a KeyValue.",
+				Properties: map[string]spec.Schema{
+					"configMapKeyRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selects a key of a ConfigMap.",
+							Ref:         ref("k8s.io/api/core/v1.ConfigMapKeySelector"),
+						},
+					},
+					"secretKeyRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selects a key of a secret in the resource namespace",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ConfigMapKeySelector", "k8s.io/api/core/v1.SecretKeySelector"},
 	}
 }

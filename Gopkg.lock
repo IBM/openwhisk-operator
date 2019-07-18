@@ -29,6 +29,22 @@
   revision = "c7013c9f456f35be34b3bf166535aaa03b834331"
 
 [[projects]]
+  digest = "1:464aef731a5f82ded547c62e249a2e9ec59fbbc9ddab53cda7b9857852630a61"
+  name = "github.com/appscode/jsonpatch"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "7c0e3b262f30165a8ec3d0b4c6059fd92703bfb2"
+  version = "1.0.0"
+
+[[projects]]
+  digest = "1:7679b7fa4a39470d9ed29a6026bf1ab4a679d82414e24867f4ffc3e5875ecf54"
+  name = "github.com/beorn7/perks"
+  packages = ["quantile"]
+  pruneopts = "T"
+  revision = "4b2b341e8d7715fae06375aa633dbb6e91b3fb46"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:42a44f8cd696c4fc86d5909cf08063bb8266b85819f674518861b14735a6587d"
   name = "github.com/cloudfoundry/jibber_jabber"
@@ -258,19 +274,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0fd03738f3b4c4d8440fc001e828ecd9a41e00f62075379df61d7111e4ef11db"
+  digest = "1:049cee550046631b4b1f1af1ee15ef462f9026198e453ff8848eeadf5da75f15"
   name = "github.com/ibm/cloud-operators"
   packages = [
     "pkg/context",
     "pkg/lib/event",
     "pkg/lib/ibmcloud",
+    "pkg/lib/keyvalue/v1",
+    "pkg/lib/resource/v1",
     "pkg/lib/secret",
-    "pkg/types/apis/keyvalue/v1",
-    "pkg/types/apis/resource/v1",
     "pkg/util",
   ]
   pruneopts = "T"
-  revision = "cde40155ff5056c24bd8a521d8d5de843e775e6e"
+  revision = "c42a8c29e816ca4d368d1b39fcf0a430e7e39ed8"
 
 [[projects]]
   digest = "1:3477d9dd8c135faab978bac762eaeafb31f28d6da97ef500d5c271966f74140a"
@@ -325,14 +341,6 @@
   version = "v1.0.4"
 
 [[projects]]
-  branch = "master"
-  digest = "1:fc2b04b0069d6b10bdef96d278fe20c345794009685ed3c8c7f1a6dc023eefec"
-  name = "github.com/mattbaird/jsonpatch"
-  packages = ["."]
-  pruneopts = "T"
-  revision = "81af80346b1a01caae0cbc27fd3c1ba5b11e189f"
-
-[[projects]]
   digest = "1:b168836ecd85a2d138391dbc464d2442ea9400c29cc0636f2c6056b996692e29"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
@@ -347,6 +355,14 @@
   pruneopts = "T"
   revision = "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c"
   version = "v0.0.4"
+
+[[projects]]
+  digest = "1:a8e3d14801bed585908d130ebfc3b925ba642208e6f30d879437ddfc7bb9b413"
+  name = "github.com/matttproud/golang_protobuf_extensions"
+  packages = ["pbutil"]
+  pruneopts = "T"
+  revision = "c12348ce28de40eed0136aa2b644d0ee0650e56c"
+  version = "v1.0.1"
 
 [[projects]]
   digest = "1:33422d238f147d247752996a26574ac48dcf472976eda7f5134015f06bf16563"
@@ -467,6 +483,49 @@
   pruneopts = "T"
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
+
+[[projects]]
+  digest = "1:f0ba4576d4c8ffe0a200d1da86cfcfd9ad6baec4bf82878fba34c8e22882f1be"
+  name = "github.com/prometheus/client_golang"
+  packages = [
+    "prometheus",
+    "prometheus/internal",
+    "prometheus/promhttp",
+  ]
+  pruneopts = "T"
+  revision = "2641b987480bca71fb39738eb8c8b0d577cb1d76"
+  version = "v0.9.4"
+
+[[projects]]
+  branch = "master"
+  digest = "1:cd67319ee7536399990c4b00fae07c3413035a53193c644549a676091507cadc"
+  name = "github.com/prometheus/client_model"
+  packages = ["go"]
+  pruneopts = "T"
+  revision = "fd36f4220a901265f90734c3183c5f0c91daa0b8"
+
+[[projects]]
+  digest = "1:f0a51af5921df9ce09c9e0df14027644afb08bea6a1cbfa4c77a741b01d9ee20"
+  name = "github.com/prometheus/common"
+  packages = [
+    "expfmt",
+    "internal/bitbucket.org/ww/goautoneg",
+    "model",
+  ]
+  pruneopts = "T"
+  revision = "31bed53e4047fd6c510e43a941f90cb31be0972a"
+  version = "v0.6.0"
+
+[[projects]]
+  digest = "1:c9bed782ef749abc80f99818c825498025292ae3c976b88f5761ca630eb54c59"
+  name = "github.com/prometheus/procfs"
+  packages = [
+    ".",
+    "internal/fs",
+  ]
+  pruneopts = "T"
+  revision = "3f98efb27840a48a7a2898ec80be07674d19f9c8"
+  version = "v0.0.3"
 
 [[projects]]
   digest = "1:fac620096bacf6e41b3beb93ff03af9fe545d77421b3e7320f114b2da2e10824"
@@ -693,7 +752,7 @@
   version = "v2.2.2"
 
 [[projects]]
-  digest = "1:75905606c2db8d9526ccff0acf5655759afe3d901d1d64868bd87985b4a46e36"
+  digest = "1:a8dd0f5c1137ed558bca1fed6617b019aa645783731d15138abc6f184952fef5"
   name = "k8s.io/api"
   packages = [
     "admission/v1beta1",
@@ -702,16 +761,19 @@
     "apps/v1",
     "apps/v1beta1",
     "apps/v1beta2",
+    "auditregistration/v1alpha1",
     "authentication/v1",
     "authentication/v1beta1",
     "authorization/v1",
     "authorization/v1beta1",
     "autoscaling/v1",
     "autoscaling/v2beta1",
+    "autoscaling/v2beta2",
     "batch/v1",
     "batch/v1beta1",
     "batch/v2alpha1",
     "certificates/v1beta1",
+    "coordination/v1beta1",
     "core/v1",
     "events/v1beta1",
     "extensions/v1beta1",
@@ -728,11 +790,11 @@
     "storage/v1beta1",
   ]
   pruneopts = "T"
-  revision = "2d6f90ab1293a1fb871cf149423ebb72aa7423aa"
-  version = "kubernetes-1.11.2"
+  revision = "05914d821849570fba9eacfb29466f2d8d3cd229"
+  version = "kubernetes-1.13.1"
 
 [[projects]]
-  digest = "1:3fe3cb0c5e5a140f0b40c18796b884d3432efbd690b0bda8cbd838d38a3ea585"
+  digest = "1:d6b5f1f23ca1b4a68aacbe3167fdd56babaf4b0a72b5d0c166595cee4b71532d"
   name = "k8s.io/apiextensions-apiserver"
   packages = [
     "pkg/apis/apiextensions",
@@ -742,11 +804,11 @@
     "pkg/client/clientset/clientset/typed/apiextensions/v1beta1",
   ]
   pruneopts = "T"
-  revision = "408db4a50408e2149acbd657bceb2480c13cb0a4"
-  version = "kubernetes-1.11.2"
+  revision = "0fe22c71c47604641d9aa352c785b7912c200562"
+  version = "kubernetes-1.13.1"
 
 [[projects]]
-  digest = "1:e2035d60919705a125feeb8b13926383aff8817634b2c4550743c19ca21f3b08"
+  digest = "1:6326c0acd4934569b53d305d4a79a30f7074b3d4fdb3537af06203b68297a22b"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/errors",
@@ -778,6 +840,7 @@
     "pkg/util/intstr",
     "pkg/util/json",
     "pkg/util/mergepatch",
+    "pkg/util/naming",
     "pkg/util/net",
     "pkg/util/runtime",
     "pkg/util/sets",
@@ -793,11 +856,11 @@
     "third_party/forked/golang/reflect",
   ]
   pruneopts = "T"
-  revision = "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
-  version = "kubernetes-1.11.2"
+  revision = "2b1284ed4c93a43499e781493253e2ac5959c4fd"
+  version = "kubernetes-1.13.1"
 
 [[projects]]
-  digest = "1:0a19f9bf56ecc683569299c8c2282ee3ac70d4e32eeb170d3265761bff8d5e12"
+  digest = "1:0b3ba6818a03b0f0f181ab6b88d9be03789d02ede8929d876f45210471811fdb"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
@@ -809,16 +872,19 @@
     "kubernetes/typed/apps/v1",
     "kubernetes/typed/apps/v1beta1",
     "kubernetes/typed/apps/v1beta2",
+    "kubernetes/typed/auditregistration/v1alpha1",
     "kubernetes/typed/authentication/v1",
     "kubernetes/typed/authentication/v1beta1",
     "kubernetes/typed/authorization/v1",
     "kubernetes/typed/authorization/v1beta1",
     "kubernetes/typed/autoscaling/v1",
     "kubernetes/typed/autoscaling/v2beta1",
+    "kubernetes/typed/autoscaling/v2beta2",
     "kubernetes/typed/batch/v1",
     "kubernetes/typed/batch/v1beta1",
     "kubernetes/typed/batch/v2alpha1",
     "kubernetes/typed/certificates/v1beta1",
+    "kubernetes/typed/coordination/v1beta1",
     "kubernetes/typed/core/v1",
     "kubernetes/typed/events/v1beta1",
     "kubernetes/typed/extensions/v1beta1",
@@ -867,8 +933,8 @@
     "util/workqueue",
   ]
   pruneopts = "T"
-  revision = "1f13a808da65775f22cbf47862c4e5898d8f4ca1"
-  version = "kubernetes-1.11.2"
+  revision = "8d9ed539ba3134352c586810e749e58df4e94e4f"
+  version = "kubernetes-1.13.1"
 
 [[projects]]
   branch = "release-1.10"
@@ -926,7 +992,7 @@
   revision = "0317810137be915b9cf888946c6e115c1bfac693"
 
 [[projects]]
-  digest = "1:ca3f51201a90f3a23bf35938ee910d2fb3095ece453cf56c8b723e935c194ebd"
+  digest = "1:fbd9138a454764d4037f8edeb7bdea3f4ef4ad24b672a52cceff2a9609aacf91"
   name = "sigs.k8s.io/controller-runtime"
   packages = [
     "pkg/cache",
@@ -940,9 +1006,12 @@
     "pkg/event",
     "pkg/handler",
     "pkg/internal/controller",
+    "pkg/internal/controller/metrics",
+    "pkg/internal/objectutil",
     "pkg/internal/recorder",
     "pkg/leaderelection",
     "pkg/manager",
+    "pkg/metrics",
     "pkg/patch",
     "pkg/predicate",
     "pkg/reconcile",
@@ -955,38 +1024,50 @@
     "pkg/source/internal",
     "pkg/webhook/admission",
     "pkg/webhook/admission/types",
+    "pkg/webhook/internal/metrics",
     "pkg/webhook/types",
   ]
   pruneopts = "T"
-  revision = "5fd1e9e9fac5261e9ad9d47c375afc014fc31d21"
-  version = "v0.1.7"
+  revision = "f1eaba5087d69cebb154c6a48193e6667f5b512c"
+  version = "v0.1.12"
 
 [[projects]]
-  digest = "1:92290e452e328ffe6bd62f969e51d3aadd57a30a68b5fcf31ccdeda62068bb5d"
+  digest = "1:403a05a256885221051ab3d11ec3b026ac8eb25927fd479f6f5e70de7cc3a142"
   name = "sigs.k8s.io/controller-tools"
   packages = [
     "cmd/controller-gen",
     "pkg/crd/generator",
     "pkg/crd/util",
-    "pkg/generate/rbac",
     "pkg/internal/codegen",
     "pkg/internal/codegen/parse",
+    "pkg/internal/general",
+    "pkg/rbac",
     "pkg/util",
+    "pkg/webhook",
   ]
   pruneopts = "T"
-  revision = "38b2f3f497ed6b8ea5d2844ecf00c28ac4b5c2c4"
-  version = "v0.1.6"
+  revision = "464fbed97efaced33902e262f09c5eae7315c3e3"
+  version = "v0.1.11"
 
 [[projects]]
-  branch = "master"
-  digest = "1:fd7fb0f1f6e3259ec03c9730c675f7c97bcbd9d2a1037364734b197eaa76eee7"
+  digest = "1:290b4da306982122bcdff12dbababbb95c6e4a94a2995db88baf235ef2f6e93e"
   name = "sigs.k8s.io/testing_frameworks"
   packages = [
     "integration",
+    "integration/addr",
     "integration/internal",
   ]
   pruneopts = "T"
-  revision = "5818a3a284a11812aaed11d5ca0bcadec2c50e83"
+  revision = "d348cb12705b516376e0c323bacca72b00a78425"
+  version = "v0.1.1"
+
+[[projects]]
+  digest = "1:7719608fe0b52a4ece56c2dde37bedd95b938677d1ab0f84b8a7852e4c59f849"
+  name = "sigs.k8s.io/yaml"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "fd68e9863619f6ec2fdd8625fe1f02e7c877e480"
+  version = "v1.1.0"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -998,9 +1079,9 @@
     "github.com/go-openapi/spec",
     "github.com/ibm/cloud-operators/pkg/context",
     "github.com/ibm/cloud-operators/pkg/lib/ibmcloud",
+    "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1",
+    "github.com/ibm/cloud-operators/pkg/lib/resource/v1",
     "github.com/ibm/cloud-operators/pkg/lib/secret",
-    "github.com/ibm/cloud-operators/pkg/types/apis/keyvalue/v1",
-    "github.com/ibm/cloud-operators/pkg/types/apis/resource/v1",
     "github.com/ibm/cloud-operators/pkg/util",
     "github.com/onsi/ginkgo",
     "github.com/onsi/ginkgo/extensions/table",

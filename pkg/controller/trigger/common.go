@@ -19,8 +19,8 @@ package trigger
 import (
 	"github.com/apache/incubator-openwhisk-client-go/whisk"
 
-	v1 "github.com/ibm/openwhisk-operator/pkg/apis/openwhisk/v1beta1"
-	ow "github.com/ibm/openwhisk-operator/pkg/controller/common"
+	v1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
 )
 
 func deleteTrigger(wskclient *whisk.Client, obj *v1.Trigger, triggerName string, params whisk.KeyValueArr) {

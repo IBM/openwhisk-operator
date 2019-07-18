@@ -22,11 +22,11 @@ if [ -z "${INSTALL_K8S_TOOLS}" ]; then
 fi
 
 if [ -z ${KUBECTL_VERSION+x} ]; then
-    KUBECTL_VERSION=v1.10.0
+    KUBECTL_VERSION=v1.13.0
 fi
 
 if [ -z ${KB_VERSION+x} ]; then
-    KB_VERSION=1.0.5
+    KB_VERSION=1.0.8
 fi
 
 if [ -z ${KUSTOMIZE_VERSION+x} ]; then

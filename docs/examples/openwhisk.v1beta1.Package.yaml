@@ -1,7 +1,0 @@
-apiVersion: openwhisk.seed.ibm.com/v1beta1
-kind: Package
-metadata:
-  name: mh-publish
-spec:
-  bind: /whisk.system/messaging
-  service: message-hub
