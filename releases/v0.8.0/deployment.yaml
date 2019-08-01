@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloud-functions-operator
-  namespace: ibmcloud-operators
   labels:
     app: cloud-functions-operator
+  name: cloud-functions-operator
+  namespace: ibmcloud-operators
 spec:
   selector:
     matchLabels:
@@ -17,7 +17,7 @@ spec:
       containers:
       - command:
         - /root/manager
-        image: local/cloud-functions-operator
+        image: ibmcom/openwhisk-operator:0.8.0
         name: manager
         resources:
           limits:

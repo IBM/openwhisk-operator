@@ -84,9 +84,29 @@ generate:
 	go generate ./pkg/... ./cmd/...
 
 # Build the docker image
-docker-build: test
+docker-build:
 	docker build . -t ${IMG}
 
 # Push the docker image
 docker-push:
 	docker push ${IMG}
+
+# Run the operator-sdk scorecard on latest release
+scorecard:
+	operator-sdk scorecard
+
+# make a release for olm and releases
+release: check-tag
+	pip install --user PyYAML
+	python hack/package.py v${TAG}
+
+.PHONY: lintall
+lintall: fmt lint vet
+
+lint:
+	golint -set_exit_status=true pkg/
+
+check-tag:
+ifndef TAG
+	$(error TAG is undefined! Please set TAG to the latest release tag, using the format x.y.z e.g. export TAG=0.1.1 )
+endif

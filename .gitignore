@@ -5,3 +5,4 @@ _build
 .history
 old
 cover.out
+.vscode

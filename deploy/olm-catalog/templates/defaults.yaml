@@ -1,0 +1,139 @@
+# Constants used to package the operator for operator hub
+
+operator_name: cloud-functions-operator
+channel_name: alpha
+maturity: alpha
+image: ibmcom/openwhisk-operator
+description: |
+  This operator allows you to manage [IBM Cloud Functions](https://cloud.ibm.com/functions) entities,
+  such as Actions, Packages, Rules and Triggers.
+
+  For more detailed information on how to use this operator,
+  please refer to the [documentation](https://github.com/IBM/cloud-functions-operator/).
+crd:
+  - kind: Function
+    description: Represent an Action
+    resources:
+      - kind: Secret
+        version: v1
+      - kind: ConfigMap
+        version: v1
+      - kind: Invocation
+        version: v1alpha1
+      - kind: Trigger
+        version: v1alpha1
+      - kind: Package
+        version: v1alpha1
+      - kind: Rule
+        version: v1alpha1
+      - kind: Function
+        version: v1alpha1
+    specDescriptors:
+      - description: The location of the code to deploy. Support `http(s)` and `file` protocols.
+        displayName: Code URI
+        path: codeURI
+        x-descriptors:
+        - urn:alm:descriptor:text
+      - description: List of key/value input parameters
+        displayName: Parameters
+        path: parameters
+        x-descriptors:
+        - urn:alm:descriptor:text
+      - description: "Runtime name and optional version. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/actions.md#languages-and-runtimes"
+        displayName: Runtime
+        path: runtime
+        x-descriptors:
+        - urn:alm:descriptor:text
+    statusDescriptors:
+      - description: Last synced generation. Set by the system
+        displayName: Generation
+        path: generation
+        x-descriptors:
+          - urn:alm:descriptor:text
+      - description: Current state message
+        displayName: Message
+        path: message
+        x-descriptors:
+          - urn:alm:descriptor:text
+      - description: Current state
+        displayName: State
+        path: state
+        x-descriptors:
+          - urn:alm:descriptor:text
+  - kind: Package
+    description: Represent a Package
+    resources:
+      - kind: Secret
+        version: v1
+      - kind: ConfigMap
+        version: v1
+      - kind: Invocation
+        version: v1alpha1
+      - kind: Trigger
+        version: v1alpha1
+      - kind: Package
+        version: v1alpha1
+      - kind: Rule
+        version: v1alpha1
+      - kind: Function
+        version: v1alpha1
+    specDescriptors:
+    statusDescriptors:
+  - kind: Trigger
+    description: Represent a Trigger
+    resources:
+      - kind: Secret
+        version: v1
+      - kind: ConfigMap
+        version: v1
+      - kind: Invocation
+        version: v1alpha1
+      - kind: Trigger
+        version: v1alpha1
+      - kind: Package
+        version: v1alpha1
+      - kind: Rule
+        version: v1alpha1
+      - kind: Function
+        version: v1alpha1
+    specDescriptors:
+    statusDescriptors:
+  - kind: Trigger
+    description: Represent a Rule
+    resources:
+      - kind: Secret
+        version: v1
+      - kind: ConfigMap
+        version: v1
+      - kind: Invocation
+        version: v1alpha1
+      - kind: Trigger
+        version: v1alpha1
+      - kind: Package
+        version: v1alpha1
+      - kind: Rule
+        version: v1alpha1
+      - kind: Function
+        version: v1alpha1
+    specDescriptors:
+    statusDescriptors:
+  - kind: Invocation
+    description: Represent an action invocation
+    resources:
+      - kind: Secret
+        version: v1
+      - kind: ConfigMap
+        version: v1
+      - kind: Invocation
+        version: v1alpha1
+      - kind: Trigger
+        version: v1alpha1
+      - kind: Package
+        version: v1alpha1
+      - kind: Rule
+        version: v1alpha1
+      - kind: Function
+        version: v1alpha1
+    specDescriptors:
+    statusDescriptors:
+

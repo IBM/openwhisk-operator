@@ -1,0 +1,7 @@
+apiVersion: ibmcloud.ibm.com/v1alpha1
+kind: Package
+metadata:
+  name: mh-publish
+spec:
+  bind: /whisk.system/messaging
+  service: message-hub

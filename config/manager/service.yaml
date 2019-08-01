@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-functions-operator
+  namespace: ibmcloud-operators
+spec:
+  selector:
+    app: cloud-functions-operator
+  ports:
+  - port: 443
