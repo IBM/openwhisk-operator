@@ -35,7 +35,7 @@ func SetStatusToPending(context context.Context, client client.Client, obj runti
 	status := resv1.GetStatus(obj)
 	if status == nil || status.GetState() != resv1.ResourceStatePending {
 		resv1.SetStatus(obj, resv1.ResourceStatePending, format, args...)
-		if err := client.Update(context, obj); err != nil {
+		if err := client.Status().Update(context, obj); err != nil {
 			slog.Info("failed setting status (retrying)", "error", err)
 			return err
 		}
