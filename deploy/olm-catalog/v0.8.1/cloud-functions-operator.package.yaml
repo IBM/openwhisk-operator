@@ -1,4 +1,4 @@
 channels:
-- currentCSV: cloud-functions-operator.v0.8.0
+- currentCSV: cloud-functions-operator.v0.8.1
   name: alpha
 packageName: cloud-functions-operator

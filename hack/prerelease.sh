@@ -56,7 +56,7 @@ echo "Creating OLM catalog"
 
 # TODO: needs quay
 # echo "Validating OLM catalog"
-# source hack/latest_tag
+source hack/latest_tag
 # operator-courier verify deploy/olm-catalog/v${TAG}/cloud-functions-operator.v${TAG}.clusterserviceversion.yaml
 
 echo "Running scorecard"

@@ -38,10 +38,10 @@ git checkout master
 git fetch --all
 git rebase upstream/master
 
-git checkout -b ibm-cloud-functions-operator-${TAG}
+git checkout -b cloud-functions-operator-${TAG}
 git rebase master
 
-mkdir -p ibm-cloud-functions-operator
-cd ibm-cloud-functions-operator
+mkdir -p cloud-functions-operator
+cd cloud-functions-operator
 cp $ROOT/deploy/olm-catalog/v${TAG}/* .
 

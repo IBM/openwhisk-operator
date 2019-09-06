@@ -7,12 +7,12 @@ metadata:
     capabilities: Basic Install
     categories: Cloud Provider
     certified: 'false'
-    containerImage: ibmcom/openwhisk-operator:0.8.0
-    createdAt: '2019-09-06T13:08:41Z'
+    containerImage: ibmcom/openwhisk-operator:0.8.1
+    createdAt: '2019-09-06T14:11:43Z'
     description: Manage IBM Cloud Functions actions and more
     repository: https://github.com/IBM/cloud-functions-operator/
     support: IBM
-  name: cloud-functions-operator.v0.8.0
+  name: cloud-functions-operator.v0.8.1
   namespace: placeholder
 spec:
   customresourcedefinitions:
@@ -360,7 +360,7 @@ spec:
               containers:
               - command:
                 - /root/manager
-                image: ibmcom/openwhisk-operator:0.8.0
+                image: ibmcom/openwhisk-operator:0.8.1
                 name: manager
                 resources:
                   limits:
@@ -409,4 +409,4 @@ spec:
   selector:
     matchLabels:
       name: cloud-functions-operator
-  version: 0.8.0
+  version: 0.8.1

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cloud-functions-operator
+  name: cloud-functions-operator
+  namespace: ibmcloud-operators
+spec:
+  selector:
+    matchLabels:
+      app: cloud-functions-operator
+  template:
+    metadata:
+      labels:
+        app: cloud-functions-operator
+    spec:
+      containers:
+      - command:
+        - /root/manager
+        image: ibmcom/openwhisk-operator:0.8.1
+        name: manager
+        resources:
+          limits:
+            cpu: 100m
+            memory: 30Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
+      serviceAccountName: cloud-functions-operator
+      terminationGracePeriodSeconds: 10
