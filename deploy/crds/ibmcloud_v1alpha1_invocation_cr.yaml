@@ -7,9 +7,4 @@ spec:
   parameters:
   - name: message
     value: Hello World
-  finalizer:
-    function: "/whisk.system/utils/echo"
-    parameters:
-    - name: message
-      value: Bye World
 

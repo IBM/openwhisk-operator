@@ -221,7 +221,8 @@ func (r *ReconcileRule) finalize(context context.Context, obj *openwhiskv1beta1.
 
 	wskclient, err := ow.NewWskClient(context, obj.Spec.ContextFrom)
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("Error creating Cloud Function client %v. (retrying)", err)
+		// TODO: maybe retry a certain number of times and then give up?
+		return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 	}
 
 	if _, err := wskclient.Rules.Delete(name); err != nil {

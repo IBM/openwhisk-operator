@@ -141,16 +141,58 @@ spec:
   sourceNamespace: marketplace
 EOF
 
-echo "Wait for CSV to be healthy"
+echo "Waiting for CSV to be healthy"
 
 for i in {0..20}; do
-  if [ "$(kubectl get clusterserviceversion -n marketplace cloud-functions-operator.v${TAG} -o=jsonpath='{.status.phase}')" == "Succeeded" ]; then
+  if [[ $(kubectl get clusterserviceversion -n marketplace cloud-functions-operator.v${TAG} -o=jsonpath='{.status.phase}') == "Succeeded" ]]; then
     break
   fi
   sleep 3
 done
 
-echo "Running scorecard"
-operator-sdk scorecard --namespace marketplace --olm-deployed --crds-dir ${OPERATOR_DIR} --csv-path "${OPERATOR_DIR}cloud-functions-operator.v${TAG}.clusterserviceversion.yaml"
+echo "Inserting the proxy scorecard into the deployment"
+kubectl patch -n marketplace deployments.app cloud-functions-operator -p '
+{
+    "spec": {
+        "template": {
+            "spec": {
+                "containers": [
+                    {
+                        "name": "scorecard-proxy",
+                        "image": "quay.io/operator-framework/scorecard-proxy",
+                        "command": [
+                            "scorecard-proxy"
+                        ],
+                        "env": [
+                            {
+                                "name": "WATCH_NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            }
+                        ],
+                        "imagePullPolicy": "Always",
+                        "ports": [
+                            {
+                                "name": "proxy",
+                                "containerPort": 8889
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}'
 
-cleanup 0
+sleep 5 # wait a bit
+
+echo "Running scorecard"
+for cr_file in $(find "deploy/crds" -name "*_cr.yaml" -print); do
+  operator-sdk scorecard --namespace marketplace --olm-deployed --cr-manifest $cr_file  --csv-path "${OPERATOR_DIR}cloud-functions-operator.v${TAG}.clusterserviceversion.yaml"
+done
+
+# cleanup 0

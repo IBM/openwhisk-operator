@@ -1,3 +1,0 @@
-cr-manifest:
-- deploy/crds/ibmcloud_v1alpha1_function_cr.yaml
-init-timeout: 360

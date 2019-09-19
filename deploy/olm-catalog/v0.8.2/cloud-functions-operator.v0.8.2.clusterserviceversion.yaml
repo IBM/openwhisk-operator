@@ -3,12 +3,12 @@ kind: ClusterServiceVersion
 metadata:
   annotations:
     alm-examples: |-
-      [{"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Function", "metadata": {"name": "myfunction"}, "spec": {"codeURI": "https://raw.githubusercontent.com/apache/incubator-openwhisk-catalog/master/packages/utils/echo.js", "runtime": "nodejs:6", "parameters": [{"name": "message", "value": "Hello World"}]}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Package", "metadata": {"name": "mh-publish"}, "spec": {"bind": "/whisk.system/messaging", "service": "message-hub"}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Trigger", "metadata": {"name": "image-uploaded"}, "spec": {"feed": "openwhisk-cloudant/changes"}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Trigger", "metadata": {"name": "image-uploaded"}, "spec": {"feed": "openwhisk-cloudant/changes"}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Invocation", "metadata": {"name": "echo-invocation"}, "spec": {"function": "/whisk.system/utils/echo", "parameters": [{"name": "message", "value": "Hello World"}], "finalizer": {"function": "/whisk.system/utils/echo", "parameters": [{"name": "message", "value": "Bye World"}]}}}]
+      [{"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Function", "metadata": {"name": "myfunction"}, "spec": {"codeURI": "https://raw.githubusercontent.com/apache/incubator-openwhisk-catalog/master/packages/utils/echo.js", "runtime": "nodejs:6"}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Package", "metadata": {"name": "mh-publish"}, "spec": {"bind": "/whisk.system/messaging", "service": "message-hub"}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Trigger", "metadata": {"name": "image-uploaded"}, "spec": {"feed": "openwhisk-cloudant/changes"}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Rule", "metadata": {"name": "my-rule"}, "spec": {"trigger": "image-uploaded", "function": "hello-world"}}, {"apiVersion": "ibmcloud.ibm.com/v1alpha1", "kind": "Invocation", "metadata": {"name": "echo-invocation"}, "spec": {"function": "/whisk.system/utils/echo", "parameters": [{"name": "message", "value": "Hello World"}]}}]
     capabilities: Basic Install
     categories: Cloud Provider
     certified: 'false'
     containerImage: cloudoperators/cloud-functions-operator:0.8.2
-    createdAt: '2019-09-13T13:58:05Z'
+    createdAt: '2019-09-19T16:53:57Z'
     description: Manage IBM Cloud Functions actions and more
     repository: https://github.com/IBM/cloud-functions-operator/
     support: IBM

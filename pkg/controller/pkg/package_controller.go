@@ -334,7 +334,8 @@ func (r *ReconcilePackage) finalize(context context.Context, obj *openwhiskv1bet
 
 	wskclient, err := ow.NewWskClient(context, obj.Spec.ContextFrom)
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("Error creating Cloud Function client %v. (Retrying)", err)
+		// TODO: maybe retry a certain number of times and then give up?
+		return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 	}
 
 	if _, err := wskclient.Packages.Delete(name); err != nil {

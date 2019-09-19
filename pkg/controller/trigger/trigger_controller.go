@@ -289,7 +289,8 @@ func (r *ReconcileTrigger) finalize(context context.Context, obj *openwhiskv1bet
 
 	wskclient, err := ow.NewWskClient(context, obj.Spec.ContextFrom)
 	if err != nil {
-		return reconcile.Result{}, fmt.Errorf("[%s] error creating Cloud Function client %v. (Retrying)", obj.Name, err)
+		// TODO: maybe retry a certain number of times and then give up?
+		return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 	}
 
 	if trigger.Feed == "" {

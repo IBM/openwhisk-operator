@@ -4,4 +4,4 @@ metadata:
   name: my-rule
 spec:
   trigger: image-uploaded
-  action: hello-world
+  function: hello-world
