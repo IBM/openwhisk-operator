@@ -3,7 +3,7 @@ kind: Function
 metadata:
   name: greetings
 spec:
-  codeURI: https://raw.githubusercontent.com/apache/incubator-openwhisk-catalog/master/packages/utils/echo.js
+  codeURI: https://raw.githubusercontent.com/apache/openwhisk-catalog/master/packages/utils/echo.js
   runtime: nodejs:6
   parameters:
   - name: message

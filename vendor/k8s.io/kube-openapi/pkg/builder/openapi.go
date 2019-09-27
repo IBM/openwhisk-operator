@@ -160,10 +160,9 @@ func (o *openAPI) buildDefinitionRecursively(name string) error {
 				return err
 			}
 		}
+	} else {
+		return fmt.Errorf("cannot find model definition for %v. If you added a new type, you may need to add +k8s:openapi-gen=true to the package or type and run code-gen again", name)
 	}
-	// else {
-	// 	return fmt.Errorf("cannot find model definition for %v. If you added a new type, you may need to add +k8s:openapi-gen=true to the package or type and run code-gen again", name)
-	// }
 	return nil
 }
 

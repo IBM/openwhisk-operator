@@ -17,13 +17,14 @@ package invocation
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"time"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -37,11 +38,11 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 )
 
 var clog = logf.Log
@@ -89,7 +90,8 @@ type ReconcileInvocation struct {
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=invocations,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=invocations/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileInvocation) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-	context := context.New(r.Client, request)
+	context := injection.WithKubeClient(context.Background(), r.Client)
+	context = injection.WithRequest(context, &request)
 
 	// Fetch the Function instance
 	invocation := &openwhiskv1beta1.Invocation{}
@@ -122,7 +124,7 @@ func (r *ReconcileInvocation) Reconcile(request reconcile.Request) (reconcile.Re
 
 	// Check Finalizer is set (but only if has a finalizer function)
 	if invocation.Spec.Finalizer != nil {
-		if !resv1.HasFinalizer(invocation, ow.Finalizer) {
+		if !ow.HasFinalizer(invocation, ow.Finalizer) {
 			invocation.SetFinalizers(append(invocation.GetFinalizers(), ow.Finalizer))
 
 			if err := r.Update(context, invocation); err != nil {
@@ -131,8 +133,8 @@ func (r *ReconcileInvocation) Reconcile(request reconcile.Request) (reconcile.Re
 			}
 		}
 	} else {
-		if resv1.HasFinalizer(invocation, ow.Finalizer) {
-			if err := resv1.RemoveFinalizerAndPut(context, invocation, ow.Finalizer); err != nil {
+		if ow.HasFinalizer(invocation, ow.Finalizer) {
+			if err := ow.RemoveFinalizerAndPut(context, invocation, ow.Finalizer); err != nil {
 				log.Info("setting finalizer failed. (retrying)", "error", err)
 				return reconcile.Result{}, err
 			}
@@ -153,7 +155,7 @@ func (r *ReconcileInvocation) Reconcile(request reconcile.Request) (reconcile.Re
 			invocation.Status.Generation = currentGeneration
 			invocation.Status.State = resv1.ResourceStateFailed
 			invocation.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutStatusAndEmit(context, invocation); err != nil {
+			if err := r.Status().Update(context, invocation); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -230,7 +232,7 @@ func (r *ReconcileInvocation) run(context context.Context, invocation *openwhisk
 	invocation.Status.State = resv1.ResourceStateOnline
 	invocation.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutStatusAndEmit(context, invocation)
+	return false, r.Status().Update(context, invocation)
 }
 
 func (r *ReconcileInvocation) store(context context.Context, invocation *openwhiskv1beta1.Invocation, projection *jsonpath.JSONPath, result map[string]interface{}) (bool, error) {
@@ -265,12 +267,15 @@ func (r *ReconcileInvocation) store(context context.Context, invocation *openwhi
 		}
 	}
 
+	namespace := injection.GetRequest(context).Namespace
+	client := injection.GetKubeClient(context)
+
 	if to.ConfigMapKeyRef != nil {
 		name := to.ConfigMapKeyRef.LocalObjectReference.Name
-		key := types.NamespacedName{Namespace: context.Namespace(), Name: name}
+		key := types.NamespacedName{Namespace: namespace, Name: name}
 
 		cm := v1.ConfigMap{}
-		err := context.Client().Get(context, key, &cm)
+		err := client.Get(context, key, &cm)
 		if err != nil {
 			if to.ConfigMapKeyRef.Optional != nil && !*to.ConfigMapKeyRef.Optional {
 				return false, err
@@ -278,7 +283,7 @@ func (r *ReconcileInvocation) store(context context.Context, invocation *openwhi
 			cm = v1.ConfigMap{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      name,
-					Namespace: context.Namespace(),
+					Namespace: namespace,
 				},
 			}
 		}
@@ -288,11 +293,11 @@ func (r *ReconcileInvocation) store(context context.Context, invocation *openwhi
 		cm.Data[to.ConfigMapKeyRef.Key] = string(actual)
 
 		if err == nil {
-			if err := context.Client().Update(context, &cm); err != nil {
+			if err := client.Update(context, &cm); err != nil {
 				return true, err
 			}
 		} else {
-			if err := context.Client().Create(context, &cm); err != nil {
+			if err := client.Create(context, &cm); err != nil {
 				return true, err
 			}
 		}
@@ -300,10 +305,10 @@ func (r *ReconcileInvocation) store(context context.Context, invocation *openwhi
 
 	if to.SecretKeyRef != nil {
 		name := to.SecretKeyRef.LocalObjectReference.Name
-		key := types.NamespacedName{Namespace: context.Namespace(), Name: name}
+		key := types.NamespacedName{Namespace: namespace, Name: name}
 
 		secret := v1.Secret{}
-		err := context.Client().Get(context, key, &secret)
+		err := client.Get(context, key, &secret)
 		if err != nil {
 			if to.SecretKeyRef.Optional != nil && !*to.SecretKeyRef.Optional {
 				return false, err
@@ -311,7 +316,7 @@ func (r *ReconcileInvocation) store(context context.Context, invocation *openwhi
 			secret = v1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      name,
-					Namespace: context.Namespace(),
+					Namespace: namespace,
 				},
 			}
 		}
@@ -321,11 +326,11 @@ func (r *ReconcileInvocation) store(context context.Context, invocation *openwhi
 		secret.Data[to.SecretKeyRef.Key] = actual
 
 		if err == nil {
-			if err := context.Client().Update(context, &secret); err != nil {
+			if err := client.Update(context, &secret); err != nil {
 				return true, err
 			}
 		} else {
-			if err := context.Client().Create(context, &secret); err != nil {
+			if err := client.Create(context, &secret); err != nil {
 				return true, err
 			}
 		}
@@ -434,5 +439,5 @@ func (r *ReconcileInvocation) finalize(context context.Context, invocation *open
 		return reconcile.Result{}, err // retry
 	}
 
-	return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, invocation, ow.Finalizer)
+	return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, invocation, ow.Finalizer)
 }

@@ -17,34 +17,38 @@
 package test
 
 import (
+	"context"
 	"io/ioutil"
 	"time"
 
 	yaml2 "github.com/ghodss/yaml"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
 	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
-
-	rcontext "github.com/ibm/cloud-operators/pkg/context"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 )
 
 // PostFunction creates a Function object
-func PostFunction(context rcontext.Context, name string, spec owv1.FunctionSpec, async bool) runtime.Object {
-	obj := makeFunction(context.Namespace(), name, spec)
-	return post(context, &obj, async, 0)
+func PostFunction(ctx context.Context, name string, spec owv1.FunctionSpec, async bool) runtime.Object {
+	ns := injection.GetRequest(ctx).Namespace
+	obj := makeFunction(ns, name, spec)
+	return post(ctx, &obj, async, 0)
 }
 
 // PostPackage creates a Package object
-func PostPackage(context rcontext.Context, name string, spec owv1.PackageSpec, async bool) runtime.Object {
-	obj := makePackage(context.Namespace(), name, spec)
-	return post(context, &obj, async, 0)
+func PostPackage(ctx context.Context, name string, spec owv1.PackageSpec, async bool) runtime.Object {
+	ns := injection.GetRequest(ctx).Namespace
+	obj := makePackage(ns, name, spec)
+	return post(ctx, &obj, async, 0)
 }
 
 // PostInvocation creates a Function object
-func PostInvocation(context rcontext.Context, name string, spec owv1.InvocationSpec, async bool) runtime.Object {
-	obj := makeInvocation(context.Namespace(), name, spec)
-	return post(context, &obj, async, 0)
+func PostInvocation(ctx context.Context, name string, spec owv1.InvocationSpec, async bool) runtime.Object {
+	ns := injection.GetRequest(ctx).Namespace
+	obj := makeInvocation(ns, name, spec)
+	return post(ctx, &obj, async, 0)
 }
 
 func makeFunction(namespace string, name string, spec owv1.FunctionSpec) owv1.Function {
@@ -90,20 +94,23 @@ func makeInvocation(namespace string, name string, spec owv1.InvocationSpec) owv
 }
 
 // PostInNs the object
-func PostInNs(context rcontext.Context, obj runtime.Object, async bool, delay time.Duration) runtime.Object {
-	obj.(metav1.ObjectMetaAccessor).GetObjectMeta().SetNamespace(context.Namespace())
-	return post(context, obj, async, delay)
+func PostInNs(ctx context.Context, obj runtime.Object, async bool, delay time.Duration) runtime.Object {
+	ns := injection.GetRequest(ctx).Namespace
+	obj.(metav1.ObjectMetaAccessor).GetObjectMeta().SetNamespace(ns)
+	return post(ctx, obj, async, delay)
 }
 
 // Post the object
-func post(context rcontext.Context, obj runtime.Object, async bool, delay time.Duration) runtime.Object {
+func post(ctx context.Context, obj runtime.Object, async bool, delay time.Duration) runtime.Object {
 	done := make(chan bool)
 
 	go func() {
 		if delay > 0 {
 			time.Sleep(delay)
 		}
-		err := context.Client().Create(context, obj)
+
+		client := injection.GetKubeClient(ctx)
+		err := client.Create(ctx, obj)
 		if err != nil {
 			panic(err)
 		}
@@ -116,11 +123,12 @@ func post(context rcontext.Context, obj runtime.Object, async bool, delay time.D
 	return obj
 }
 
-func deleteObject(context rcontext.Context, obj runtime.Object, async bool) {
+func deleteObject(ctx context.Context, obj runtime.Object, async bool) {
 	done := make(chan bool)
 
 	go func() {
-		err := context.Client().Delete(context, obj)
+		client := injection.GetKubeClient(ctx)
+		err := client.Delete(ctx, obj)
 		if err != nil {
 			panic(err)
 		}
@@ -132,9 +140,19 @@ func deleteObject(context rcontext.Context, obj runtime.Object, async bool) {
 	}
 }
 
+// LoadSecret loads the YAML spec into obj
+func LoadSecret(filename string) *v1.Secret {
+	secret := LoadObject(filename, &v1.Secret{}).(*v1.Secret)
+	secret.Data = make(map[string][]byte)
+	for key, value := range secret.StringData {
+		secret.Data[key] = []byte(value)
+	}
+	return secret
+}
+
 // LoadFunction loads the YAML spec into obj
-func LoadFunction(filename string) owv1.Function {
-	return *LoadObject(filename, &owv1.Function{}).(*owv1.Function)
+func LoadFunction(filename string) *owv1.Function {
+	return LoadObject(filename, &owv1.Function{}).(*owv1.Function)
 }
 
 // LoadTrigger loads the YAML spec into obj

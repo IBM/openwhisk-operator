@@ -17,6 +17,7 @@
 package common
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
@@ -24,18 +25,17 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 )
 
 var slog = logf.Log.WithName("openwhisk")
 
 // SetStatusToPending sets the status to Pending
-func SetStatusToPending(context context.Context, client client.Client, obj runtime.Object, format string, args ...interface{}) error {
+func SetStatusToPending(ctx context.Context, client client.Client, obj runtime.Object, format string, args ...interface{}) error {
 	status := resv1.GetStatus(obj)
 	if status == nil || status.GetState() != resv1.ResourceStatePending {
 		resv1.SetStatus(obj, resv1.ResourceStatePending, format, args...)
-		if err := client.Status().Update(context, obj); err != nil {
+		if err := client.Status().Update(ctx, obj); err != nil {
 			slog.Info("failed setting status (retrying)", "error", err)
 			return err
 		}

@@ -16,10 +16,12 @@ limitations under the License.
 package pkg
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"time"
 
+	"github.com/apache/openwhisk-client-go/whisk"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -30,14 +32,12 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
-
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
-	"github.com/ibm/cloud-operators/pkg/lib/secret"
 
 	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
+	"github.com/ibm/cloud-functions-operator/pkg/resources"
 )
 
 var clog = logf.Log
@@ -84,7 +84,8 @@ type ReconcilePackage struct {
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=packages,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=packages/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcilePackage) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-	context := context.New(r.Client, request)
+	context := injection.WithKubeClient(context.Background(), r.Client)
+	context = injection.WithRequest(context, &request)
 
 	// Fetch the Package instance
 	pkg := &openwhiskv1beta1.Package{}
@@ -139,7 +140,7 @@ func (r *ReconcilePackage) Reconcile(request reconcile.Request) (reconcile.Resul
 			pkg.Status.Generation = currentGeneration
 			pkg.Status.State = resv1.ResourceStateFailed
 			pkg.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutStatusAndEmit(context, pkg); err != nil {
+			if err := r.Status().Update(context, pkg); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -225,7 +226,7 @@ func (r *ReconcilePackage) updatePackage(context context.Context, obj *openwhisk
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutStatusAndEmit(context, obj)
+	return false, r.Status().Update(context, obj)
 }
 
 func (r *ReconcilePackage) updateBinding(context context.Context, obj *openwhiskv1beta1.Package) (bool, error) {
@@ -309,12 +310,12 @@ func (r *ReconcilePackage) updateBinding(context context.Context, obj *openwhisk
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutStatusAndEmit(context, obj)
+	return false, r.Status().Update(context, obj)
 }
 
 func getServiceKeys(context context.Context, serviceName string) (interface{}, error) {
 	secretName := fmt.Sprintf("binding-%s", serviceName)
-	value, err := secret.GetSecret(context, secretName, true)
+	value, err := resources.GetSecret(context, secretName, true)
 	if err != nil {
 		return nil, err
 	}
@@ -335,7 +336,7 @@ func (r *ReconcilePackage) finalize(context context.Context, obj *openwhiskv1bet
 	wskclient, err := ow.NewWskClient(context, obj.Spec.ContextFrom)
 	if err != nil {
 		// TODO: maybe retry a certain number of times and then give up?
-		return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+		return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 	}
 
 	if _, err := wskclient.Packages.Delete(name); err != nil {
@@ -344,5 +345,5 @@ func (r *ReconcilePackage) finalize(context context.Context, obj *openwhiskv1bet
 		}
 	}
 
-	return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+	return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 }

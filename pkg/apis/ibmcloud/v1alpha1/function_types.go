@@ -16,10 +16,9 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	keyvaluev1 "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 )
 
@@ -61,7 +60,7 @@ type FunctionSpec struct {
 	// +optional
 	Code *string `json:"code,omitempty"`
 	// Runtime name and optional version.
-	// More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/actions.md#languages-and-runtimes
+	// More info: https://github.com/apache/openwhisk/blob/master/docs/actions.md#languages-and-runtimes
 	//
 	// Support these runtimes (not an exhaustive live):
 	//
@@ -81,16 +80,16 @@ type FunctionSpec struct {
 	//
 	// +optional
 	Runtime string `json:"runtime"`
-	// Docker image identifier (in dockerhub). More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/actions-docker.md
+	// Docker image identifier (in dockerhub). More info: https://github.com/apache/openwhisk/blob/master/docs/actions-docker.md
 	// +optional
 	Docker string `json:"docker,omitempty"`
-	// Run the action as native. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/actions-docker.md#creating-native-actions
+	// Run the action as native. More info: https://github.com/apache/openwhisk/blob/master/docs/actions-docker.md#creating-native-actions
 	// +optional
 	Native bool `json:"native,omitempty"`
 	// List of key/value input parameters
 	// +optional
-	Parameters []keyvaluev1.KeyValue `json:"parameters,omitempty"`
-	// Sets the action limits. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/reference.md#system-limits
+	Parameters []KeyValue `json:"parameters,omitempty"`
+	// Sets the action limits. More info: https://github.com/apache/openwhisk/blob/master/docs/reference.md#system-limits
 	// +optional
 	Limits *Limits `json:"limits,omitempty"`
 	// The name of the action entry point (function or fully-qualified method name when applicable)
@@ -100,17 +99,17 @@ type FunctionSpec struct {
 	// +optional
 	Functions *string `json:"functions,omitempty"`
 	// Turns the function into a "web action" causing it to return HTTP content
-	// without use of an API Gateway. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/webactions.md
+	// without use of an API Gateway. More info: https://github.com/apache/openwhisk/blob/master/docs/webactions.md
 	// +optional
 	WebExport bool `json:"webExport,omitempty"`
 	// Indicates if the function is able to consume the raw contents within
 	// the body of an HTTP request. Only valid when `webExport` is `true`.
-	// More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/webactions.md#raw-http-handling
+	// More info: https://github.com/apache/openwhisk/blob/master/docs/webactions.md#raw-http-handling
 	// +optional
 	RawHTTP bool `json:"rawHTTP,omitempty"`
 	// List of key/value annotations
 	// +optional
-	Annotations []keyvaluev1.KeyValue `json:"annotations,omitempty"`
+	Annotations []KeyValue `json:"annotations,omitempty"`
 	// Reference to a secret representing where to deploy this entity
 	// Default is `seed-default-owprops`
 	// The secret must defines these fields:

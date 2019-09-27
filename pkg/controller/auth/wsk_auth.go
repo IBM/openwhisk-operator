@@ -25,7 +25,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 )
 
 // BmxNamespacesResponse is this...
@@ -48,9 +48,8 @@ type BmxNamespaceResponse struct {
 }
 
 // AuthenticateUserWithWsk gets the OpenWhisk apikey associated to the given UUA token
-func AuthenticateUserWithWsk(apiHost string, uaaTokenOnly string, uaaRefreshToken string, insecure bool) (*BmxNamespacesResponse, *http.Response, error) {
-	var reqURLStr = fmt.Sprintf("https://%s/%s", apiHost, "bluemix/v2/authenticate")
-
+func AuthenticateUserWithWsk(baseURL string, uaaTokenOnly string, uaaRefreshToken string, insecure bool) (*BmxNamespacesResponse, *http.Response, error) {
+	var reqURLStr = fmt.Sprintf("%s/%s", baseURL, "bluemix/v2/authenticate")
 	reqNamespaces := &BmxNamespacesRequest{
 		AccessToken:  uaaTokenOnly,
 		RefreshToken: uaaRefreshToken,

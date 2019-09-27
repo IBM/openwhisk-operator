@@ -17,16 +17,17 @@
 package test
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
 	Ω "github.com/onsi/gomega"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 )
 
@@ -40,13 +41,15 @@ func StartTestManager(mgr manager.Manager) chan struct{} {
 }
 
 // GetObject gets the object from the store
-func GetObject(context context.Context, obj runtime.Object) func() runtime.Object {
+func GetObject(ctx context.Context, obj runtime.Object) func() runtime.Object {
 	return func() runtime.Object {
 		key, err := client.ObjectKeyFromObject(obj)
 		if err != nil {
 			return nil
 		}
-		if err := context.Client().Get(context, key, obj); err != nil {
+
+		client := injection.GetKubeClient(ctx)
+		if err := client.Get(ctx, key, obj); err != nil {
 			return nil
 		}
 		return obj

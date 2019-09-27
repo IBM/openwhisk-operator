@@ -18,7 +18,7 @@ package auth
 import (
 	"strings"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -129,7 +129,18 @@ func (r *ReconcileAuth) Reconcile(request reconcile.Request) (reconcile.Result, 
 
 		log.Info("retrieving openwhisk auth")
 
-		ns, _, err := AuthenticateUserWithWsk("openwhisk.ng.bluemix.net", strings.TrimPrefix(string(accessToken), "bearer "), string(refreshToken), false)
+		apihost, ok := cm.Data["apihost"]
+		if !ok {
+			apihost = "us-south.functions.cloud.ibm.com"
+		}
+
+		baseURL := apihost
+		if !strings.HasPrefix(apihost, "http") {
+			baseURL = "https://" + apihost
+		}
+
+		ns, _, err := AuthenticateUserWithWsk(baseURL, strings.TrimPrefix(string(accessToken), "bearer "), string(refreshToken), false)
+
 		if err != nil {
 			return reconcile.Result{}, err // retry
 		}
@@ -149,7 +160,7 @@ func (r *ReconcileAuth) Reconcile(request reconcile.Request) (reconcile.Result, 
 				Name:      secretName,
 			},
 			Data: map[string][]byte{
-				"apihost": []byte("openwhisk.ng.bluemix.net"), // TODO
+				"apihost": []byte(apihost),
 				"auth":    []byte(auth),
 			},
 		}); err != nil {

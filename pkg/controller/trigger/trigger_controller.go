@@ -16,6 +16,7 @@ limitations under the License.
 package trigger
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -29,13 +30,13 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 )
 
 var clog = logf.Log
@@ -82,7 +83,8 @@ type ReconcileTrigger struct {
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=triggers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=triggers/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileTrigger) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-	context := context.New(r.Client, request)
+	context := injection.WithKubeClient(context.Background(), r.Client)
+	context = injection.WithRequest(context, &request)
 
 	// Fetch the Function instance
 	trigger := &openwhiskv1beta1.Trigger{}
@@ -137,7 +139,7 @@ func (r *ReconcileTrigger) Reconcile(request reconcile.Request) (reconcile.Resul
 			trigger.Status.Generation = currentGeneration
 			trigger.Status.State = resv1.ResourceStateFailed
 			trigger.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutStatusAndEmit(context, trigger); err != nil {
+			if err := r.Status().Update(context, trigger); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -277,7 +279,7 @@ func (r *ReconcileTrigger) updateTrigger(context context.Context, obj *openwhisk
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutStatusAndEmit(context, obj)
+	return false, r.Status().Update(context, obj)
 }
 
 func (r *ReconcileTrigger) finalize(context context.Context, obj *openwhiskv1beta1.Trigger) (reconcile.Result, error) {
@@ -290,7 +292,7 @@ func (r *ReconcileTrigger) finalize(context context.Context, obj *openwhiskv1bet
 	wskclient, err := ow.NewWskClient(context, obj.Spec.ContextFrom)
 	if err != nil {
 		// TODO: maybe retry a certain number of times and then give up?
-		return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+		return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 	}
 
 	if trigger.Feed == "" {
@@ -312,5 +314,5 @@ func (r *ReconcileTrigger) finalize(context context.Context, obj *openwhiskv1bet
 		deleteTrigger(wskclient, obj, name, params)
 	}
 
-	return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+	return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 }

@@ -16,6 +16,7 @@ limitations under the License.
 package rule
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -29,13 +30,13 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 )
 
 var clog = logf.Log
@@ -82,8 +83,8 @@ type ReconcileRule struct {
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=rules,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=rules/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileRule) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-
-	context := context.New(r.Client, request)
+	context := injection.WithKubeClient(context.Background(), r.Client)
+	context = injection.WithRequest(context, &request)
 
 	// Fetch the Function instance
 	rule := &openwhiskv1beta1.Rule{}
@@ -138,7 +139,7 @@ func (r *ReconcileRule) Reconcile(request reconcile.Request) (reconcile.Result, 
 			rule.Status.Generation = currentGeneration
 			rule.Status.State = resv1.ResourceStateFailed
 			rule.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutStatusAndEmit(context, rule); err != nil {
+			if err := r.Status().Update(context, rule); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -209,7 +210,7 @@ func (r *ReconcileRule) updateRule(context context.Context, obj *openwhiskv1beta
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutStatusAndEmit(context, obj)
+	return false, r.Status().Update(context, obj)
 }
 
 func (r *ReconcileRule) finalize(context context.Context, obj *openwhiskv1beta1.Rule) (reconcile.Result, error) {
@@ -222,7 +223,7 @@ func (r *ReconcileRule) finalize(context context.Context, obj *openwhiskv1beta1.
 	wskclient, err := ow.NewWskClient(context, obj.Spec.ContextFrom)
 	if err != nil {
 		// TODO: maybe retry a certain number of times and then give up?
-		return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+		return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 	}
 
 	if _, err := wskclient.Rules.Delete(name); err != nil {
@@ -231,5 +232,5 @@ func (r *ReconcileRule) finalize(context context.Context, obj *openwhiskv1beta1.
 		}
 	}
 
-	return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+	return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 }

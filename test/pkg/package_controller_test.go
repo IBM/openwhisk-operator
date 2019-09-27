@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"context"
 	"log"
 	"path/filepath"
 	"testing"
@@ -21,14 +22,14 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
 	"github.com/ibm/cloud-functions-operator/pkg/controller/pkg"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
@@ -36,7 +37,7 @@ var (
 	c         client.Client
 	cfg       *rest.Config
 	namespace string
-	scontext  context.Context
+	ctx       context.Context
 	wskclient *whisk.Client
 	t         *envtest.Environment
 	stop      chan struct{}
@@ -73,8 +74,9 @@ var _ = BeforeSuite(func() {
 
 	stop = owtest.StartTestManager(mgr)
 
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-package-")
-	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-package-", nil)
+	ctx = injection.WithRequest(context.Background(), &reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	ctx = injection.WithKubeClient(ctx, c)
 
 	clientset := owtest.GetClientsetOrDie(cfg)
 	config := &v1.Secret{
@@ -89,7 +91,7 @@ var _ = BeforeSuite(func() {
 
 	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
 
-	wskclient, err = ow.NewWskClient(scontext, nil)
+	wskclient, err = ow.NewWskClient(ctx, nil)
 	Expect(err).NotTo(HaveOccurred())
 })
 
@@ -103,13 +105,13 @@ var _ = Describe("package", func() {
 	DescribeTable("should be ready",
 		func(specfile string, expected whisk.KeyValueArr) {
 			pkg := owtest.LoadPackage("testdata/" + specfile)
-			obj := owtest.PostInNs(scontext, &pkg, true, 0)
+			obj := owtest.PostInNs(ctx, &pkg, true, 0)
 
 			getParameters := func(pkg *whisk.Package) whisk.KeyValueArr {
 				return pkg.Parameters
 			}
 
-			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
+			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))
 			Eventually(owtest.GetPackage(wskclient, pkg.Name)).Should(WithTransform(getParameters, Equal(expected)))
 		},
 

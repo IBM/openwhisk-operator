@@ -17,24 +17,21 @@
 package common
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
-	kv "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1"
-	"github.com/ibm/cloud-operators/pkg/lib/secret"
-	"github.com/ibm/cloud-operators/pkg/util"
-
-	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	owv1alpha1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	"github.com/ibm/cloud-functions-operator/pkg/resources"
 )
 
 // ConvertKeyValues convert key value array to whisk key values
-func ConvertKeyValues(ctx context.Context, obj runtime.Object, params []kv.KeyValue, what string) (whisk.KeyValueArr, bool, error) {
+func ConvertKeyValues(ctx context.Context, obj runtime.Object, params []owv1alpha1.KeyValue, what string) (whisk.KeyValueArr, bool, error) {
 	keyValArr, err := ToKeyValueArr(ctx, params)
 	if err != nil {
 		if strings.Contains(err.Error(), "Missing") {
@@ -46,7 +43,7 @@ func ConvertKeyValues(ctx context.Context, obj runtime.Object, params []kv.KeyVa
 }
 
 // ToKeyValueArr converts a list of key-value pairs to Whisk format
-func ToKeyValueArr(ctx context.Context, vars []kv.KeyValue) (whisk.KeyValueArr, error) {
+func ToKeyValueArr(ctx context.Context, vars []owv1alpha1.KeyValue) (whisk.KeyValueArr, error) {
 	keyValueArr := make(whisk.KeyValueArr, 0)
 	for _, v := range vars {
 		var keyVal whisk.KeyValue
@@ -94,12 +91,12 @@ func GetValueString(keyValueArr whisk.KeyValueArr, key string) (string, error) {
 }
 
 // ConvertParametersFrom converts parameters sources to whisk key value pairs
-func ConvertParametersFrom(ctx context.Context, obj runtime.Object, params []openwhiskv1beta1.ParametersFromSource) (whisk.KeyValueArr, bool, error) {
+func ConvertParametersFrom(ctx context.Context, obj runtime.Object, params []owv1alpha1.ParametersFromSource) (whisk.KeyValueArr, bool, error) {
 	keyValueArr := make(whisk.KeyValueArr, 0)
 
 	for _, source := range params {
 		if source.ConfigMapKeyRef != nil {
-			cm, err := util.GetConfigMap(ctx, source.ConfigMapKeyRef.Name, true)
+			cm, err := resources.GetConfigMap(ctx, source.ConfigMapKeyRef.Name, true)
 			if err != nil {
 				// Recoverable
 				return nil, true, fmt.Errorf("Missing configmap %s", source.ConfigMapKeyRef.Name)
@@ -119,7 +116,7 @@ func ConvertParametersFrom(ctx context.Context, obj runtime.Object, params []ope
 			}
 		}
 		if source.SecretKeyRef != nil {
-			sc, err := secret.GetSecret(ctx, source.SecretKeyRef.Name, true)
+			sc, err := resources.GetSecret(ctx, source.SecretKeyRef.Name, true)
 			if err != nil {
 				// Recoverable
 				return nil, true, fmt.Errorf("Missing secret %s", source.SecretKeyRef.Name)

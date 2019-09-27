@@ -20,10 +20,6 @@ required = [
   branch = "master"
 
 [[override]]
-  name = "github.com/apache/incubator-openwhisk-client-go"
-  branch = "master"
-
-[[override]]
   name = "k8s.io/api"
   version = "kubernetes-1.13.1"
 
@@ -58,3 +54,7 @@ required = [
 name = "gopkg.in/fsnotify.v1"
 source = "https://github.com/fsnotify/fsnotify.git"
 version="v1.4.7"
+
+[[constraint]]
+  name = "github.com/apache/openwhisk-client-go"
+  version = "1.0.0"

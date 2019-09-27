@@ -16,11 +16,12 @@ limitations under the License.
 package auth
 
 import (
+	"context"
 	"log"
 	"testing"
 	"time"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/rest"
@@ -32,21 +33,21 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
-
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 	owtest "github.com/ibm/cloud-functions-operator/test"
+	"github.com/ibm/cloud-functions-operator/test/wsk"
 )
 
 var (
 	c         client.Client
 	cfg       *rest.Config
 	namespace string
-	scontext  context.Context
+	ctx       context.Context
 	t         *envtest.Environment
 	stop      chan struct{}
 )
 
-func TestUauth(t *testing.T) {
+func TestAuth(t *testing.T) {
 	RegisterFailHandler(Fail)
 	SetDefaultEventuallyPollingInterval(1 * time.Second)
 	SetDefaultEventuallyTimeout(30 * time.Second)
@@ -58,7 +59,6 @@ var _ = BeforeSuite(func() {
 	// Start kube apiserver
 	t = &envtest.Environment{
 		ControlPlaneStartTimeout: 2 * time.Minute,
-		// UseExistingCluster: true,
 	}
 	var err error
 	if cfg, err = t.Start(); err != nil {
@@ -76,9 +76,14 @@ var _ = BeforeSuite(func() {
 	stop = owtest.StartTestManager(mgr)
 
 	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-auth-")
-	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	org := "testorg"
+	space := "testspace"
 
+	wskserver := wsk.NewServer(wsk.NewAuthResponse(org, space))
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-auth-", map[string]string{"org": org, "space": space, "apihost": wskserver.URL})
+
+	ctx = injection.WithRequest(context.Background(), &reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	ctx = injection.WithKubeClient(ctx, c)
 })
 
 var _ = AfterSuite(func() {
@@ -95,7 +100,7 @@ var _ = Describe("auth", func() {
 				Name:      "seed-defaults" + SecretSuffix,
 			},
 		}
-		Eventually(owtest.GetObject(scontext, &secret)).Should(And(Not(BeNil()), WithTransform(getData, And(HaveKey("auth"), HaveKey("apihost")))))
+		Eventually(owtest.GetObject(ctx, &secret)).Should(And(Not(BeNil()), WithTransform(getData, And(HaveKey("auth"), HaveKey("apihost")))))
 	})
 
 })

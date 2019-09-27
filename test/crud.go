@@ -24,7 +24,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 

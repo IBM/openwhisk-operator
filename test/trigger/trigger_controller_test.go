@@ -16,6 +16,7 @@ limitations under the License.
 package trigger
 
 import (
+	"context"
 	"log"
 	"path/filepath"
 	"testing"
@@ -35,9 +36,8 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
@@ -46,6 +46,7 @@ import (
 	owpkg "github.com/ibm/cloud-functions-operator/pkg/controller/pkg"
 	owrule "github.com/ibm/cloud-functions-operator/pkg/controller/rule"
 	"github.com/ibm/cloud-functions-operator/pkg/controller/trigger"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
@@ -53,7 +54,7 @@ var (
 	c         client.Client
 	cfg       *rest.Config
 	namespace string
-	scontext  context.Context
+	ctx       context.Context
 	wskclient *whisk.Client
 	t         *envtest.Environment
 	stop      chan struct{}
@@ -97,8 +98,9 @@ var _ = BeforeSuite(func() {
 	stop = owtest.StartTestManager(mgr)
 
 	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-trigger-")
-	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-trigger-", nil)
+	ctx = injection.WithRequest(context.Background(), &reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	ctx = injection.WithKubeClient(ctx, c)
 
 	clientset := owtest.GetClientsetOrDie(cfg)
 	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
@@ -106,7 +108,7 @@ var _ = BeforeSuite(func() {
 	secret := owtest.LoadObject("testdata/secrets-kafka.yaml", &v1.Secret{})
 	clientset.CoreV1().Secrets(namespace).Create(secret.(*v1.Secret))
 
-	wskclient, err = ow.NewWskClient(scontext, nil)
+	wskclient, err = ow.NewWskClient(ctx, nil)
 	Expect(err).NotTo(HaveOccurred())
 })
 
@@ -123,12 +125,12 @@ var _ = Describe("trigger", func() {
 			pkg := owtest.LoadPackage("testdata/" + pkgfile)
 			rule := owtest.LoadRule("testdata/" + rlfile)
 
-			owtest.PostInNs(scontext, &pkg, false, 0)
-			ruleo := owtest.PostInNs(scontext, &rule, true, 0)
-			obj := owtest.PostInNs(scontext, &trigger, false, 0)
+			owtest.PostInNs(ctx, &pkg, false, 0)
+			ruleo := owtest.PostInNs(ctx, &rule, true, 0)
+			obj := owtest.PostInNs(ctx, &trigger, false, 0)
 
-			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
-			Eventually(owtest.GetState(scontext, ruleo)).Should(Equal(resv1.ResourceStateOnline))
+			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))
+			Eventually(owtest.GetState(ctx, ruleo)).Should(Equal(resv1.ResourceStateOnline))
 
 			params := make(map[string]string)
 			params["topic"] = "openwhisk-test-topic1"

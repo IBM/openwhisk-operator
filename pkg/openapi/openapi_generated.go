@@ -205,21 +205,21 @@ func schema_pkg_apis_ibmcloud_v1alpha1_FunctionSpec(ref common.ReferenceCallback
 					},
 					"runtime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Runtime name and optional version. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/actions.md#languages-and-runtimes\n\nSupport these runtimes (not an exhaustive live):\n\nRuntime\t| image name\t| Description\n -------- | --------- | ----------\n app | N/A | runs a function composition\n sequence | N/A | runs a function sequence\n nodejs | nodejsaction:latest | Latest NodeJS runtime\n nodejs:6\t| nodejs6action:latest | Latest NodeJS 6 runtime\n java\t| java8action:latest | Latest Java language runtime\n python:2\t| python2action:latest | Latest Python 2 language runtime\n python:3\t| python3action:latest | Latest Python 3 language runtime\n swift | swiftaction:latest | Latest Swift 2 language runtime\n swift:3\t| swift3action:latest | Latest Swift 3 language runtime\n swift:3.1.1 | action-swift-v3.1.1:latest | Latest Swift 3.1.1 language runtime\n php:7.1 | action-php-v7.1:latest\t| Latest PHP language runtime\n",
+							Description: "Runtime name and optional version. More info: https://github.com/apache/openwhisk/blob/master/docs/actions.md#languages-and-runtimes\n\nSupport these runtimes (not an exhaustive live):\n\nRuntime\t| image name\t| Description\n -------- | --------- | ----------\n app | N/A | runs a function composition\n sequence | N/A | runs a function sequence\n nodejs | nodejsaction:latest | Latest NodeJS runtime\n nodejs:6\t| nodejs6action:latest | Latest NodeJS 6 runtime\n java\t| java8action:latest | Latest Java language runtime\n python:2\t| python2action:latest | Latest Python 2 language runtime\n python:3\t| python3action:latest | Latest Python 3 language runtime\n swift | swiftaction:latest | Latest Swift 2 language runtime\n swift:3\t| swift3action:latest | Latest Swift 3 language runtime\n swift:3.1.1 | action-swift-v3.1.1:latest | Latest Swift 3.1.1 language runtime\n php:7.1 | action-php-v7.1:latest\t| Latest PHP language runtime\n",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"docker": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Docker image identifier (in dockerhub). More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/actions-docker.md",
+							Description: "Docker image identifier (in dockerhub). More info: https://github.com/apache/openwhisk/blob/master/docs/actions-docker.md",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"native": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Run the action as native. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/actions-docker.md#creating-native-actions",
+							Description: "Run the action as native. More info: https://github.com/apache/openwhisk/blob/master/docs/actions-docker.md#creating-native-actions",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -239,7 +239,7 @@ func schema_pkg_apis_ibmcloud_v1alpha1_FunctionSpec(ref common.ReferenceCallback
 					},
 					"limits": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Sets the action limits. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/reference.md#system-limits",
+							Description: "Sets the action limits. More info: https://github.com/apache/openwhisk/blob/master/docs/reference.md#system-limits",
 							Ref:         ref("github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1.Limits"),
 						},
 					},
@@ -259,14 +259,14 @@ func schema_pkg_apis_ibmcloud_v1alpha1_FunctionSpec(ref common.ReferenceCallback
 					},
 					"webExport": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Turns the function into a \"web action\" causing it to return HTTP content without use of an API Gateway. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/webactions.md",
+							Description: "Turns the function into a \"web action\" causing it to return HTTP content without use of an API Gateway. More info: https://github.com/apache/openwhisk/blob/master/docs/webactions.md",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"rawHTTP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates if the function is able to consume the raw contents within the body of an HTTP request. Only valid when `webExport` is `true`. More info: https://github.com/apache/incubator-openwhisk/blob/master/docs/webactions.md#raw-http-handling",
+							Description: "Indicates if the function is able to consume the raw contents within the body of an HTTP request. Only valid when `webExport` is `true`. More info: https://github.com/apache/openwhisk/blob/master/docs/webactions.md#raw-http-handling",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

@@ -16,6 +16,7 @@ limitations under the License.
 package rule
 
 import (
+	"context"
 	"log"
 	"path/filepath"
 	"testing"
@@ -34,9 +35,8 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
@@ -45,6 +45,7 @@ import (
 	owf "github.com/ibm/cloud-functions-operator/pkg/controller/function"
 	"github.com/ibm/cloud-functions-operator/pkg/controller/rule"
 	owt "github.com/ibm/cloud-functions-operator/pkg/controller/trigger"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
@@ -52,7 +53,7 @@ var (
 	c         client.Client
 	cfg       *rest.Config
 	namespace string
-	scontext  context.Context
+	ctx       context.Context
 	wskclient *whisk.Client
 	t         *envtest.Environment
 	stop      chan struct{}
@@ -95,13 +96,14 @@ var _ = BeforeSuite(func() {
 	stop = owtest.StartTestManager(mgr)
 
 	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-rule-")
-	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-rule-", nil)
+	ctx = injection.WithRequest(context.Background(), &reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	ctx = injection.WithKubeClient(ctx, c)
 
 	clientset := owtest.GetClientsetOrDie(cfg)
 	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
 
-	wskclient, err = ow.NewWskClient(scontext, nil)
+	wskclient, err = ow.NewWskClient(ctx, nil)
 	Expect(err).NotTo(HaveOccurred())
 })
 
@@ -124,12 +126,12 @@ var _ = Describe("rule", func() {
 			trigger := owtest.LoadTrigger("testdata/" + tgfile)
 			rule := owtest.LoadRule("testdata/" + specfile)
 
-			fn := owtest.PostInNs(scontext, &function, true, 0)
-			owtest.PostInNs(scontext, &trigger, true, 0)
-			obj := owtest.PostInNs(scontext, &rule, false, 0)
+			fn := owtest.PostInNs(ctx, function, true, 0)
+			owtest.PostInNs(ctx, &trigger, true, 0)
+			obj := owtest.PostInNs(ctx, &rule, false, 0)
 
-			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
-			Eventually(owtest.GetState(scontext, fn)).Should(Equal(resv1.ResourceStateOnline))
+			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))
+			Eventually(owtest.GetState(ctx, fn)).Should(Equal(resv1.ResourceStateOnline))
 		},
 		Entry("location", "owr-hello-location.yaml", "owf-hello.yaml", "owt-location-update.yaml"),
 	)

@@ -19,7 +19,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	keyvaluev1 "github.com/ibm/cloud-operators/pkg/lib/keyvalue/v1"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 )
 
@@ -54,10 +53,10 @@ type TriggerSpec struct {
 	Feed string `json:"feed,omitempty"`
 	// List of key/value annotations
 	// +optional
-	Annotations []keyvaluev1.KeyValue `json:"annotations,omitempty"`
+	Annotations []KeyValue `json:"annotations,omitempty"`
 	// List of key/value input parameters
 	// +optional
-	Parameters []keyvaluev1.KeyValue `json:"parameters,omitempty"`
+	Parameters []KeyValue `json:"parameters,omitempty"`
 	// Reference to a secret representing where to deploy this entity
 	// Default is `seed-default-owprops`
 	// The secret must defines these fields:

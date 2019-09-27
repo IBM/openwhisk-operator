@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
@@ -30,11 +30,11 @@ import (
 )
 
 // SetupKubeOrDie setups Kube for testing
-func SetupKubeOrDie(restCfg *rest.Config, stem string) string {
+func SetupKubeOrDie(restCfg *rest.Config, stem string, config map[string]string) string {
 	clientset := GetClientsetOrDie(restCfg)
 
 	namespace := CreateNamespaceOrDie(clientset.CoreV1().Namespaces(), stem)
-	ConfigureSeedDefaults(clientset.CoreV1().ConfigMaps(namespace))
+	ConfigureSeedDefaults(clientset.CoreV1().ConfigMaps(namespace), config)
 	ConfigureSeedSecret(clientset.CoreV1().Secrets(namespace))
 	ConfigurePrivateGithubSecret(clientset.CoreV1().Secrets(namespace))
 
@@ -88,18 +88,35 @@ func CreateNamespaceOrDie(namespaces corev1.NamespaceInterface, stem string) str
 }
 
 // ConfigureSeedDefaults sets seed-defaults
-func ConfigureSeedDefaults(configmaps corev1.ConfigMapInterface) {
+func ConfigureSeedDefaults(configmaps corev1.ConfigMapInterface, data map[string]string) {
+	if data == nil {
+		data = map[string]string{
+			"org":    org,
+			"space":  space,
+			"region": region,
+		}
+	} else {
+		if _, ok := data["org"]; !ok {
+			data["org"] = org
+		}
+		if _, ok := data["space"]; !ok {
+			data["space"] = space
+		}
+		if _, ok := data["region"]; !ok {
+			data["region"] = region
+		}
+	}
+
 	config := &v1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "seed-defaults",
 		},
-		Data: map[string]string{
-			"org":    org,
-			"space":  space,
-			"region": region,
-		},
+		Data: data,
 	}
-	configmaps.Create(config)
+	_, err := configmaps.Create(config)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // ConfigureSeedSecret sets seed-secret and seed-secret-tokens

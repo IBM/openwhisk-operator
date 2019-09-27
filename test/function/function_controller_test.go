@@ -1,6 +1,7 @@
 package function
 
 import (
+	"context"
 	"log"
 	"path/filepath"
 	"testing"
@@ -21,15 +22,15 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
 	"github.com/ibm/cloud-functions-operator/pkg/controller/function"
 	owpkg "github.com/ibm/cloud-functions-operator/pkg/controller/pkg"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
 	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
@@ -37,7 +38,7 @@ var (
 	c         client.Client
 	cfg       *rest.Config
 	namespace string
-	scontext  context.Context
+	ctx       context.Context
 	wskclient *whisk.Client
 	t         *envtest.Environment
 	stop      chan struct{}
@@ -75,8 +76,9 @@ var _ = BeforeSuite(func() {
 
 	stop = owtest.StartTestManager(mgr)
 
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-function-")
-	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-function-", nil)
+	ctx = injection.WithRequest(context.Background(), &reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
+	ctx = injection.WithKubeClient(ctx, c)
 
 	clientset := owtest.GetClientsetOrDie(cfg)
 	config := &v1.Secret{
@@ -95,7 +97,7 @@ var _ = BeforeSuite(func() {
 	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
 	owtest.ConfigureOwprops("seed-defaults-owprops2", clientset.CoreV1().Secrets(namespace))
 
-	wskclient, err = ow.NewWskClient(scontext, nil)
+	wskclient, err = ow.NewWskClient(ctx, nil)
 	Expect(err).NotTo(HaveOccurred())
 })
 
@@ -109,14 +111,14 @@ var _ = Describe("function", func() {
 	DescribeTable("should be ready",
 		func(specfile string, pkgspec string, expected string) {
 			function := owtest.LoadFunction("testdata/" + specfile)
-			obj := owtest.PostInNs(scontext, &function, true, 0)
+			obj := owtest.PostInNs(ctx, function, true, 0)
 
 			if pkgspec != "" {
 				pkg := owtest.LoadPackage("testdata/" + pkgspec)
-				owtest.PostInNs(scontext, &pkg, true, 0)
+				owtest.PostInNs(ctx, &pkg, true, 0)
 			}
 
-			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
+			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))
 			Eventually(owtest.GetAction(wskclient, function.Name)).ShouldNot(BeNil())
 
 			Expect(owtest.InvokeAction(wskclient, function.Name, nil)).Should(MatchJSON(expected))
@@ -144,8 +146,8 @@ var _ = Describe("function", func() {
 	DescribeTable("should fail",
 		func(specfile string) {
 			function := owtest.LoadFunction("testdata/" + specfile)
-			obj := owtest.PostInNs(scontext, &function, true, 0)
-			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateFailed))
+			obj := owtest.PostInNs(ctx, function, true, 0)
+			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateFailed))
 
 		},
 		Entry("missing code, codeURI or native", "owf-invalid-nocode-noURI.yaml"),

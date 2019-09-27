@@ -17,17 +17,17 @@
 package common
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/url"
 	"strings"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
-	"github.com/ibm/cloud-operators/pkg/lib/secret"
+	"github.com/ibm/cloud-functions-operator/pkg/resources"
 )
 
 // --- Authentication
@@ -65,16 +65,14 @@ func NewWskClient(ctx context.Context, owctx *v1.SecretEnvSource) (*whisk.Client
 
 		Insecure: config.WskCliInsecure, // true if you want to ignore certificate signing
 	}
-
-	client, err := whisk.NewClient(nil, configInput)
-	return client, err
+	return whisk.NewClient(nil, configInput)
 }
 
 // GetWskPropertiesFromSecret returns WskConfig from secret
 func GetWskPropertiesFromSecret(ctx context.Context, secretName string) (*WskConfig, error) {
 	var config WskConfig
 
-	secret, err := secret.GetSecret(ctx, secretName, true)
+	secret, err := resources.GetSecret(ctx, secretName, true)
 	if err != nil {
 		return nil, err
 	}

@@ -18,6 +18,7 @@ package function
 import (
 	"archive/zip"
 	"bytes"
+	"context"
 	"encoding/base64"
 	"fmt"
 	"path"
@@ -34,14 +35,14 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	"github.com/apache/incubator-openwhisk-client-go/whisk"
+	"github.com/apache/openwhisk-client-go/whisk"
 
-	context "github.com/ibm/cloud-operators/pkg/context"
-	ic "github.com/ibm/cloud-operators/pkg/lib/ibmcloud"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
-	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	owv1alpha1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
+	"github.com/ibm/cloud-functions-operator/pkg/injection"
+	"github.com/ibm/cloud-functions-operator/pkg/resources"
 )
 
 var clog = logf.Log
@@ -67,7 +68,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	}
 
 	// Watch for changes to Function
-	err = c.Watch(&source.Kind{Type: &openwhiskv1beta1.Function{}}, &handler.EnqueueRequestForObject{})
+	err = c.Watch(&source.Kind{Type: &owv1alpha1.Function{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
@@ -89,10 +90,11 @@ type ReconcileFunction struct {
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=functions,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=ibmcloud.ibm.com,resources=functions/status,verbs=get;list;watch;create;update;patch;delete
 func (r *ReconcileFunction) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-	context := context.New(r.Client, request)
+	context := injection.WithKubeClient(context.Background(), r.Client)
+	context = injection.WithRequest(context, &request)
 
 	// Fetch the Function instance
-	function := &openwhiskv1beta1.Function{}
+	function := &owv1alpha1.Function{}
 	err := r.Get(context, request.NamespacedName, function)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -144,7 +146,7 @@ func (r *ReconcileFunction) Reconcile(request reconcile.Request) (reconcile.Resu
 			function.Status.Generation = currentGeneration
 			function.Status.State = resv1.ResourceStateFailed
 			function.Status.Message = fmt.Sprintf("%v", err)
-			if err := resv1.PutStatusAndEmit(context, function); err != nil {
+			if err := injection.GetKubeClient(context).Status().Update(context, function); err != nil {
 				log.Info("failed to set status. (retrying)", "error", err)
 			}
 			return reconcile.Result{}, nil
@@ -155,7 +157,7 @@ func (r *ReconcileFunction) Reconcile(request reconcile.Request) (reconcile.Resu
 	return reconcile.Result{}, nil
 }
 
-func (r *ReconcileFunction) updateAction(context context.Context, obj *openwhiskv1beta1.Function) (bool, error) {
+func (r *ReconcileFunction) updateAction(context context.Context, obj *owv1alpha1.Function) (bool, error) {
 	log := clog.WithValues("namespace", obj.Namespace, "name", obj.Name)
 
 	// Can now reconcile!
@@ -278,7 +280,7 @@ func (r *ReconcileFunction) updateAction(context context.Context, obj *openwhisk
 			// TODO: set status
 			log.Info("downloading code", "URI", *action.CodeURI)
 
-			dat, erRead := ic.Read(context, *action.CodeURI)
+			dat, erRead := resources.Read(context, *action.CodeURI)
 			if erRead != nil {
 				return false, fmt.Errorf("Error reading %s : %v", *action.CodeURI, erRead)
 			}
@@ -334,10 +336,10 @@ func (r *ReconcileFunction) updateAction(context context.Context, obj *openwhisk
 	obj.Status.State = resv1.ResourceStateOnline
 	obj.Status.Message = time.Now().Format(time.RFC850)
 
-	return false, resv1.PutStatusAndEmit(context, obj)
+	return false, injection.GetKubeClient(context).Status().Update(context, obj)
 }
 
-func (r *ReconcileFunction) finalize(context context.Context, obj *openwhiskv1beta1.Function) (reconcile.Result, error) {
+func (r *ReconcileFunction) finalize(context context.Context, obj *owv1alpha1.Function) (reconcile.Result, error) {
 	log := clog.WithValues("namespace", obj.Namespace, "name", obj.Name)
 	log.Info("finalizing")
 
@@ -346,7 +348,7 @@ func (r *ReconcileFunction) finalize(context context.Context, obj *openwhiskv1be
 	wskclient, err := ow.NewWskClient(context, obj.Spec.ContextFrom)
 	if err != nil {
 		// TODO: maybe retry a certain number of times and then give up?
-		return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+		return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 		// return reconcile.Result{}, fmt.Errorf("Error creating Cloud Function client %v. (retrying)", err)
 	}
 
@@ -356,7 +358,7 @@ func (r *ReconcileFunction) finalize(context context.Context, obj *openwhiskv1be
 		}
 	}
 
-	return reconcile.Result{}, resv1.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+	return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
 }
 
 func zipCode(code string) (*string, error) {
