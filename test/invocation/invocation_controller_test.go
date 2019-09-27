@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package trigger
+package invocation
 
 import (
 	"log"
@@ -21,7 +21,6 @@ import (
 	"testing"
 	"time"
 
-	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -41,10 +40,10 @@ import (
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
+	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
 	owfn "github.com/ibm/cloud-functions-operator/pkg/controller/function"
-	owpkg "github.com/ibm/cloud-functions-operator/pkg/controller/pkg"
-	owrule "github.com/ibm/cloud-functions-operator/pkg/controller/rule"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/invocation"
 	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
@@ -54,16 +53,18 @@ var (
 	namespace string
 	scontext  context.Context
 	wskclient *whisk.Client
-	t         *envtest.Environment
-	stop      chan struct{}
+	echoCode  = "const main = params => params || {}"
+
+	t    *envtest.Environment
+	stop chan struct{}
 )
 
-func TestTrigger(t *testing.T) {
+func TestInvocation(t *testing.T) {
 	RegisterFailHandler(Fail)
 	SetDefaultEventuallyPollingInterval(1 * time.Second)
 	SetDefaultEventuallyTimeout(30 * time.Second)
 
-	RunSpecs(t, "Trigger Suite")
+	RunSpecs(t, "Invocation Suite")
 }
 
 var _ = BeforeSuite(func() {
@@ -88,23 +89,17 @@ var _ = BeforeSuite(func() {
 	c = mgr.GetClient()
 
 	// Add reconcilers
-	recFn := newReconciler(mgr)
-	Expect(add(mgr, recFn)).NotTo(HaveOccurred())
-	Expect(owrule.Add(mgr)).NotTo(HaveOccurred())
-	Expect(owpkg.Add(mgr)).NotTo(HaveOccurred())
-	Expect(owfn.Add(mgr)).NotTo(HaveOccurred())
+	Expect(invocation.Add(mgr)).NotTo(HaveOccurred())
+	Expect(owfn.Add(mgr)).NotTo(HaveOccurred()) // register function controller
 
 	stop = owtest.StartTestManager(mgr)
 
 	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-trigger-")
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-invocation-")
 	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
 
 	clientset := owtest.GetClientsetOrDie(cfg)
 	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
-
-	secret := owtest.LoadObject("testdata/secrets-kafka.yaml", &v1.Secret{})
-	clientset.CoreV1().Secrets(namespace).Create(secret.(*v1.Secret))
 
 	wskclient, err = ow.NewWskClient(scontext, nil)
 	Expect(err).NotTo(HaveOccurred())
@@ -115,27 +110,42 @@ var _ = AfterSuite(func() {
 	t.Stop()
 })
 
-var _ = Describe("trigger", func() {
+type testCase struct {
+	invocation owv1.Invocation
+	function   *owv1.Function
+	delay      time.Duration // delay before posting function
+}
+
+var _ = Describe("invocation", func() {
 
 	DescribeTable("should be ready",
-		func(specfile, pkgfile, rlfile string) {
-			trigger := owtest.LoadTrigger("testdata/" + specfile)
-			pkg := owtest.LoadPackage("testdata/" + pkgfile)
-			rule := owtest.LoadRule("testdata/" + rlfile)
-
-			owtest.PostInNs(scontext, &pkg, false, 0)
-			ruleo := owtest.PostInNs(scontext, &rule, true, 0)
-			obj := owtest.PostInNs(scontext, &trigger, false, 0)
+		func(specfile string, fnfile string, delay time.Duration) {
+			var function owv1.Function
+			if fnfile != "" {
+				function = owtest.LoadFunction("testdata/" + fnfile)
+				owtest.PostInNs(scontext, &function, true, delay)
+			}
+			invocation := owtest.LoadInvocation("testdata/" + specfile)
+			obj := owtest.PostInNs(scontext, &invocation, false, 0)
 
 			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
-			Eventually(owtest.GetState(scontext, ruleo)).Should(Equal(resv1.ResourceStateOnline))
 
-			params := make(map[string]string)
-			params["topic"] = "openwhisk-test-topic1"
-			params["value"] = "a message from seed"
-
-			Expect(owtest.ActionInvocation(wskclient, "trigger-kafka-binding/messageHubProduce", params)).Should(HaveKeyWithValue("success", true))
+			scontext.Client().Delete(scontext, obj)
+			Eventually(owtest.GetObject(scontext, obj)).Should(BeNil())
+			if invocation.Spec.Finalizer != nil {
+				Expect(owtest.GetActivation(wskclient, invocation.Spec.Finalizer.Function)).ShouldNot(BeNil())
+			}
 		},
-		Entry("kafka", "owt-kafka.yaml", "owp-kafka.yaml", "owr-kafka.yaml"),
+
+		Entry("with no args", "noargs.yaml", "", time.Duration(0)),
+		Entry("with one arg", "in-hello.yaml", "", time.Duration(0)),
+		Entry("with retries until no errors", "in-echo-error.yaml", "fn-echo-error.yaml", time.Duration(0)),
+		Entry("with function delay", "in-hello-delay.yaml", "fn-echo-delay.yaml", 2*time.Second),
+
+		Entry("with finalizer", "in-echo-finalizer.yaml", "fn-echo-finalizer.yaml", time.Duration(0)),
+
+		Entry("with secret store", "in-echo-store-secret.yaml", "", time.Duration(0)),
+		Entry("with secret store projection", "in-echo-store-secret-projection.yaml", "", time.Duration(0)),
 	)
+
 })

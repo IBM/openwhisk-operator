@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package invocation
+package rule
 
 import (
 	"log"
@@ -42,7 +42,9 @@ import (
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
 	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
-	owfn "github.com/ibm/cloud-functions-operator/pkg/controller/function"
+	owf "github.com/ibm/cloud-functions-operator/pkg/controller/function"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/rule"
+	owt "github.com/ibm/cloud-functions-operator/pkg/controller/trigger"
 	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
@@ -52,18 +54,16 @@ var (
 	namespace string
 	scontext  context.Context
 	wskclient *whisk.Client
-	echoCode  = "const main = params => params || {}"
-
-	t    *envtest.Environment
-	stop chan struct{}
+	t         *envtest.Environment
+	stop      chan struct{}
 )
 
-func TestInvocation(t *testing.T) {
+func TestRule(t *testing.T) {
 	RegisterFailHandler(Fail)
 	SetDefaultEventuallyPollingInterval(1 * time.Second)
 	SetDefaultEventuallyTimeout(30 * time.Second)
 
-	RunSpecs(t, "Invocation Suite")
+	RunSpecs(t, "Rule Suite")
 }
 
 var _ = BeforeSuite(func() {
@@ -88,14 +88,14 @@ var _ = BeforeSuite(func() {
 	c = mgr.GetClient()
 
 	// Add reconcilers
-	recFn := newReconciler(mgr)
-	Expect(add(mgr, recFn)).NotTo(HaveOccurred())
-	Expect(owfn.Add(mgr)).NotTo(HaveOccurred()) // register function controller
+	Expect(rule.Add(mgr)).NotTo(HaveOccurred())
+	Expect(owt.Add(mgr)).NotTo(HaveOccurred())
+	Expect(owf.Add(mgr)).NotTo(HaveOccurred())
 
 	stop = owtest.StartTestManager(mgr)
 
 	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-invocation-")
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-rule-")
 	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
 
 	clientset := owtest.GetClientsetOrDie(cfg)
@@ -111,41 +111,26 @@ var _ = AfterSuite(func() {
 })
 
 type testCase struct {
-	invocation owv1.Invocation
-	function   *owv1.Function
-	delay      time.Duration // delay before posting function
+	function owv1.Function
+	trigger  owv1.Trigger
+	rule     owv1.Rule
 }
 
-var _ = Describe("invocation", func() {
+var _ = Describe("rule", func() {
 
 	DescribeTable("should be ready",
-		func(specfile string, fnfile string, delay time.Duration) {
-			var function owv1.Function
-			if fnfile != "" {
-				function = owtest.LoadFunction("testdata/" + fnfile)
-				owtest.PostInNs(scontext, &function, true, delay)
-			}
-			invocation := owtest.LoadInvocation("testdata/" + specfile)
-			obj := owtest.PostInNs(scontext, &invocation, false, 0)
+		func(specfile, fnfile, tgfile string) {
+			function := owtest.LoadFunction("testdata/" + fnfile)
+			trigger := owtest.LoadTrigger("testdata/" + tgfile)
+			rule := owtest.LoadRule("testdata/" + specfile)
+
+			fn := owtest.PostInNs(scontext, &function, true, 0)
+			owtest.PostInNs(scontext, &trigger, true, 0)
+			obj := owtest.PostInNs(scontext, &rule, false, 0)
 
 			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
-
-			scontext.Client().Delete(scontext, obj)
-			Eventually(owtest.GetObject(scontext, obj)).Should(BeNil())
-			if invocation.Spec.Finalizer != nil {
-				Expect(owtest.GetActivation(wskclient, invocation.Spec.Finalizer.Function)).ShouldNot(BeNil())
-			}
+			Eventually(owtest.GetState(scontext, fn)).Should(Equal(resv1.ResourceStateOnline))
 		},
-
-		Entry("with no args", "noargs.yaml", "", time.Duration(0)),
-		Entry("with one arg", "in-hello.yaml", "", time.Duration(0)),
-		Entry("with retries until no errors", "in-echo-error.yaml", "fn-echo-error.yaml", time.Duration(0)),
-		Entry("with function delay", "in-hello-delay.yaml", "fn-echo-delay.yaml", 2*time.Second),
-
-		Entry("with finalizer", "in-echo-finalizer.yaml", "fn-echo-finalizer.yaml", time.Duration(0)),
-
-		Entry("with secret store", "in-echo-store-secret.yaml", "", time.Duration(0)),
-		Entry("with secret store projection", "in-echo-store-secret-projection.yaml", "", time.Duration(0)),
+		Entry("location", "owr-hello-location.yaml", "owf-hello.yaml", "owt-location-update.yaml"),
 	)
-
 })

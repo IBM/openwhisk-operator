@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package rule
+package trigger
 
 import (
 	"log"
@@ -21,6 +21,7 @@ import (
 	"testing"
 	"time"
 
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -40,10 +41,11 @@ import (
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
-	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
-	owf "github.com/ibm/cloud-functions-operator/pkg/controller/function"
-	owt "github.com/ibm/cloud-functions-operator/pkg/controller/trigger"
+	owfn "github.com/ibm/cloud-functions-operator/pkg/controller/function"
+	owpkg "github.com/ibm/cloud-functions-operator/pkg/controller/pkg"
+	owrule "github.com/ibm/cloud-functions-operator/pkg/controller/rule"
+	"github.com/ibm/cloud-functions-operator/pkg/controller/trigger"
 	owtest "github.com/ibm/cloud-functions-operator/test"
 )
 
@@ -57,12 +59,12 @@ var (
 	stop      chan struct{}
 )
 
-func TestRule(t *testing.T) {
+func TestTrigger(t *testing.T) {
 	RegisterFailHandler(Fail)
 	SetDefaultEventuallyPollingInterval(1 * time.Second)
 	SetDefaultEventuallyTimeout(30 * time.Second)
 
-	RunSpecs(t, "Rule Suite")
+	RunSpecs(t, "Trigger Suite")
 }
 
 var _ = BeforeSuite(func() {
@@ -87,19 +89,22 @@ var _ = BeforeSuite(func() {
 	c = mgr.GetClient()
 
 	// Add reconcilers
-	recFn := newReconciler(mgr)
-	Expect(add(mgr, recFn)).NotTo(HaveOccurred())
-	Expect(owt.Add(mgr)).NotTo(HaveOccurred())
-	Expect(owf.Add(mgr)).NotTo(HaveOccurred())
+	Expect(trigger.Add(mgr)).NotTo(HaveOccurred())
+	Expect(owrule.Add(mgr)).NotTo(HaveOccurred())
+	Expect(owpkg.Add(mgr)).NotTo(HaveOccurred())
+	Expect(owfn.Add(mgr)).NotTo(HaveOccurred())
 
 	stop = owtest.StartTestManager(mgr)
 
 	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-rule-")
+	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-trigger-")
 	scontext = context.New(c, reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
 
 	clientset := owtest.GetClientsetOrDie(cfg)
 	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
+
+	secret := owtest.LoadObject("testdata/secrets-kafka.yaml", &v1.Secret{})
+	clientset.CoreV1().Secrets(namespace).Create(secret.(*v1.Secret))
 
 	wskclient, err = ow.NewWskClient(scontext, nil)
 	Expect(err).NotTo(HaveOccurred())
@@ -110,27 +115,27 @@ var _ = AfterSuite(func() {
 	t.Stop()
 })
 
-type testCase struct {
-	function owv1.Function
-	trigger  owv1.Trigger
-	rule     owv1.Rule
-}
-
-var _ = Describe("rule", func() {
+var _ = Describe("trigger", func() {
 
 	DescribeTable("should be ready",
-		func(specfile, fnfile, tgfile string) {
-			function := owtest.LoadFunction("testdata/" + fnfile)
-			trigger := owtest.LoadTrigger("testdata/" + tgfile)
-			rule := owtest.LoadRule("testdata/" + specfile)
+		func(specfile, pkgfile, rlfile string) {
+			trigger := owtest.LoadTrigger("testdata/" + specfile)
+			pkg := owtest.LoadPackage("testdata/" + pkgfile)
+			rule := owtest.LoadRule("testdata/" + rlfile)
 
-			fn := owtest.PostInNs(scontext, &function, true, 0)
-			owtest.PostInNs(scontext, &trigger, true, 0)
-			obj := owtest.PostInNs(scontext, &rule, false, 0)
+			owtest.PostInNs(scontext, &pkg, false, 0)
+			ruleo := owtest.PostInNs(scontext, &rule, true, 0)
+			obj := owtest.PostInNs(scontext, &trigger, false, 0)
 
 			Eventually(owtest.GetState(scontext, obj)).Should(Equal(resv1.ResourceStateOnline))
-			Eventually(owtest.GetState(scontext, fn)).Should(Equal(resv1.ResourceStateOnline))
+			Eventually(owtest.GetState(scontext, ruleo)).Should(Equal(resv1.ResourceStateOnline))
+
+			params := make(map[string]string)
+			params["topic"] = "openwhisk-test-topic1"
+			params["value"] = "a message from seed"
+
+			Expect(owtest.ActionInvocation(wskclient, "trigger-kafka-binding/messageHubProduce", params)).Should(HaveKeyWithValue("success", true))
 		},
-		Entry("location", "owr-hello-location.yaml", "owf-hello.yaml", "owt-location-update.yaml"),
+		Entry("kafka", "owt-kafka.yaml", "owp-kafka.yaml", "owr-kafka.yaml"),
 	)
 })
