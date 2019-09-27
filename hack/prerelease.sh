@@ -195,4 +195,7 @@ for cr_file in $(find "deploy/crds" -name "*_cr.yaml" -print); do
   operator-sdk scorecard --namespace marketplace --olm-deployed --cr-manifest $cr_file  --csv-path "${OPERATOR_DIR}cloud-functions-operator.v${TAG}.clusterserviceversion.yaml"
 done
 
-# cleanup 0
+echo "generating swagger and documentation"
+hack/docgen.sh
+
+cleanup 0

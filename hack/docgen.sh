@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 set -e
 
-ROOT=$(realpath $(dirname ${BASH_SOURCE})/..)
+ROOT=$(dirname ${BASH_SOURCE})/..
+source $ROOT/hack/lib/library.sh
+ROOT=$(bash::realpath $ROOT)
+
 CODEGEN_PKG=${CODEGEN_PKG:-$(cd ${ROOT}; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ${GOPATH}/src/k8s.io/code-generator)}
 
 go run ${CODEGEN_PKG}/cmd/openapi-gen/main.go \
