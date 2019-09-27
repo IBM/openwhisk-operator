@@ -54,7 +54,7 @@ var _ = BeforeSuite(func() {
 	logf.SetLogger(logf.ZapLoggerTo(GinkgoWriter, true))
 
 	t = &envtest.Environment{
-		CRDDirectoryPaths:        []string{filepath.Join("..", "..", "..", "config", "crds")},
+		CRDDirectoryPaths:        []string{filepath.Join("..", "..", "config", "crds")},
 		ControlPlaneStartTimeout: 2 * time.Minute,
 	}
 	apis.AddToScheme(scheme.Scheme)
