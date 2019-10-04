@@ -1,0 +1,7 @@
+apiVersion: ibmcloud.ibm.com/v1alpha1
+kind: Rule
+metadata:
+  name: hello-location
+spec:
+  trigger: location-update-trigger
+  function: echo-null

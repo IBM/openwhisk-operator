@@ -122,20 +122,21 @@ var _ = Describe("invocation", func() {
 
 	DescribeTable("should be ready",
 		func(specfile string, fnfile string, delay time.Duration) {
+			ts := time.Now().Unix()
 			var function *owv1.Function
 			if fnfile != "" {
 				function = owtest.LoadFunction("testdata/" + fnfile)
 				owtest.PostInNs(ctx, function, true, delay)
 			}
 			invocation := owtest.LoadInvocation("testdata/" + specfile)
-			obj := owtest.PostInNs(ctx, &invocation, false, 0)
+			obj := owtest.PostInNs(ctx, invocation, false, 0)
 
 			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))
 
 			c.Delete(ctx, obj)
 			Eventually(owtest.GetObject(ctx, obj)).Should(BeNil())
 			if invocation.Spec.Finalizer != nil {
-				Expect(owtest.GetActivation(wskclient, invocation.Spec.Finalizer.Function)).ShouldNot(BeNil())
+				Expect(owtest.GetActivation(wskclient, invocation.Spec.Finalizer.Function, ts)).ShouldNot(BeNil())
 			}
 		},
 

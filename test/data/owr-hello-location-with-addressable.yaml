@@ -1,0 +1,10 @@
+apiVersion: ibmcloud.ibm.com/v1alpha1
+kind: Rule
+metadata:
+  name: hello-location-with-addressable
+spec:
+  trigger: location-update-trigger
+  ref:
+    apiVersion: serving.knative.dev/v1alpha1
+    kind: Service
+    name: hello

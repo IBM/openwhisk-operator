@@ -125,9 +125,9 @@ var _ = Describe("trigger", func() {
 			pkg := owtest.LoadPackage("testdata/" + pkgfile)
 			rule := owtest.LoadRule("testdata/" + rlfile)
 
-			owtest.PostInNs(ctx, &pkg, false, 0)
-			ruleo := owtest.PostInNs(ctx, &rule, true, 0)
-			obj := owtest.PostInNs(ctx, &trigger, false, 0)
+			owtest.PostInNs(ctx, pkg, false, 0)
+			ruleo := owtest.PostInNs(ctx, rule, true, 0)
+			obj := owtest.PostInNs(ctx, trigger, false, 0)
 
 			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))
 			Eventually(owtest.GetState(ctx, ruleo)).Should(Equal(resv1.ResourceStateOnline))
@@ -136,7 +136,7 @@ var _ = Describe("trigger", func() {
 			params["topic"] = "openwhisk-test-topic1"
 			params["value"] = "a message from seed"
 
-			Expect(owtest.ActionInvocation(wskclient, "trigger-kafka-binding/messageHubProduce", params)).Should(HaveKeyWithValue("success", true))
+			Expect(owtest.Invoke(wskclient, "trigger-kafka-binding/messageHubProduce", params)).Should(HaveKeyWithValue("success", true))
 		},
 		Entry("kafka", "owt-kafka.yaml", "owp-kafka.yaml", "owr-kafka.yaml"),
 	)

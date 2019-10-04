@@ -105,7 +105,7 @@ var _ = Describe("package", func() {
 	DescribeTable("should be ready",
 		func(specfile string, expected whisk.KeyValueArr) {
 			pkg := owtest.LoadPackage("testdata/" + specfile)
-			obj := owtest.PostInNs(ctx, &pkg, true, 0)
+			obj := owtest.PostInNs(ctx, pkg, true, 0)
 
 			getParameters := func(pkg *whisk.Package) whisk.KeyValueArr {
 				return pkg.Parameters

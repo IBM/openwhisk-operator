@@ -115,7 +115,7 @@ var _ = Describe("function", func() {
 
 			if pkgspec != "" {
 				pkg := owtest.LoadPackage("testdata/" + pkgspec)
-				owtest.PostInNs(ctx, &pkg, true, 0)
+				owtest.PostInNs(ctx, pkg, true, 0)
 			}
 
 			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))

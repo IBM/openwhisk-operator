@@ -38,8 +38,11 @@ spec:
                 or not to bypass certificate checking (optional, default is false)'
               type: object
             function:
-              description: Name of the action the rule applies to
+              description: Name of the action to associate with the rule
               type: string
+            ref:
+              description: Reference to the object to associate with the rule
+              type: object
             name:
               description: Rule name. Override metadata.name.
               type: string
@@ -48,7 +51,6 @@ spec:
               type: string
           required:
           - trigger
-          - function
           type: object
         status:
           properties:

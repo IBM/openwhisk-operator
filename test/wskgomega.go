@@ -21,11 +21,11 @@ import (
 	"fmt"
 
 	"github.com/apache/openwhisk-client-go/whisk"
+	Ω "github.com/onsi/gomega"
+	"github.com/onsi/gomega/types"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-
-	Ω "github.com/onsi/gomega"
 
 	"github.com/ibm/cloud-functions-operator/pkg/injection"
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
@@ -90,22 +90,28 @@ func GetPackage(client *whisk.Client, pkgName string) func() (*whisk.Package, er
 	}
 }
 
-// ActionInvocation invokes the given action, dropping the response for gomega compatibility
-func ActionInvocation(wskclient *whisk.Client, actionName string, payload interface{}) (map[string]interface{}, error) {
+// Invoke invokes the given action, dropping the http response for gomega compatibility
+func Invoke(wskclient *whisk.Client, actionName string, payload interface{}) (map[string]interface{}, error) {
 	result, _, err := wskclient.Actions.Invoke(actionName, payload, true, true)
 	return result, err
 }
 
 // GetActivation tries to get activations for the action.
-func GetActivation(client *whisk.Client, actionName string) func() (*whisk.Activation, error) {
+func GetActivation(client *whisk.Client, actionName string, since int64) func() (*whisk.Activation, error) {
 	return func() (*whisk.Activation, error) {
-		activations, _, err := client.Activations.List(&whisk.ActivationListOptions{Since: ts})
+		activations, _, err := client.Activations.List(&whisk.ActivationListOptions{Since: since})
 		if err != nil {
 			return nil, err
 		}
 		for _, activation := range activations {
 			if activation.Name == actionName {
-				return &activation, nil
+				// Get full activation
+				fullactivation, _, err := client.Activations.Get(activation.ActivationID)
+				if err != nil {
+					return nil, err
+				}
+
+				return fullactivation, nil
 			}
 		}
 		return nil, fmt.Errorf("No activation found for %s", actionName)
@@ -122,6 +128,30 @@ func Result(httpResponse map[string]interface{}) map[string]interface{} {
 			return result.(map[string]interface{})
 		}
 	}
-
 	return nil
+}
+
+// Fire fires the given trigger, dropping the http response for gomega compatibility
+func Fire(wskclient *whisk.Client, triggerName string, payload interface{}) (string, error) {
+	trigger, _, err := wskclient.Triggers.Fire(triggerName, payload)
+	return trigger.ActivationId, err
+}
+
+// MatchResult matches activation payload
+func MatchResult(result map[string]interface{}) types.GomegaMatcher {
+	wskresult := whisk.Result(result)
+	return Ω.WithTransform(getResult, Ω.Equal(whisk.Response{
+		Status:     "success",
+		StatusCode: 0,
+		Success:    true,
+		Result:     &wskresult,
+	}))
+}
+
+func getResult(activation *whisk.Activation) whisk.Response {
+	return activation.Response
+}
+
+func getSuccess(response *whisk.Response) bool {
+	return response.Success
 }

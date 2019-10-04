@@ -48,10 +48,17 @@ type RuleSpec struct {
 	// Rule name. Override metadata.name.
 	// +optional
 	Name string `json:"name,omitempty"`
+
 	// Name of the trigger the Rule applies to
 	Trigger string `json:"trigger"`
-	// Name of the action the rule applies to
-	Function string `json:"function"`
+
+	// Name of the action to associate with the rule
+	// +optional
+	Function string `json:"function,omitempty"`
+
+	// Reference to the object to associate with the rule
+	// +optional
+	Ref *v1.ObjectReference `json:"ref,omitempty"`
 
 	// Reference to a secret representing where to deploy this entity
 	// Default is `seed-default-owprops`

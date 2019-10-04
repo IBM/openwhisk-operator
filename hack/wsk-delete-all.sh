@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 # Copyright 2019 IBM Corporation
@@ -14,10 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 set -e
 
-LIBROOT=$(dirname $BASH_SOURCE[0])
-source $LIBROOT/utils.sh
-source $LIBROOT/object.sh
-source $LIBROOT/bash.sh
-source $LIBROOT/wsk.sh
+ROOT=$(dirname $BASH_SOURCE[0])/..
+source $ROOT/hack/lib/library.sh
+
+
+wsk::delete_all

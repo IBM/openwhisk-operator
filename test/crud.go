@@ -22,7 +22,6 @@ import (
 	"os"
 	"os/user"
 	"strings"
-	"time"
 
 	"github.com/apache/openwhisk-client-go/whisk"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
@@ -38,7 +37,6 @@ var (
 	apihost         = os.Getenv("OW_APIHOST")
 	uaaAccessToken  = ""
 	uaaRefreshToken = ""
-	ts              = time.Now().Unix()
 )
 
 func init() {

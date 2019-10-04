@@ -22,6 +22,7 @@ import (
 	"testing"
 	"time"
 
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -33,20 +34,17 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
-	. "github.com/onsi/gomega"
+	Ω "github.com/onsi/gomega"
 
 	"github.com/apache/openwhisk-client-go/whisk"
 
-	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
-
 	"github.com/ibm/cloud-functions-operator/pkg/apis"
-	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
 	owf "github.com/ibm/cloud-functions-operator/pkg/controller/function"
 	"github.com/ibm/cloud-functions-operator/pkg/controller/rule"
 	owt "github.com/ibm/cloud-functions-operator/pkg/controller/trigger"
 	"github.com/ibm/cloud-functions-operator/pkg/injection"
-	owtest "github.com/ibm/cloud-functions-operator/test"
+	"github.com/ibm/cloud-functions-operator/test"
 )
 
 var (
@@ -60,9 +58,9 @@ var (
 )
 
 func TestRule(t *testing.T) {
-	RegisterFailHandler(Fail)
-	SetDefaultEventuallyPollingInterval(1 * time.Second)
-	SetDefaultEventuallyTimeout(30 * time.Second)
+	Ω.RegisterFailHandler(Fail)
+	Ω.SetDefaultEventuallyPollingInterval(1 * time.Second)
+	Ω.SetDefaultEventuallyTimeout(30 * time.Second)
 
 	RunSpecs(t, "Rule Suite")
 }
@@ -84,27 +82,27 @@ var _ = BeforeSuite(func() {
 
 	// Setup the Manager and Controller.
 	mgr, err := manager.New(cfg, manager.Options{})
-	Expect(err).NotTo(HaveOccurred())
+	Ω.Expect(err).NotTo(Ω.HaveOccurred())
 
 	c = mgr.GetClient()
 
 	// Add reconcilers
-	Expect(rule.Add(mgr)).NotTo(HaveOccurred())
-	Expect(owt.Add(mgr)).NotTo(HaveOccurred())
-	Expect(owf.Add(mgr)).NotTo(HaveOccurred())
+	Ω.Expect(rule.Add(mgr)).NotTo(Ω.HaveOccurred())
+	Ω.Expect(owt.Add(mgr)).NotTo(Ω.HaveOccurred())
+	Ω.Expect(owf.Add(mgr)).NotTo(Ω.HaveOccurred())
 
-	stop = owtest.StartTestManager(mgr)
+	stop = test.StartTestManager(mgr)
 
 	// Initialize objects
-	namespace = owtest.SetupKubeOrDie(cfg, "openwhisk-rule-", nil)
+	namespace = test.SetupKubeOrDie(cfg, "openwhisk-rule-", nil)
 	ctx = injection.WithRequest(context.Background(), &reconcile.Request{NamespacedName: types.NamespacedName{Name: "", Namespace: namespace}})
 	ctx = injection.WithKubeClient(ctx, c)
 
-	clientset := owtest.GetClientsetOrDie(cfg)
-	owtest.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
+	clientset := test.GetClientsetOrDie(cfg)
+	test.ConfigureOwprops("seed-defaults-owprops", clientset.CoreV1().Secrets(namespace))
 
 	wskclient, err = ow.NewWskClient(ctx, nil)
-	Expect(err).NotTo(HaveOccurred())
+	Ω.Expect(err).NotTo(Ω.HaveOccurred())
 })
 
 var _ = AfterSuite(func() {
@@ -112,27 +110,27 @@ var _ = AfterSuite(func() {
 	t.Stop()
 })
 
-type testCase struct {
-	function owv1.Function
-	trigger  owv1.Trigger
-	rule     owv1.Rule
-}
-
 var _ = Describe("rule", func() {
 
-	DescribeTable("should be ready",
-		func(specfile, fnfile, tgfile string) {
-			function := owtest.LoadFunction("testdata/" + fnfile)
-			trigger := owtest.LoadTrigger("testdata/" + tgfile)
-			rule := owtest.LoadRule("testdata/" + specfile)
+	DescribeTable("Firing Events",
 
-			fn := owtest.PostInNs(ctx, function, true, 0)
-			owtest.PostInNs(ctx, &trigger, true, 0)
-			obj := owtest.PostInNs(ctx, &rule, false, 0)
+		func(tc test.IntegrationCase) {
+			tc.Init(ctx)
+			tc.WaitOnline(ctx)
 
-			Eventually(owtest.GetState(ctx, obj)).Should(Equal(resv1.ResourceStateOnline))
-			Eventually(owtest.GetState(ctx, fn)).Should(Equal(resv1.ResourceStateOnline))
+			_, err := test.Fire(wskclient, "location-update-trigger", map[string]string{"name": "John", "place": "ykt"})
+			Ω.Expect(err).NotTo(Ω.HaveOccurred())
+			Ω.Eventually(test.GetActivation(wskclient, "rule-hello", tc.StartTime)).
+				Should(test.MatchResult(map[string]interface{}{"payload": "Hello, John from ykt"}))
 		},
-		Entry("location", "owr-hello-location.yaml", "owf-hello.yaml", "owt-location-update.yaml"),
+
+		Entry("rule linking a simple trigger and the hello function", test.IntegrationCase{
+			Case: test.Case{
+				InitObjects: []runtime.Object{
+					test.LoadRule("testdata/owr-location-update-rule.yaml"),
+					test.LoadFunction("testdata/owf-rule-hello.yaml"),
+					test.LoadTrigger("testdata/owt-location-update-trigger.yaml"),
+				}},
+		}),
 	)
 })

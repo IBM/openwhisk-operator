@@ -24,6 +24,7 @@ import (
 	yaml2 "github.com/ghodss/yaml"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 
 	owv1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
@@ -156,23 +157,28 @@ func LoadFunction(filename string) *owv1.Function {
 }
 
 // LoadTrigger loads the YAML spec into obj
-func LoadTrigger(filename string) owv1.Trigger {
-	return *LoadObject(filename, &owv1.Trigger{}).(*owv1.Trigger)
+func LoadTrigger(filename string) *owv1.Trigger {
+	return LoadObject(filename, &owv1.Trigger{}).(*owv1.Trigger)
 }
 
 // LoadPackage loads the YAML spec into obj
-func LoadPackage(filename string) owv1.Package {
-	return *LoadObject(filename, &owv1.Package{}).(*owv1.Package)
+func LoadPackage(filename string) *owv1.Package {
+	return LoadObject(filename, &owv1.Package{}).(*owv1.Package)
 }
 
 // LoadRule loads the YAML spec into obj
-func LoadRule(filename string) owv1.Rule {
-	return *LoadObject(filename, &owv1.Rule{}).(*owv1.Rule)
+func LoadRule(filename string) *owv1.Rule {
+	return LoadObject(filename, &owv1.Rule{}).(*owv1.Rule)
 }
 
 // LoadInvocation loads the YAML spec into obj
-func LoadInvocation(filename string) owv1.Invocation {
-	return *LoadObject(filename, &owv1.Invocation{}).(*owv1.Invocation)
+func LoadInvocation(filename string) *owv1.Invocation {
+	return LoadObject(filename, &owv1.Invocation{}).(*owv1.Invocation)
+}
+
+// LoadUnstructured loads the YAML spec into obj
+func LoadUnstructured(filename string) *unstructured.Unstructured {
+	return LoadObject(filename, &unstructured.Unstructured{}).(*unstructured.Unstructured)
 }
 
 // LoadObject loads the YAML spec into obj

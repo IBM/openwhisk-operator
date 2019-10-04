@@ -20,8 +20,10 @@ import (
 	"fmt"
 	"time"
 
+	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -34,8 +36,9 @@ import (
 
 	resv1 "github.com/ibm/cloud-operators/pkg/lib/resource/v1"
 
-	openwhiskv1beta1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
+	owv1alpha1 "github.com/ibm/cloud-functions-operator/pkg/apis/ibmcloud/v1alpha1"
 	ow "github.com/ibm/cloud-functions-operator/pkg/controller/common"
+	"github.com/ibm/cloud-functions-operator/pkg/duck"
 	"github.com/ibm/cloud-functions-operator/pkg/injection"
 )
 
@@ -61,7 +64,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	}
 
 	// Watch for changes to Function
-	err = c.Watch(&source.Kind{Type: &openwhiskv1beta1.Rule{}}, &handler.EnqueueRequestForObject{})
+	err = c.Watch(&source.Kind{Type: &owv1alpha1.Rule{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
@@ -87,7 +90,7 @@ func (r *ReconcileRule) Reconcile(request reconcile.Request) (reconcile.Result, 
 	context = injection.WithRequest(context, &request)
 
 	// Fetch the Function instance
-	rule := &openwhiskv1beta1.Rule{}
+	rule := &owv1alpha1.Rule{}
 	err := r.Get(context, request.NamespacedName, rule)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -150,7 +153,7 @@ func (r *ReconcileRule) Reconcile(request reconcile.Request) (reconcile.Result, 
 	return reconcile.Result{}, nil
 }
 
-func (r *ReconcileRule) updateRule(context context.Context, obj *openwhiskv1beta1.Rule) (bool, error) {
+func (r *ReconcileRule) updateRule(context context.Context, obj *owv1alpha1.Rule) (bool, error) {
 	log := clog.WithValues("namespace", obj.Namespace, "name", obj.Name)
 
 	rule := obj.Spec
@@ -175,12 +178,11 @@ func (r *ReconcileRule) updateRule(context context.Context, obj *openwhiskv1beta
 
 	wskrule.Trigger = fmt.Sprintf("/%s/%s", triggerQName.Namespace, triggerQName.EntityName)
 
-	actionQName, err := ow.ParseQualifiedName(rule.Function, "_")
+	actionName, err := r.resolveActionName(context, obj)
 	if err != nil {
-		resv1.SetStatus(obj, resv1.ResourceStateFailed, "Malformed rule action name: %s", rule.Function)
-		return false, nil
+		return false, nil // no retry
 	}
-	wskrule.Action = fmt.Sprintf("/%s/%s", actionQName.Namespace, actionQName.EntityName)
+	wskrule.Action = actionName
 
 	log.Info("acquiring OpenWhisk credentials")
 
@@ -213,7 +215,7 @@ func (r *ReconcileRule) updateRule(context context.Context, obj *openwhiskv1beta
 	return false, r.Status().Update(context, obj)
 }
 
-func (r *ReconcileRule) finalize(context context.Context, obj *openwhiskv1beta1.Rule) (reconcile.Result, error) {
+func (r *ReconcileRule) finalize(context context.Context, obj *owv1alpha1.Rule) (reconcile.Result, error) {
 	rule := obj.Spec
 	name := obj.Name
 	if rule.Name != "" {
@@ -233,4 +235,51 @@ func (r *ReconcileRule) finalize(context context.Context, obj *openwhiskv1beta1.
 	}
 
 	return reconcile.Result{}, ow.RemoveFinalizerAndPut(context, obj, ow.Finalizer)
+}
+
+func (r *ReconcileRule) resolveActionName(ctx context.Context, rule *owv1alpha1.Rule) (string, error) {
+	if rule.Spec.Ref == nil {
+		actionQName, err := ow.ParseQualifiedName(rule.Spec.Function, "_")
+		if err != nil {
+			// TODO: condition
+			resv1.SetStatus(rule, resv1.ResourceStateFailed, "Malformed rule action name: %s", rule.Spec.Function)
+			return "", nil
+		}
+		return fmt.Sprintf("/%s/%s", actionQName.Namespace, actionQName.EntityName), nil
+	}
+	url, err := duck.ResolveURL(ctx, rule.Spec.Ref)
+
+	if err != nil {
+		// TODO: condition
+		resv1.SetStatus(rule, resv1.ResourceStateFailed, "Object is not adressable: %s/%s", rule.Namespace, rule.Spec.Ref.Name)
+		return "", err
+	}
+
+	functionName := RedirectFunctionName(rule)
+	redirect := NewRedirectFunction(rule, url)
+
+	var existingRedirect = owv1alpha1.Function{}
+	err = r.Client.Get(ctx, types.NamespacedName{Name: redirect.Name, Namespace: redirect.Namespace}, &existingRedirect)
+	if err == nil {
+		// maybe update
+		if !equality.Semantic.DeepEqual(existingRedirect.Spec, redirect.Spec) {
+			existingRedirect.Spec = redirect.Spec
+
+			err = r.Client.Update(ctx, &existingRedirect)
+			if err != nil {
+				return "", err
+			}
+		}
+	} else if errors.IsNotFound(err) {
+		// create
+		err := r.Client.Create(ctx, redirect)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		// retry
+		return "", err
+	}
+
+	return functionName, nil
 }
